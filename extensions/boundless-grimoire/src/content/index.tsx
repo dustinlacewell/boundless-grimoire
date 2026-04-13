@@ -39,12 +39,11 @@ const allHydrated = Promise.allSettled([
   }
 });
 
-// Pull untap decks once the deck store specifically is ready — we need
-// the linked-uid set to know which decks to import. This runs in parallel
-// with the other store hydrations and with the React mount below.
+// Boot sync once the deck store is hydrated — pull untap decks we're
+// missing, re-enrich any thin cards, then push every local deck to untap
+// (extension is authority). Runs in parallel with React mount below.
 void deckHydrated.then(() => {
-  void import("../sync/untapSync").then(({ pullUntapDecks }) => pullUntapDecks());
-  void import("../sync/reEnrich").then(({ reEnrichThinDecks }) => reEnrichThinDecks());
+  void import("../sync/untapSync").then(({ bootSync }) => bootSync());
 });
 
 let root: Root | null = null;

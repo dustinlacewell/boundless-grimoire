@@ -63,7 +63,7 @@ async function runPush(deck: Deck): Promise<void> {
   if (uid && uid !== deck.untapDeckUid) backfillUntapDeckUid(deck.id, uid);
 }
 
-function backfillUntapDeckUid(localDeckId: string, untapDeckUid: string): void {
+export function backfillUntapDeckUid(localDeckId: string, untapDeckUid: string): void {
   useDeckStore.setState((s) => {
     const d = s.library.decks[localDeckId];
     if (!d) return s;

@@ -17,6 +17,7 @@
  * This file is the public surface: a barrel of re-exports so callers
  * (deckStore subscriber, content/index.tsx) only need one import path.
  */
+export { bootSync } from "./bootSync";
 export { isUntapAvailable } from "./untapApi";
 export { pullUntapDecks } from "./pullDecks";
 export { deleteUntapDeck } from "./pushDeck";
