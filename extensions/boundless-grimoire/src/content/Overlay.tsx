@@ -3,6 +3,7 @@ import { DeckFormatPicker } from "../decks/DeckFormatPicker";
 import { DeckRibbon } from "../decks/DeckRibbon";
 import { DeckView } from "../decks/DeckView";
 import { EditableDeckTitle } from "../decks/EditableDeckTitle";
+import { LegalityToast } from "../decks/LegalityToast";
 import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
 import { SettingsModal } from "../settings/SettingsModal";
@@ -74,6 +75,7 @@ export function Overlay(_props: Props) {
         </IconButton>
       </div>
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
+      <LegalityToast />
       <div style={bodyStyle}>
         <section>
           <div style={sectionLabelStyle}>Decks</div>

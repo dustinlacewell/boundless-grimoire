@@ -56,6 +56,7 @@ export async function checkLegality(
   }
 
   useLegalityStore.setState((s) => ({
+    illegalByDeck: { ...s.illegalByDeck, [deckId]: new Set() },
     checking: { ...s.checking, [deckId]: true },
   }));
 

@@ -14,4 +14,5 @@ export const colors = {
   textFaint: "rgba(255,255,255,0.4)",
   accent: "#ff7e3a",
   danger: "#ff5a5a",
+  success: "#4caf50",
 };
