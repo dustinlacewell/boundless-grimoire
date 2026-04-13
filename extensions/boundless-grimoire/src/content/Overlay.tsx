@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DeckAnalytics } from "../analytics/DeckAnalytics";
 import { DeckFormatPicker } from "../decks/DeckFormatPicker";
 import { DeckRibbon } from "../decks/DeckRibbon";
 import { DeckView } from "../decks/DeckView";
@@ -100,6 +101,13 @@ export function Overlay(_props: Props) {
             </div>
           )}
         </section>
+
+        {selected && (
+          <section>
+            <div style={sectionLabelStyle}>Analytics</div>
+            <DeckAnalytics deck={selected} />
+          </section>
+        )}
 
         <section style={{ display: "flex", flexDirection: "column" }}>
           <div style={sectionLabelStyle}>Browse · Filters</div>
