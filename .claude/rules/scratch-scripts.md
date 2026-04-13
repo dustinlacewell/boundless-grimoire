@@ -1,0 +1,1 @@
+Do not write scripts using inline bash on the terminal unless they are trivial. ESPECIALLY if they might be run more than once (even in the future), write SCRATCH script in llm/scratch/ instead.
