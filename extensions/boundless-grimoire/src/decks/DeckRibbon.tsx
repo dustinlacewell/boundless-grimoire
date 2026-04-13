@@ -7,6 +7,7 @@ import {
 } from "../storage/deckStore";
 import { HScroll } from "../ui/HScroll";
 import { DeckRibbonItem } from "./DeckRibbonItem";
+import { ImportDeckTile } from "./ImportDeckTile";
 import { NewDeckTile } from "./NewDeckTile";
 
 const DRAG_MIME = "application/x-boundless-grimoire-deck";
@@ -101,6 +102,7 @@ export function DeckRibbon() {
         />
       ))}
       <NewDeckTile onCreate={() => createDeck("Untitled")} />
+      <ImportDeckTile />
     </HScroll>
   );
 }

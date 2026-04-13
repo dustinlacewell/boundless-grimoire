@@ -18,6 +18,7 @@ import {
   LIBRARY_VERSION,
   type CardSnapshot,
   type Deck,
+  type DeckCard,
   type DeckLibrary,
 } from "./types";
 
@@ -410,6 +411,55 @@ export function moveCardToZone(deckId: string, cardId: string, from: DeckZone): 
       decks: { ...lib.decks, [deckId]: touch({ ...deck, [srcField]: src, [dstField]: dst }) },
     };
   });
+}
+
+/**
+ * Import a parsed decklist: create a new deck, resolve card names via
+ * Scryfall's /cards/collection, and populate it. Returns the new deck id.
+ */
+export async function importDecklist(
+  entries: import("../decks/parseDecklist").DecklistEntry[],
+  name = "Imported Deck",
+): Promise<string> {
+  const { getCardsByIds } = await import("../scryfall/client");
+  const { toSnapshot } = await import("../scryfall/snapshot");
+
+  // Dedupe names for the batch lookup
+  const uniqueNames = [...new Set(entries.map((e) => e.name))];
+  const identifiers = uniqueNames.map((n) => ({ name: n }));
+  const resolved = await getCardsByIds(identifiers);
+
+  // Build name → snapshot lookup (case-insensitive)
+  const byName = new Map<string, CardSnapshot>();
+  for (const card of resolved) {
+    byName.set(card.name.toLowerCase(), toSnapshot(card));
+  }
+
+  const deckId = createDeck(name);
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    const cards: Record<string, DeckCard> = {};
+    const sideboard: Record<string, DeckCard> = {};
+    const now = Date.now();
+    for (const entry of entries) {
+      const snap = byName.get(entry.name.toLowerCase());
+      if (!snap) continue;
+      const target = entry.zone === "sideboard" ? sideboard : cards;
+      const existing = target[snap.id];
+      if (existing) {
+        target[snap.id] = { ...existing, count: existing.count + entry.count };
+      } else {
+        target[snap.id] = { snapshot: snap, count: entry.count, addedAt: now };
+      }
+    }
+    return {
+      ...lib,
+      decks: { ...lib.decks, [deckId]: touch({ ...deck, cards, sideboard }) },
+    };
+  });
+
+  return deckId;
 }
 
 // ---------- Selectors ----------

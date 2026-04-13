@@ -94,7 +94,7 @@ export function getCardByName(name: string, opts: FetchOpts = {}): Promise<Scryf
   return get<ScryfallCard>(`/cards/named?${params}`, opts);
 }
 
-type ScryfallIdentifier = { id: string } | { name: string; set: string };
+type ScryfallIdentifier = { id: string } | { name: string; set?: string };
 
 /**
  * /cards/collection — fetch up to 75 cards by Scryfall ID or name+set.
