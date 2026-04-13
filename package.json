@@ -1,0 +1,16 @@
+{
+  "name": "mtg-deck-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "ws": "ws"
+  },
+  "dependencies": {
+    "@ldlework/workmark": "^1.1.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

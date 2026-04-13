@@ -1,0 +1,258 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import {
+  formatsToText,
+  textToFormats,
+  setCustomFormats,
+  resetCustomFormats,
+  useCustomFormatStore,
+} from "../filters/customFormatStore";
+import {
+  queriesToText,
+  textToQueries,
+  setCustomQueries,
+  resetCustomQueries,
+  useCustomQueryStore,
+} from "../filters/customQueryStore";
+import { colors } from "../ui/colors";
+
+const overlayStyle: React.CSSProperties = {
+  position: "fixed",
+  inset: 0,
+  zIndex: 2147483647,
+  background: "rgba(0,0,0,0.7)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontFamily: "system-ui, sans-serif",
+};
+
+const dialogStyle: React.CSSProperties = {
+  width: "min(700px, 92vw)",
+  maxHeight: "88vh",
+  background: colors.bg1,
+  border: `1px solid ${colors.borderStrong}`,
+  borderRadius: 12,
+  boxShadow: "0 12px 36px rgba(0,0,0,0.7)",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  color: colors.text,
+};
+
+const headerStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 12,
+  padding: "12px 16px",
+  borderBottom: `1px solid ${colors.border}`,
+};
+
+const titleStyle: React.CSSProperties = {
+  fontWeight: 700,
+  fontSize: 15,
+  flex: 1,
+};
+
+const closeBtnStyle: React.CSSProperties = {
+  background: colors.bg2,
+  color: colors.text,
+  border: `1px solid ${colors.borderStrong}`,
+  borderRadius: 6,
+  padding: "4px 10px",
+  fontSize: 12,
+  fontWeight: 600,
+  cursor: "pointer",
+};
+
+const tabBarStyle: React.CSSProperties = {
+  display: "flex",
+  gap: 0,
+  borderBottom: `1px solid ${colors.border}`,
+};
+
+const tabStyle = (active: boolean): React.CSSProperties => ({
+  padding: "10px 20px",
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: "pointer",
+  color: active ? colors.accent : colors.textMuted,
+  background: "transparent",
+  border: "none",
+  borderBottomStyle: "solid",
+  borderBottomWidth: 2,
+  borderBottomColor: active ? colors.accent : "transparent",
+});
+
+const bodyStyle: React.CSSProperties = {
+  flex: 1,
+  overflowY: "auto",
+  padding: 16,
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+};
+
+const hintStyle: React.CSSProperties = {
+  fontSize: 12,
+  color: colors.textMuted,
+  lineHeight: 1.5,
+};
+
+const textareaStyle: React.CSSProperties = {
+  width: "100%",
+  minHeight: 300,
+  background: colors.bg2,
+  color: colors.text,
+  border: `1px solid ${colors.borderStrong}`,
+  borderRadius: 8,
+  padding: 12,
+  fontSize: 13,
+  fontFamily: "monospace",
+  lineHeight: 1.6,
+  resize: "vertical",
+  boxSizing: "border-box",
+  outline: "none",
+};
+
+const saveBtnStyle: React.CSSProperties = {
+  background: colors.accent,
+  color: "#0a0a0c",
+  border: "none",
+  borderRadius: 6,
+  padding: "8px 20px",
+  fontSize: 13,
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+const footerStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+};
+
+type Tab = "filters" | "formats";
+
+interface Props {
+  onClose: () => void;
+}
+
+export function SettingsModal({ onClose }: Props) {
+  const queries = useCustomQueryStore((s) => s.queries);
+  const formats = useCustomFormatStore((s) => s.formats);
+  const [filterText, setFilterText] = useState(() => queriesToText(queries));
+  const [formatText, setFormatText] = useState(() => formatsToText(formats));
+  const [tab, setTab] = useState<Tab>("filters");
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  const handleSaveFilters = () => {
+    setCustomQueries(textToQueries(filterText));
+    onClose();
+  };
+
+  const handleResetFilters = () => {
+    const defaults = resetCustomQueries();
+    setFilterText(queriesToText(defaults));
+  };
+
+  const handleSaveFormats = () => {
+    setCustomFormats(textToFormats(formatText));
+    onClose();
+  };
+
+  const handleResetFormats = () => {
+    const defaults = resetCustomFormats();
+    setFormatText(formatsToText(defaults));
+  };
+
+  const host = document.getElementById("boundless-grimoire-root");
+  if (!host) return null;
+
+  return createPortal(
+    <div style={overlayStyle} onClick={onClose}>
+      <div style={dialogStyle} onClick={(e) => e.stopPropagation()}>
+        <div style={headerStyle}>
+          <div style={titleStyle}>Settings</div>
+          <button type="button" style={closeBtnStyle} onClick={onClose}>
+            Close
+          </button>
+        </div>
+
+        <div style={tabBarStyle}>
+          <button type="button" style={tabStyle(tab === "filters")} onClick={() => setTab("filters")}>
+            Filters
+          </button>
+          <button type="button" style={tabStyle(tab === "formats")} onClick={() => setTab("formats")}>
+            Formats
+          </button>
+        </div>
+
+        <div style={bodyStyle}>
+          {tab === "filters" && (
+            <>
+              <div style={hintStyle}>
+                Define custom filter toggles. One per line, format:{" "}
+                <strong>Name=scryfall query</strong>
+                <br />
+                A line without <code>=</code> becomes a section header.
+                <br />
+                Example: <code style={{ color: colors.text }}>Removal=otag:spot-removal or otag:sweeper</code>
+              </div>
+              <textarea
+                style={textareaStyle}
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                spellCheck={false}
+              />
+              <div style={footerStyle}>
+                <button type="button" style={closeBtnStyle} onClick={handleResetFilters}>
+                  Reset to Defaults
+                </button>
+                <button type="button" style={saveBtnStyle} onClick={handleSaveFilters}>
+                  Save
+                </button>
+              </div>
+            </>
+          )}
+          {tab === "formats" && (
+            <>
+              <div style={hintStyle}>
+                Define formats that can be assigned to decks. One per line, format:{" "}
+                <strong>Name=scryfall query</strong>
+                <br />
+                When a deck has a format, it applies to all searches and flags illegal cards.
+                <br />
+                Example: <code style={{ color: colors.text }}>Standard=f:standard</code>
+                {" "}or{" "}
+                <code style={{ color: colors.text }}>My Cube=s:mkm or s:dsk or s:blb</code>
+              </div>
+              <textarea
+                style={{ ...textareaStyle, minHeight: 180 }}
+                value={formatText}
+                onChange={(e) => setFormatText(e.target.value)}
+                spellCheck={false}
+              />
+              <div style={footerStyle}>
+                <button type="button" style={closeBtnStyle} onClick={handleResetFormats}>
+                  Reset to Defaults
+                </button>
+                <button type="button" style={saveBtnStyle} onClick={handleSaveFormats}>
+                  Save
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>,
+    host,
+  );
+}

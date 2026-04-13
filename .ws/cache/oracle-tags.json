@@ -1,0 +1,8157 @@
+{
+  "fetchedAt": "2026-04-13T18:44:05.337Z",
+  "total": 4396,
+  "minCount": 10,
+  "tags": [
+    {
+      "name": "activated ability",
+      "slug": "activated-ability",
+      "taggingCount": 9013
+    },
+    {
+      "name": "triggered ability",
+      "slug": "triggered-ability",
+      "taggingCount": 7718
+    },
+    {
+      "name": "spot removal",
+      "slug": "spot-removal",
+      "taggingCount": 4887
+    },
+    {
+      "name": "single target instant/sorcery",
+      "slug": "single-target-instant-sorcery",
+      "taggingCount": 4569
+    },
+    {
+      "name": "evasion",
+      "slug": "evasion",
+      "taggingCount": 4241
+    },
+    {
+      "name": "alliteration",
+      "slug": "alliteration",
+      "taggingCount": 4119
+    },
+    {
+      "name": "repeatable crime",
+      "slug": "repeatable-crime",
+      "taggingCount": 3607
+    },
+    {
+      "name": "removal-creature",
+      "slug": "removal-creature",
+      "taggingCount": 2485
+    },
+    {
+      "name": "unique type line",
+      "slug": "unique-type-line",
+      "taggingCount": 2125
+    },
+    {
+      "name": "intervening if clause",
+      "slug": "intervening-if-clause",
+      "taggingCount": 2114
+    },
+    {
+      "name": "attack trigger",
+      "slug": "attack-trigger",
+      "taggingCount": 1993
+    },
+    {
+      "name": "repeatable removal",
+      "slug": "repeatable-removal",
+      "taggingCount": 1752
+    },
+    {
+      "name": "removal-destroy",
+      "slug": "removal-destroy",
+      "taggingCount": 1683
+    },
+    {
+      "name": "gains pp counters",
+      "slug": "gains-pp-counters",
+      "taggingCount": 1637
+    },
+    {
+      "name": "noncreature typal",
+      "slug": "noncreature-typal",
+      "taggingCount": 1583
+    },
+    {
+      "name": "namesake spell",
+      "slug": "namesake-spell",
+      "taggingCount": 1581
+    },
+    {
+      "name": "virtual vanilla",
+      "slug": "virtual-vanilla",
+      "taggingCount": 1546
+    },
+    {
+      "name": "attacking matters-self",
+      "slug": "attacking-matters-self",
+      "taggingCount": 1519
+    },
+    {
+      "name": "french vanilla",
+      "slug": "french-vanilla",
+      "taggingCount": 1516
+    },
+    {
+      "name": "multiple targets",
+      "slug": "multiple-targets",
+      "taggingCount": 1440
+    },
+    {
+      "name": "hand-neutral",
+      "slug": "hand-neutral",
+      "taggingCount": 1439
+    },
+    {
+      "name": "draw engine",
+      "slug": "draw-engine",
+      "taggingCount": 1403
+    },
+    {
+      "name": "repeatable creature tokens",
+      "slug": "repeatable-creature-tokens",
+      "taggingCount": 1397
+    },
+    {
+      "name": "drawback",
+      "slug": "drawback",
+      "taggingCount": 1378
+    },
+    {
+      "name": "repeatable lifegain",
+      "slug": "repeatable-lifegain",
+      "taggingCount": 1342
+    },
+    {
+      "name": "cheaper than mv",
+      "slug": "cheaper-than-mv",
+      "taggingCount": 1337
+    },
+    {
+      "name": "single english word name",
+      "slug": "single-english-word-name",
+      "taggingCount": 1293
+    },
+    {
+      "name": "gives pp counters",
+      "slug": "gives-pp-counters",
+      "taggingCount": 1280
+    },
+    {
+      "name": "repeatable pure draw",
+      "slug": "repeatable-pure-draw",
+      "taggingCount": 1262
+    },
+    {
+      "name": "pure draw",
+      "slug": "pure-draw",
+      "taggingCount": 1257
+    },
+    {
+      "name": "virtual french vanilla",
+      "slug": "virtual-french-vanilla",
+      "taggingCount": 1251
+    },
+    {
+      "name": "cast trigger-you",
+      "slug": "cast-trigger-you",
+      "taggingCount": 1232
+    },
+    {
+      "name": "attacking matters",
+      "slug": "attacking-matters",
+      "taggingCount": 1162
+    },
+    {
+      "name": "delayed trigger",
+      "slug": "delayed-trigger",
+      "taggingCount": 1087
+    },
+    {
+      "name": "burn creature",
+      "slug": "burn-creature",
+      "taggingCount": 1028
+    },
+    {
+      "name": "more expensive than mv",
+      "slug": "more-expensive-than-mv",
+      "taggingCount": 955
+    },
+    {
+      "name": "power boost to all",
+      "slug": "power-boost-to-all",
+      "taggingCount": 914
+    },
+    {
+      "name": "burn any",
+      "slug": "burn-any",
+      "taggingCount": 885
+    },
+    {
+      "name": "opponent loses life",
+      "slug": "opponent-loses-life",
+      "taggingCount": 884
+    },
+    {
+      "name": "sacrifice outlet-creature",
+      "slug": "sacrifice-outlet-creature",
+      "taggingCount": 873
+    },
+    {
+      "name": "lifegain",
+      "slug": "lifegain",
+      "taggingCount": 863
+    },
+    {
+      "name": "hand-positive",
+      "slug": "hand-positive",
+      "taggingCount": 862
+    },
+    {
+      "name": "burn player",
+      "slug": "burn-player",
+      "taggingCount": 848
+    },
+    {
+      "name": "ramp",
+      "slug": "ramp",
+      "taggingCount": 839
+    },
+    {
+      "name": "exile-self",
+      "slug": "exile-self",
+      "taggingCount": 833
+    },
+    {
+      "name": "bottomless mana sink",
+      "slug": "bottomless-mana-sink",
+      "taggingCount": 745
+    },
+    {
+      "name": "symmetrical",
+      "slug": "symmetrical",
+      "taggingCount": 744
+    },
+    {
+      "name": "sweeper",
+      "slug": "sweeper",
+      "taggingCount": 739
+    },
+    {
+      "name": "mana value matters",
+      "slug": "mana-value-matters",
+      "taggingCount": 737
+    },
+    {
+      "name": "protects-creature",
+      "slug": "protects-creature",
+      "taggingCount": 720
+    },
+    {
+      "name": "toughness boost to all",
+      "slug": "toughness-boost-to-all",
+      "taggingCount": 718
+    },
+    {
+      "name": "death trigger-self",
+      "slug": "death-trigger-self",
+      "taggingCount": 712
+    },
+    {
+      "name": "combat trick",
+      "slug": "combat-trick",
+      "taggingCount": 704
+    },
+    {
+      "name": "mana sink",
+      "slug": "mana-sink",
+      "taggingCount": 694
+    },
+    {
+      "name": "synergy-artifact",
+      "slug": "synergy-artifact",
+      "taggingCount": 687
+    },
+    {
+      "name": "death trigger",
+      "slug": "death-trigger",
+      "taggingCount": 671
+    },
+    {
+      "name": "cantrip",
+      "slug": "cantrip",
+      "taggingCount": 631
+    },
+    {
+      "name": "group slug",
+      "slug": "group-slug",
+      "taggingCount": 622
+    },
+    {
+      "name": "multi removal",
+      "slug": "multi-removal",
+      "taggingCount": 615
+    },
+    {
+      "name": "gives haste",
+      "slug": "gives-haste",
+      "taggingCount": 614
+    },
+    {
+      "name": "removal-toughness",
+      "slug": "removal-toughness",
+      "taggingCount": 599
+    },
+    {
+      "name": "tapper-creature",
+      "slug": "tapper-creature",
+      "taggingCount": 594
+    },
+    {
+      "name": "tap fuel-creature",
+      "slug": "tap-fuel-creature",
+      "taggingCount": 586
+    },
+    {
+      "name": "type addition human",
+      "slug": "type-addition-human",
+      "taggingCount": 573
+    },
+    {
+      "name": "discard",
+      "slug": "discard",
+      "taggingCount": 567
+    },
+    {
+      "name": "utility land",
+      "slug": "utility-land",
+      "taggingCount": 566
+    },
+    {
+      "name": "burst draw",
+      "slug": "burst-draw",
+      "taggingCount": 556
+    },
+    {
+      "name": "tutor-to-hand",
+      "slug": "tutor-to-hand",
+      "taggingCount": 542
+    },
+    {
+      "name": "saboteur",
+      "slug": "saboteur",
+      "taggingCount": 536
+    },
+    {
+      "name": "modal",
+      "slug": "modal",
+      "taggingCount": 523
+    },
+    {
+      "name": "activate from hand",
+      "slug": "activate-from-hand",
+      "taggingCount": 521
+    },
+    {
+      "name": "reanimate-creature",
+      "slug": "reanimate-creature",
+      "taggingCount": 516
+    },
+    {
+      "name": "potentially black border",
+      "slug": "potentially-black-border",
+      "taggingCount": 514
+    },
+    {
+      "name": "type errata",
+      "slug": "type-errata",
+      "taggingCount": 509
+    },
+    {
+      "name": "adds multiple mana",
+      "slug": "adds-multiple-mana",
+      "taggingCount": 498
+    },
+    {
+      "name": "punny name",
+      "slug": "punny-name",
+      "taggingCount": 493
+    },
+    {
+      "name": "discard outlet",
+      "slug": "discard-outlet",
+      "taggingCount": 478
+    },
+    {
+      "name": "power matters",
+      "slug": "power-matters",
+      "taggingCount": 478
+    },
+    {
+      "name": "enters in company",
+      "slug": "enters-in-company",
+      "taggingCount": 472
+    },
+    {
+      "name": "creaturefall",
+      "slug": "creaturefall",
+      "taggingCount": 471
+    },
+    {
+      "name": "keyword anthem",
+      "slug": "keyword-anthem",
+      "taggingCount": 465
+    },
+    {
+      "name": "synergy-instant",
+      "slug": "synergy-instant",
+      "taggingCount": 460
+    },
+    {
+      "name": "synergy-sorcery",
+      "slug": "synergy-sorcery",
+      "taggingCount": 459
+    },
+    {
+      "name": "scry",
+      "slug": "scry",
+      "taggingCount": 457
+    },
+    {
+      "name": "anthem",
+      "slug": "anthem",
+      "taggingCount": 448
+    },
+    {
+      "name": "gives flying",
+      "slug": "gives-flying",
+      "taggingCount": 445
+    },
+    {
+      "name": "gives trample",
+      "slug": "gives-trample",
+      "taggingCount": 444
+    },
+    {
+      "name": "removal-exile",
+      "slug": "removal-exile",
+      "taggingCount": 440
+    },
+    {
+      "name": "untapper-creature",
+      "slug": "untapper-creature",
+      "taggingCount": 435
+    },
+    {
+      "name": "mana dork",
+      "slug": "mana-dork",
+      "taggingCount": 424
+    },
+    {
+      "name": "castable from exile",
+      "slug": "castable-from-exile",
+      "taggingCount": 423
+    },
+    {
+      "name": "block trigger",
+      "slug": "block-trigger",
+      "taggingCount": 416
+    },
+    {
+      "name": "martyr",
+      "slug": "martyr",
+      "taggingCount": 412
+    },
+    {
+      "name": "multiple bodies",
+      "slug": "multiple-bodies",
+      "taggingCount": 410
+    },
+    {
+      "name": "hate-blocker",
+      "slug": "hate-blocker",
+      "taggingCount": 408
+    },
+    {
+      "name": "cast on resolution",
+      "slug": "cast-on-resolution",
+      "taggingCount": 399
+    },
+    {
+      "name": "free-cast-another",
+      "slug": "free-cast-another",
+      "taggingCount": 398
+    },
+    {
+      "name": "castable from graveyard",
+      "slug": "castable-from-graveyard",
+      "taggingCount": 395
+    },
+    {
+      "name": "removal-nonland",
+      "slug": "removal-nonland",
+      "taggingCount": 386
+    },
+    {
+      "name": "burn planeswalker",
+      "slug": "burn-planeswalker",
+      "taggingCount": 380
+    },
+    {
+      "name": "removal-sacrifice",
+      "slug": "removal-sacrifice",
+      "taggingCount": 380
+    },
+    {
+      "name": "unique token",
+      "slug": "unique-token",
+      "taggingCount": 374
+    },
+    {
+      "name": "damage prevention",
+      "slug": "damage-prevention",
+      "taggingCount": 373
+    },
+    {
+      "name": "drain life",
+      "slug": "drain-life",
+      "taggingCount": 361
+    },
+    {
+      "name": "hate-attacker",
+      "slug": "hate-attacker",
+      "taggingCount": 359
+    },
+    {
+      "name": "self-replacement effect",
+      "slug": "self-replacement-effect",
+      "taggingCount": 359
+    },
+    {
+      "name": "removal-bounce",
+      "slug": "removal-bounce",
+      "taggingCount": 358
+    },
+    {
+      "name": "pinger",
+      "slug": "pinger",
+      "taggingCount": 357
+    },
+    {
+      "name": "copy-creature",
+      "slug": "copy-creature",
+      "taggingCount": 347
+    },
+    {
+      "name": "sacrifice self",
+      "slug": "sacrifice-self",
+      "taggingCount": 346
+    },
+    {
+      "name": "life payment",
+      "slug": "life-payment",
+      "taggingCount": 336
+    },
+    {
+      "name": "fun ruling",
+      "slug": "fun-ruling",
+      "taggingCount": 335
+    },
+    {
+      "name": "removal-artifact",
+      "slug": "removal-artifact",
+      "taggingCount": 334
+    },
+    {
+      "name": "offcolor ability",
+      "slug": "offcolor-ability",
+      "taggingCount": 332
+    },
+    {
+      "name": "pp counters matter",
+      "slug": "pp-counters-matter",
+      "taggingCount": 330
+    },
+    {
+      "name": "mill-self",
+      "slug": "mill-self",
+      "taggingCount": 327
+    },
+    {
+      "name": "regrowth-creature",
+      "slug": "regrowth-creature",
+      "taggingCount": 326
+    },
+    {
+      "name": "tutor-land-basic",
+      "slug": "tutor-land-basic",
+      "taggingCount": 325
+    },
+    {
+      "name": "unique mana cost",
+      "slug": "unique-mana-cost",
+      "taggingCount": 325
+    },
+    {
+      "name": "mini refund",
+      "slug": "mini-refund",
+      "taggingCount": 313
+    },
+    {
+      "name": "untracked indefinite effect",
+      "slug": "untracked-indefinite-effect",
+      "taggingCount": 309
+    },
+    {
+      "name": "out of color token",
+      "slug": "out-of-color-token",
+      "taggingCount": 306
+    },
+    {
+      "name": "gains flying",
+      "slug": "gains-flying",
+      "taggingCount": 304
+    },
+    {
+      "name": "hate-graveyard",
+      "slug": "hate-graveyard",
+      "taggingCount": 301
+    },
+    {
+      "name": "copy-self",
+      "slug": "copy-self",
+      "taggingCount": 300
+    },
+    {
+      "name": "egg",
+      "slug": "egg",
+      "taggingCount": 299
+    },
+    {
+      "name": "removal-land",
+      "slug": "removal-land",
+      "taggingCount": 298
+    },
+    {
+      "name": "digital-only mechanics",
+      "slug": "digital-only-mechanics",
+      "taggingCount": 295
+    },
+    {
+      "name": "counters matter",
+      "slug": "counters-matter",
+      "taggingCount": 291
+    },
+    {
+      "name": "reflexive trigger",
+      "slug": "reflexive-trigger",
+      "taggingCount": 291
+    },
+    {
+      "name": "aesthetic counter",
+      "slug": "aesthetic-counter",
+      "taggingCount": 290
+    },
+    {
+      "name": "sacrifice outlet-artifact",
+      "slug": "sacrifice-outlet-artifact",
+      "taggingCount": 290
+    },
+    {
+      "name": "bear with set's mechanic",
+      "slug": "bear-with-set-s-mechanic",
+      "taggingCount": 289
+    },
+    {
+      "name": "per-player",
+      "slug": "per-player",
+      "taggingCount": 284
+    },
+    {
+      "name": "firebreathing",
+      "slug": "firebreathing",
+      "taggingCount": 283
+    },
+    {
+      "name": "type change",
+      "slug": "type-change",
+      "taggingCount": 282
+    },
+    {
+      "name": "power matters-self",
+      "slug": "power-matters-self",
+      "taggingCount": 281
+    },
+    {
+      "name": "surveil",
+      "slug": "surveil",
+      "taggingCount": 279
+    },
+    {
+      "name": "burn with set's mechanic",
+      "slug": "burn-with-set-s-mechanic",
+      "taggingCount": 276
+    },
+    {
+      "name": "gives first strike",
+      "slug": "gives-first-strike",
+      "taggingCount": 276
+    },
+    {
+      "name": "shade pump",
+      "slug": "shade-pump",
+      "taggingCount": 276
+    },
+    {
+      "name": "animate self",
+      "slug": "animate-self",
+      "taggingCount": 275
+    },
+    {
+      "name": "life for cards",
+      "slug": "life-for-cards",
+      "taggingCount": 275
+    },
+    {
+      "name": "tutor-land-to-battlefield",
+      "slug": "tutor-land-to-battlefield",
+      "taggingCount": 274
+    },
+    {
+      "name": "gives vigilance",
+      "slug": "gives-vigilance",
+      "taggingCount": 273
+    },
+    {
+      "name": "force draw",
+      "slug": "force-draw",
+      "taggingCount": 270
+    },
+    {
+      "name": "gains haste",
+      "slug": "gains-haste",
+      "taggingCount": 270
+    },
+    {
+      "name": "gives indestructible",
+      "slug": "gives-indestructible",
+      "taggingCount": 268
+    },
+    {
+      "name": "refund",
+      "slug": "refund",
+      "taggingCount": 264
+    },
+    {
+      "name": "reanimate-self",
+      "slug": "reanimate-self",
+      "taggingCount": 260
+    },
+    {
+      "name": "gives castable from exile",
+      "slug": "gives-castable-from-exile",
+      "taggingCount": 253
+    },
+    {
+      "name": "synergy-noncreature",
+      "slug": "synergy-noncreature",
+      "taggingCount": 253
+    },
+    {
+      "name": "hate-set-mechanic",
+      "slug": "hate-set-mechanic",
+      "taggingCount": 252
+    },
+    {
+      "name": "cast trigger-self",
+      "slug": "cast-trigger-self",
+      "taggingCount": 247
+    },
+    {
+      "name": "pair-commander",
+      "slug": "pair-commander",
+      "taggingCount": 247
+    },
+    {
+      "name": "prevent blocker",
+      "slug": "prevent-blocker",
+      "taggingCount": 244
+    },
+    {
+      "name": "rhystic",
+      "slug": "rhystic",
+      "taggingCount": 244
+    },
+    {
+      "name": "shapechange",
+      "slug": "shapechange",
+      "taggingCount": 242
+    },
+    {
+      "name": "cda-power",
+      "slug": "cda-power",
+      "taggingCount": 241
+    },
+    {
+      "name": "disenchant/naturalize",
+      "slug": "disenchant-naturalize",
+      "taggingCount": 238
+    },
+    {
+      "name": "sacrifice outlet-land",
+      "slug": "sacrifice-outlet-land",
+      "taggingCount": 237
+    },
+    {
+      "name": "virtual legendary",
+      "slug": "virtual-legendary",
+      "taggingCount": 237
+    },
+    {
+      "name": "theft-creature",
+      "slug": "theft-creature",
+      "taggingCount": 232
+    },
+    {
+      "name": "curiosity",
+      "slug": "curiosity",
+      "taggingCount": 231
+    },
+    {
+      "name": "type addition phyrexian",
+      "slug": "type-addition-phyrexian",
+      "taggingCount": 231
+    },
+    {
+      "name": "upkeep cost",
+      "slug": "upkeep-cost",
+      "taggingCount": 230
+    },
+    {
+      "name": "gives lifelink",
+      "slug": "gives-lifelink",
+      "taggingCount": 228
+    },
+    {
+      "name": "repeatable loot",
+      "slug": "repeatable-loot",
+      "taggingCount": 228
+    },
+    {
+      "name": "utility mana rock",
+      "slug": "utility-mana-rock",
+      "taggingCount": 227
+    },
+    {
+      "name": "removal-enchantment",
+      "slug": "removal-enchantment",
+      "taggingCount": 219
+    },
+    {
+      "name": "unnoted tracked information",
+      "slug": "unnoted-tracked-information",
+      "taggingCount": 219
+    },
+    {
+      "name": "landfall",
+      "slug": "landfall",
+      "taggingCount": 218
+    },
+    {
+      "name": "sweeper-one-sided",
+      "slug": "sweeper-one-sided",
+      "taggingCount": 216
+    },
+    {
+      "name": "repeatable pp counters",
+      "slug": "repeatable-pp-counters",
+      "taggingCount": 215
+    },
+    {
+      "name": "typal coupling",
+      "slug": "typal-coupling",
+      "taggingCount": 215
+    },
+    {
+      "name": "restricted mana",
+      "slug": "restricted-mana",
+      "taggingCount": 211
+    },
+    {
+      "name": "synergy-white",
+      "slug": "synergy-white",
+      "taggingCount": 210
+    },
+    {
+      "name": "removal-permanent",
+      "slug": "removal-permanent",
+      "taggingCount": 209
+    },
+    {
+      "name": "synergy-blocker-self",
+      "slug": "synergy-blocker-self",
+      "taggingCount": 209
+    },
+    {
+      "name": "temporary token",
+      "slug": "temporary-token",
+      "taggingCount": 209
+    },
+    {
+      "name": "dnd character",
+      "slug": "dnd-character",
+      "taggingCount": 208
+    },
+    {
+      "name": "deprecated legend type",
+      "slug": "deprecated-legend-type",
+      "taggingCount": 204
+    },
+    {
+      "name": "manaless value",
+      "slug": "manaless-value",
+      "taggingCount": 203
+    },
+    {
+      "name": "name matters",
+      "slug": "name-matters",
+      "taggingCount": 203
+    },
+    {
+      "name": "gives mm counters",
+      "slug": "gives-mm-counters",
+      "taggingCount": 201
+    },
+    {
+      "name": "discard with set's mechanic",
+      "slug": "discard-with-set-s-mechanic",
+      "taggingCount": 199
+    },
+    {
+      "name": "theft-cast",
+      "slug": "theft-cast",
+      "taggingCount": 196
+    },
+    {
+      "name": "activate from graveyard",
+      "slug": "activate-from-graveyard",
+      "taggingCount": 194
+    },
+    {
+      "name": "enlarge",
+      "slug": "enlarge",
+      "taggingCount": 194
+    },
+    {
+      "name": "selective group hug",
+      "slug": "selective-group-hug",
+      "taggingCount": 194
+    },
+    {
+      "name": "synergy-green",
+      "slug": "synergy-green",
+      "taggingCount": 194
+    },
+    {
+      "name": "unblockable",
+      "slug": "unblockable",
+      "taggingCount": 194
+    },
+    {
+      "name": "synergy-legendary",
+      "slug": "synergy-legendary",
+      "taggingCount": 193
+    },
+    {
+      "name": "discount-self",
+      "slug": "discount-self",
+      "taggingCount": 192
+    },
+    {
+      "name": "hand-negative",
+      "slug": "hand-negative",
+      "taggingCount": 192
+    },
+    {
+      "name": "mill-opponent",
+      "slug": "mill-opponent",
+      "taggingCount": 192
+    },
+    {
+      "name": "repeatable treasures",
+      "slug": "repeatable-treasures",
+      "taggingCount": 191
+    },
+    {
+      "name": "regrowth-self",
+      "slug": "regrowth-self",
+      "taggingCount": 190
+    },
+    {
+      "name": "combat ramp",
+      "slug": "combat-ramp",
+      "taggingCount": 189
+    },
+    {
+      "name": "front-card",
+      "slug": "front-card",
+      "taggingCount": 187
+    },
+    {
+      "name": "mill-any",
+      "slug": "mill-any",
+      "taggingCount": 187
+    },
+    {
+      "name": "cda-toughness",
+      "slug": "cda-toughness",
+      "taggingCount": 186
+    },
+    {
+      "name": "hate-artifact",
+      "slug": "hate-artifact",
+      "taggingCount": 186
+    },
+    {
+      "name": "synergy-commander",
+      "slug": "synergy-commander",
+      "taggingCount": 185
+    },
+    {
+      "name": "synergy-red",
+      "slug": "synergy-red",
+      "taggingCount": 183
+    },
+    {
+      "name": "donate token",
+      "slug": "donate-token",
+      "taggingCount": 182
+    },
+    {
+      "name": "synergy-black",
+      "slug": "synergy-black",
+      "taggingCount": 181
+    },
+    {
+      "name": "graveyard fuel-creature",
+      "slug": "graveyard-fuel-creature",
+      "taggingCount": 180
+    },
+    {
+      "name": "creature count matters",
+      "slug": "creature-count-matters",
+      "taggingCount": 179
+    },
+    {
+      "name": "gives deathtouch",
+      "slug": "gives-deathtouch",
+      "taggingCount": 179
+    },
+    {
+      "name": "graveyard fuel",
+      "slug": "graveyard-fuel",
+      "taggingCount": 179
+    },
+    {
+      "name": "paper-compatible",
+      "slug": "paper-compatible",
+      "taggingCount": 179
+    },
+    {
+      "name": "regenerates self",
+      "slug": "regenerates-self",
+      "taggingCount": 178
+    },
+    {
+      "name": "freeze-creature",
+      "slug": "freeze-creature",
+      "taggingCount": 177
+    },
+    {
+      "name": "group hug",
+      "slug": "group-hug",
+      "taggingCount": 177
+    },
+    {
+      "name": "gives pp counters to all",
+      "slug": "gives-pp-counters-to-all",
+      "taggingCount": 174
+    },
+    {
+      "name": "toll",
+      "slug": "toll",
+      "taggingCount": 174
+    },
+    {
+      "name": "gives menace",
+      "slug": "gives-menace",
+      "taggingCount": 173
+    },
+    {
+      "name": "free sacrifice outlet",
+      "slug": "free-sacrifice-outlet",
+      "taggingCount": 171
+    },
+    {
+      "name": "tutor-to-battlefield",
+      "slug": "tutor-to-battlefield",
+      "taggingCount": 171
+    },
+    {
+      "name": "repeatable artifact tokens",
+      "slug": "repeatable-artifact-tokens",
+      "taggingCount": 170
+    },
+    {
+      "name": "synergy-equipment",
+      "slug": "synergy-equipment",
+      "taggingCount": 170
+    },
+    {
+      "name": "untaps self",
+      "slug": "untaps-self",
+      "taggingCount": 170
+    },
+    {
+      "name": "cards in graveyard matter",
+      "slug": "cards-in-graveyard-matter",
+      "taggingCount": 165
+    },
+    {
+      "name": "jump",
+      "slug": "jump",
+      "taggingCount": 165
+    },
+    {
+      "name": "synergy-planeswalker",
+      "slug": "synergy-planeswalker",
+      "taggingCount": 165
+    },
+    {
+      "name": "counterspell with set mechanic",
+      "slug": "counterspell-with-set-mechanic",
+      "taggingCount": 164
+    },
+    {
+      "name": "force attacker",
+      "slug": "force-attacker",
+      "taggingCount": 164
+    },
+    {
+      "name": "lifegain matters",
+      "slug": "lifegain-matters",
+      "taggingCount": 164
+    },
+    {
+      "name": "synergy-blue",
+      "slug": "synergy-blue",
+      "taggingCount": 164
+    },
+    {
+      "name": "giant growth",
+      "slug": "giant-growth",
+      "taggingCount": 163
+    },
+    {
+      "name": "hate-high-pt",
+      "slug": "hate-high-pt",
+      "taggingCount": 163
+    },
+    {
+      "name": "repeatable impulse",
+      "slug": "repeatable-impulse",
+      "taggingCount": 162
+    },
+    {
+      "name": "non mana ability mana",
+      "slug": "non-mana-ability-mana",
+      "taggingCount": 161
+    },
+    {
+      "name": "type addition from none",
+      "slug": "type-addition-from-none",
+      "taggingCount": 161
+    },
+    {
+      "name": "bounce-self",
+      "slug": "bounce-self",
+      "taggingCount": 160
+    },
+    {
+      "name": "color change",
+      "slug": "color-change",
+      "taggingCount": 160
+    },
+    {
+      "name": "damage prevention-creature",
+      "slug": "damage-prevention-creature",
+      "taggingCount": 160
+    },
+    {
+      "name": "gains first strike",
+      "slug": "gains-first-strike",
+      "taggingCount": 159
+    },
+    {
+      "name": "leaves trigger-self",
+      "slug": "leaves-trigger-self",
+      "taggingCount": 159
+    },
+    {
+      "name": "damage prevention-you",
+      "slug": "damage-prevention-you",
+      "taggingCount": 158
+    },
+    {
+      "name": "mix-and-match",
+      "slug": "mix-and-match",
+      "taggingCount": 157
+    },
+    {
+      "name": "gives unblockable",
+      "slug": "gives-unblockable",
+      "taggingCount": 156
+    },
+    {
+      "name": "copy-instant",
+      "slug": "copy-instant",
+      "taggingCount": 155
+    },
+    {
+      "name": "synergy-enchantment",
+      "slug": "synergy-enchantment",
+      "taggingCount": 155
+    },
+    {
+      "name": "cost reducer",
+      "slug": "cost-reducer",
+      "taggingCount": 154
+    },
+    {
+      "name": "rhyming name",
+      "slug": "rhyming-name",
+      "taggingCount": 154
+    },
+    {
+      "name": "gives hexproof",
+      "slug": "gives-hexproof",
+      "taggingCount": 153
+    },
+    {
+      "name": "hate-black",
+      "slug": "hate-black",
+      "taggingCount": 153
+    },
+    {
+      "name": "hate-tapped",
+      "slug": "hate-tapped",
+      "taggingCount": 153
+    },
+    {
+      "name": "rescue-creature",
+      "slug": "rescue-creature",
+      "taggingCount": 152
+    },
+    {
+      "name": "repeatable impulsive draw",
+      "slug": "repeatable-impulsive-draw",
+      "taggingCount": 151
+    },
+    {
+      "name": "copy-sorcery",
+      "slug": "copy-sorcery",
+      "taggingCount": 150
+    },
+    {
+      "name": "aikido",
+      "slug": "aikido",
+      "taggingCount": 149
+    },
+    {
+      "name": "cast trigger",
+      "slug": "cast-trigger",
+      "taggingCount": 149
+    },
+    {
+      "name": "gives double strike",
+      "slug": "gives-double-strike",
+      "taggingCount": 149
+    },
+    {
+      "name": "impulse-creature",
+      "slug": "impulse-creature",
+      "taggingCount": 149
+    },
+    {
+      "name": "one-sided fight",
+      "slug": "one-sided-fight",
+      "taggingCount": 149
+    },
+    {
+      "name": "titan trigger",
+      "slug": "titan-trigger",
+      "taggingCount": 149
+    },
+    {
+      "name": "gains trample",
+      "slug": "gains-trample",
+      "taggingCount": 148
+    },
+    {
+      "name": "punisher",
+      "slug": "punisher",
+      "taggingCount": 148
+    },
+    {
+      "name": "removal-planeswalker",
+      "slug": "removal-planeswalker",
+      "taggingCount": 148
+    },
+    {
+      "name": "renew",
+      "slug": "renew",
+      "taggingCount": 147
+    },
+    {
+      "name": "cda-color",
+      "slug": "cda-color",
+      "taggingCount": 146
+    },
+    {
+      "name": "unique counter",
+      "slug": "unique-counter",
+      "taggingCount": 146
+    },
+    {
+      "name": "copy-spell",
+      "slug": "copy-spell",
+      "taggingCount": 145
+    },
+    {
+      "name": "reanimate-cast",
+      "slug": "reanimate-cast",
+      "taggingCount": 145
+    },
+    {
+      "name": "removal-tuck",
+      "slug": "removal-tuck",
+      "taggingCount": 144
+    },
+    {
+      "name": "lands matter",
+      "slug": "lands-matter",
+      "taggingCount": 143
+    },
+    {
+      "name": "prevent attack",
+      "slug": "prevent-attack",
+      "taggingCount": 143
+    },
+    {
+      "name": "synergy-artifact-creature",
+      "slug": "synergy-artifact-creature",
+      "taggingCount": 143
+    },
+    {
+      "name": "thoughtseize",
+      "slug": "thoughtseize",
+      "taggingCount": 142
+    },
+    {
+      "name": "uninspired",
+      "slug": "uninspired",
+      "taggingCount": 142
+    },
+    {
+      "name": "multiplayer",
+      "slug": "multiplayer",
+      "taggingCount": 141
+    },
+    {
+      "name": "hate-regenerate",
+      "slug": "hate-regenerate",
+      "taggingCount": 140
+    },
+    {
+      "name": "trigger from graveyard",
+      "slug": "trigger-from-graveyard",
+      "taggingCount": 140
+    },
+    {
+      "name": "typal-dragon",
+      "slug": "typal-dragon",
+      "taggingCount": 140
+    },
+    {
+      "name": "ditch hand",
+      "slug": "ditch-hand",
+      "taggingCount": 138
+    },
+    {
+      "name": "portmanteau",
+      "slug": "portmanteau",
+      "taggingCount": 138
+    },
+    {
+      "name": "toughness matters",
+      "slug": "toughness-matters",
+      "taggingCount": 138
+    },
+    {
+      "name": "counterspell-soft",
+      "slug": "counterspell-soft",
+      "taggingCount": 137
+    },
+    {
+      "name": "hate-flying",
+      "slug": "hate-flying",
+      "taggingCount": 137
+    },
+    {
+      "name": "removal-fight",
+      "slug": "removal-fight",
+      "taggingCount": 137
+    },
+    {
+      "name": "synergy-aura",
+      "slug": "synergy-aura",
+      "taggingCount": 137
+    },
+    {
+      "name": "life loss matters",
+      "slug": "life-loss-matters",
+      "taggingCount": 136
+    },
+    {
+      "name": "color break",
+      "slug": "color-break",
+      "taggingCount": 134
+    },
+    {
+      "name": "giant growth with set mechanic",
+      "slug": "giant-growth-with-set-mechanic",
+      "taggingCount": 134
+    },
+    {
+      "name": "gains indestructible",
+      "slug": "gains-indestructible",
+      "taggingCount": 133
+    },
+    {
+      "name": "burn player-each",
+      "slug": "burn-player-each",
+      "taggingCount": 132
+    },
+    {
+      "name": "gives tap ability",
+      "slug": "gives-tap-ability",
+      "taggingCount": 131
+    },
+    {
+      "name": "poisonous",
+      "slug": "poisonous",
+      "taggingCount": 131
+    },
+    {
+      "name": "typal-spirit",
+      "slug": "typal-spirit",
+      "taggingCount": 131
+    },
+    {
+      "name": "hate-red",
+      "slug": "hate-red",
+      "taggingCount": 130
+    },
+    {
+      "name": "hate-discard",
+      "slug": "hate-discard",
+      "taggingCount": 129
+    },
+    {
+      "name": "40k model",
+      "slug": "40k-model",
+      "taggingCount": 128
+    },
+    {
+      "name": "consult-cast",
+      "slug": "consult-cast",
+      "taggingCount": 128
+    },
+    {
+      "name": "counter fuel-aesthetic",
+      "slug": "counter-fuel-aesthetic",
+      "taggingCount": 128
+    },
+    {
+      "name": "humble",
+      "slug": "humble",
+      "taggingCount": 128
+    },
+    {
+      "name": "morbid",
+      "slug": "morbid",
+      "taggingCount": 128
+    },
+    {
+      "name": "rummage",
+      "slug": "rummage",
+      "taggingCount": 128
+    },
+    {
+      "name": "typal-elf",
+      "slug": "typal-elf",
+      "taggingCount": 128
+    },
+    {
+      "name": "unprinted token",
+      "slug": "unprinted-token",
+      "taggingCount": 128
+    },
+    {
+      "name": "flicker-creature",
+      "slug": "flicker-creature",
+      "taggingCount": 127
+    },
+    {
+      "name": "mana filter",
+      "slug": "mana-filter",
+      "taggingCount": 127
+    },
+    {
+      "name": "swap removal",
+      "slug": "swap-removal",
+      "taggingCount": 127
+    },
+    {
+      "name": "gives protection",
+      "slug": "gives-protection",
+      "taggingCount": 126
+    },
+    {
+      "name": "repeatable plunder",
+      "slug": "repeatable-plunder",
+      "taggingCount": 126
+    },
+    {
+      "name": "typal-zombie",
+      "slug": "typal-zombie",
+      "taggingCount": 125
+    },
+    {
+      "name": "counter fuel-energy",
+      "slug": "counter-fuel-energy",
+      "taggingCount": 124
+    },
+    {
+      "name": "energy generator",
+      "slug": "energy-generator",
+      "taggingCount": 124
+    },
+    {
+      "name": "heroic",
+      "slug": "heroic",
+      "taggingCount": 124
+    },
+    {
+      "name": "typal-goblin",
+      "slug": "typal-goblin",
+      "taggingCount": 124
+    },
+    {
+      "name": "typal-sliver",
+      "slug": "typal-sliver",
+      "taggingCount": 124
+    },
+    {
+      "name": "cast trigger-other",
+      "slug": "cast-trigger-other",
+      "taggingCount": 123
+    },
+    {
+      "name": "deanimate self",
+      "slug": "deanimate-self",
+      "taggingCount": 123
+    },
+    {
+      "name": "nightveil theft",
+      "slug": "nightveil-theft",
+      "taggingCount": 123
+    },
+    {
+      "name": "faux targeting",
+      "slug": "faux-targeting",
+      "taggingCount": 122
+    },
+    {
+      "name": "meme",
+      "slug": "meme",
+      "taggingCount": 122
+    },
+    {
+      "name": "tome",
+      "slug": "tome",
+      "taggingCount": 122
+    },
+    {
+      "name": "hate-counterspell",
+      "slug": "hate-counterspell",
+      "taggingCount": 121
+    },
+    {
+      "name": "synergy-vehicle",
+      "slug": "synergy-vehicle",
+      "taggingCount": 121
+    },
+    {
+      "name": "bombard-self",
+      "slug": "bombard-self",
+      "taggingCount": 120
+    },
+    {
+      "name": "hand size matters",
+      "slug": "hand-size-matters",
+      "taggingCount": 118
+    },
+    {
+      "name": "impulse-onto-battlefield",
+      "slug": "impulse-onto-battlefield",
+      "taggingCount": 118
+    },
+    {
+      "name": "tutored by name",
+      "slug": "tutored-by-name",
+      "taggingCount": 118
+    },
+    {
+      "name": "cost ignorer",
+      "slug": "cost-ignorer",
+      "taggingCount": 117
+    },
+    {
+      "name": "hate-white",
+      "slug": "hate-white",
+      "taggingCount": 117
+    },
+    {
+      "name": "synergy-forest",
+      "slug": "synergy-forest",
+      "taggingCount": 117
+    },
+    {
+      "name": "gives castable from graveyard",
+      "slug": "gives-castable-from-graveyard",
+      "taggingCount": 116
+    },
+    {
+      "name": "banish",
+      "slug": "banish",
+      "taggingCount": 114
+    },
+    {
+      "name": "mill-exile",
+      "slug": "mill-exile",
+      "taggingCount": 114
+    },
+    {
+      "name": "exponential",
+      "slug": "exponential",
+      "taggingCount": 113
+    },
+    {
+      "name": "restricted attacker",
+      "slug": "restricted-attacker",
+      "taggingCount": 113
+    },
+    {
+      "name": "rainbow land",
+      "slug": "rainbow-land",
+      "taggingCount": 112
+    },
+    {
+      "name": "exile on resolution",
+      "slug": "exile-on-resolution",
+      "taggingCount": 111
+    },
+    {
+      "name": "repeatable rummage",
+      "slug": "repeatable-rummage",
+      "taggingCount": 111
+    },
+    {
+      "name": "turn-face-up-trigger-self",
+      "slug": "turn-face-up-trigger-self",
+      "taggingCount": 111
+    },
+    {
+      "name": "convoke",
+      "slug": "convoke",
+      "taggingCount": 110
+    },
+    {
+      "name": "repeatable rescue",
+      "slug": "repeatable-rescue",
+      "taggingCount": 110
+    },
+    {
+      "name": "gives mana ability",
+      "slug": "gives-mana-ability",
+      "taggingCount": 109
+    },
+    {
+      "name": "mass land denial",
+      "slug": "mass-land-denial",
+      "taggingCount": 109
+    },
+    {
+      "name": "threshold",
+      "slug": "threshold",
+      "taggingCount": 109
+    },
+    {
+      "name": "tutor-card",
+      "slug": "tutor-card",
+      "taggingCount": 109
+    },
+    {
+      "name": "undergrowth",
+      "slug": "undergrowth",
+      "taggingCount": 109
+    },
+    {
+      "name": "mulch",
+      "slug": "mulch",
+      "taggingCount": 108
+    },
+    {
+      "name": "synergy-token-creature",
+      "slug": "synergy-token-creature",
+      "taggingCount": 108
+    },
+    {
+      "name": "animate land",
+      "slug": "animate-land",
+      "taggingCount": 107
+    },
+    {
+      "name": "ferocious",
+      "slug": "ferocious",
+      "taggingCount": 107
+    },
+    {
+      "name": "mana rock",
+      "slug": "mana-rock",
+      "taggingCount": 107
+    },
+    {
+      "name": "combat-neutral damage trigger",
+      "slug": "combat-neutral-damage-trigger",
+      "taggingCount": 106
+    },
+    {
+      "name": "flowstone",
+      "slug": "flowstone",
+      "taggingCount": 106
+    },
+    {
+      "name": "mana rock with set's mechanic",
+      "slug": "mana-rock-with-set-s-mechanic",
+      "taggingCount": 106
+    },
+    {
+      "name": "nonbasic-basic-land-type",
+      "slug": "nonbasic-basic-land-type",
+      "taggingCount": 106
+    },
+    {
+      "name": "lockdown-creature",
+      "slug": "lockdown-creature",
+      "taggingCount": 105
+    },
+    {
+      "name": "loot",
+      "slug": "loot",
+      "taggingCount": 105
+    },
+    {
+      "name": "opponent chooses",
+      "slug": "opponent-chooses",
+      "taggingCount": 105
+    },
+    {
+      "name": "universal type change",
+      "slug": "universal-type-change",
+      "taggingCount": 105
+    },
+    {
+      "name": "card types in graveyard matter",
+      "slug": "card-types-in-graveyard-matter",
+      "taggingCount": 104
+    },
+    {
+      "name": "extra untap",
+      "slug": "extra-untap",
+      "taggingCount": 104
+    },
+    {
+      "name": "synergy-flying",
+      "slug": "synergy-flying",
+      "taggingCount": 104
+    },
+    {
+      "name": "damage prevention-self",
+      "slug": "damage-prevention-self",
+      "taggingCount": 103
+    },
+    {
+      "name": "shrink",
+      "slug": "shrink",
+      "taggingCount": 103
+    },
+    {
+      "name": "synergy-token",
+      "slug": "synergy-token",
+      "taggingCount": 103
+    },
+    {
+      "name": "typal-human",
+      "slug": "typal-human",
+      "taggingCount": 103
+    },
+    {
+      "name": "gains lifelink",
+      "slug": "gains-lifelink",
+      "taggingCount": 102
+    },
+    {
+      "name": "roll d6",
+      "slug": "roll-d6",
+      "taggingCount": 102
+    },
+    {
+      "name": "card advantage",
+      "slug": "card-advantage",
+      "taggingCount": 101
+    },
+    {
+      "name": "impulse-land",
+      "slug": "impulse-land",
+      "taggingCount": 101
+    },
+    {
+      "name": "mana producer",
+      "slug": "mana-producer",
+      "taggingCount": 101
+    },
+    {
+      "name": "synergy-blocker",
+      "slug": "synergy-blocker",
+      "taggingCount": 101
+    },
+    {
+      "name": "synergy-sacrifice",
+      "slug": "synergy-sacrifice",
+      "taggingCount": 101
+    },
+    {
+      "name": "commander set booster cards",
+      "slug": "commander-set-booster-cards",
+      "taggingCount": 100
+    },
+    {
+      "name": "flicker-slow",
+      "slug": "flicker-slow",
+      "taggingCount": 100
+    },
+    {
+      "name": "type errata summon creature",
+      "slug": "type-errata-summon-creature",
+      "taggingCount": 100
+    },
+    {
+      "name": "cheat death-self",
+      "slug": "cheat-death-self",
+      "taggingCount": 99
+    },
+    {
+      "name": "counter fuel-pp",
+      "slug": "counter-fuel-pp",
+      "taggingCount": 99
+    },
+    {
+      "name": "draw matters",
+      "slug": "draw-matters",
+      "taggingCount": 99
+    },
+    {
+      "name": "quick equip",
+      "slug": "quick-equip",
+      "taggingCount": 99
+    },
+    {
+      "name": "regenerates other",
+      "slug": "regenerates-other",
+      "taggingCount": 99
+    },
+    {
+      "name": "tutor-creature",
+      "slug": "tutor-creature",
+      "taggingCount": 99
+    },
+    {
+      "name": "untapper-land",
+      "slug": "untapper-land",
+      "taggingCount": 99
+    },
+    {
+      "name": "minigame",
+      "slug": "minigame",
+      "taggingCount": 98
+    },
+    {
+      "name": "dnd monster",
+      "slug": "dnd-monster",
+      "taggingCount": 97
+    },
+    {
+      "name": "amount spent matters",
+      "slug": "amount-spent-matters",
+      "taggingCount": 96
+    },
+    {
+      "name": "multiple race types",
+      "slug": "multiple-race-types",
+      "taggingCount": 96
+    },
+    {
+      "name": "strive",
+      "slug": "strive",
+      "taggingCount": 96
+    },
+    {
+      "name": "temporary reanimation",
+      "slug": "temporary-reanimation",
+      "taggingCount": 96
+    },
+    {
+      "name": "conjure-to-hand",
+      "slug": "conjure-to-hand",
+      "taggingCount": 95
+    },
+    {
+      "name": "full refund",
+      "slug": "full-refund",
+      "taggingCount": 95
+    },
+    {
+      "name": "gains vigilance",
+      "slug": "gains-vigilance",
+      "taggingCount": 95
+    },
+    {
+      "name": "hate-color-choose",
+      "slug": "hate-color-choose",
+      "taggingCount": 95
+    },
+    {
+      "name": "hate-blue",
+      "slug": "hate-blue",
+      "taggingCount": 94
+    },
+    {
+      "name": "pacifism",
+      "slug": "pacifism",
+      "taggingCount": 94
+    },
+    {
+      "name": "reanimate-from-any",
+      "slug": "reanimate-from-any",
+      "taggingCount": 94
+    },
+    {
+      "name": "synergy-swamp",
+      "slug": "synergy-swamp",
+      "taggingCount": 94
+    },
+    {
+      "name": "cheat death",
+      "slug": "cheat-death",
+      "taggingCount": 93
+    },
+    {
+      "name": "counterspell",
+      "slug": "counterspell",
+      "taggingCount": 93
+    },
+    {
+      "name": "gives reach",
+      "slug": "gives-reach",
+      "taggingCount": 93
+    },
+    {
+      "name": "passive ability",
+      "slug": "passive-ability",
+      "taggingCount": 93
+    },
+    {
+      "name": "catch up",
+      "slug": "catch-up",
+      "taggingCount": 92
+    },
+    {
+      "name": "conjure-named",
+      "slug": "conjure-named",
+      "taggingCount": 92
+    },
+    {
+      "name": "hate-instant",
+      "slug": "hate-instant",
+      "taggingCount": 92
+    },
+    {
+      "name": "hate-green",
+      "slug": "hate-green",
+      "taggingCount": 91
+    },
+    {
+      "name": "coin flip",
+      "slug": "coin-flip",
+      "taggingCount": 90
+    },
+    {
+      "name": "eponymous",
+      "slug": "eponymous",
+      "taggingCount": 90
+    },
+    {
+      "name": "exile-self-dfc-transform",
+      "slug": "exile-self-dfc-transform",
+      "taggingCount": 90
+    },
+    {
+      "name": "sneak-creature",
+      "slug": "sneak-creature",
+      "taggingCount": 90
+    },
+    {
+      "name": "typal-choose",
+      "slug": "typal-choose",
+      "taggingCount": 90
+    },
+    {
+      "name": "bombard",
+      "slug": "bombard",
+      "taggingCount": 89
+    },
+    {
+      "name": "synergy-mountain",
+      "slug": "synergy-mountain",
+      "taggingCount": 89
+    },
+    {
+      "name": "color change-self",
+      "slug": "color-change-self",
+      "taggingCount": 88
+    },
+    {
+      "name": "conjure-creature",
+      "slug": "conjure-creature",
+      "taggingCount": 88
+    },
+    {
+      "name": "artifactfall",
+      "slug": "artifactfall",
+      "taggingCount": 87
+    },
+    {
+      "name": "haven",
+      "slug": "haven",
+      "taggingCount": 87
+    },
+    {
+      "name": "impulsive draw",
+      "slug": "impulsive-draw",
+      "taggingCount": 87
+    },
+    {
+      "name": "repeatable clues",
+      "slug": "repeatable-clues",
+      "taggingCount": 86
+    },
+    {
+      "name": "repeated keyword",
+      "slug": "repeated-keyword",
+      "taggingCount": 86
+    },
+    {
+      "name": "typal-vampire",
+      "slug": "typal-vampire",
+      "taggingCount": 86
+    },
+    {
+      "name": "gains deathtouch",
+      "slug": "gains-deathtouch",
+      "taggingCount": 85
+    },
+    {
+      "name": "mixed subtypes",
+      "slug": "mixed-subtypes",
+      "taggingCount": 85
+    },
+    {
+      "name": "self-discard matters",
+      "slug": "self-discard-matters",
+      "taggingCount": 85
+    },
+    {
+      "name": "synergy-mill",
+      "slug": "synergy-mill",
+      "taggingCount": 85
+    },
+    {
+      "name": "gains menace",
+      "slug": "gains-menace",
+      "taggingCount": 84
+    },
+    {
+      "name": "offcolor additional cost",
+      "slug": "offcolor-additional-cost",
+      "taggingCount": 84
+    },
+    {
+      "name": "synergy-food",
+      "slug": "synergy-food",
+      "taggingCount": 84
+    },
+    {
+      "name": "typal-ally",
+      "slug": "typal-ally",
+      "taggingCount": 84
+    },
+    {
+      "name": "alternate win condition",
+      "slug": "alternate-win-condition",
+      "taggingCount": 83
+    },
+    {
+      "name": "personal-text",
+      "slug": "personal-text",
+      "taggingCount": 83
+    },
+    {
+      "name": "trigger from exile",
+      "slug": "trigger-from-exile",
+      "taggingCount": 83
+    },
+    {
+      "name": "hate-nonbasic-land",
+      "slug": "hate-nonbasic-land",
+      "taggingCount": 82
+    },
+    {
+      "name": "seek-to-hand",
+      "slug": "seek-to-hand",
+      "taggingCount": 82
+    },
+    {
+      "name": "synergy-island",
+      "slug": "synergy-island",
+      "taggingCount": 82
+    },
+    {
+      "name": "tapland with set's mechanic",
+      "slug": "tapland-with-set-s-mechanic",
+      "taggingCount": 82
+    },
+    {
+      "name": "un type line",
+      "slug": "un-type-line",
+      "taggingCount": 82
+    },
+    {
+      "name": "sweeper-graveyard",
+      "slug": "sweeper-graveyard",
+      "taggingCount": 81
+    },
+    {
+      "name": "synergy-arcane",
+      "slug": "synergy-arcane",
+      "taggingCount": 81
+    },
+    {
+      "name": "typal-merfolk",
+      "slug": "typal-merfolk",
+      "taggingCount": 81
+    },
+    {
+      "name": "weaker in singleton formats",
+      "slug": "weaker-in-singleton-formats",
+      "taggingCount": 81
+    },
+    {
+      "name": "land conversion",
+      "slug": "land-conversion",
+      "taggingCount": 80
+    },
+    {
+      "name": "living weapon",
+      "slug": "living-weapon",
+      "taggingCount": 80
+    },
+    {
+      "name": "restricted blocker",
+      "slug": "restricted-blocker",
+      "taggingCount": 80
+    },
+    {
+      "name": "tutors by name",
+      "slug": "tutors-by-name",
+      "taggingCount": 80
+    },
+    {
+      "name": "hate-sorcery",
+      "slug": "hate-sorcery",
+      "taggingCount": 79
+    },
+    {
+      "name": "threaten",
+      "slug": "threaten",
+      "taggingCount": 79
+    },
+    {
+      "name": "tutor-mv",
+      "slug": "tutor-mv",
+      "taggingCount": 79
+    },
+    {
+      "name": "leaves body behind",
+      "slug": "leaves-body-behind",
+      "taggingCount": 77
+    },
+    {
+      "name": "notorious templating",
+      "slug": "notorious-templating",
+      "taggingCount": 77
+    },
+    {
+      "name": "typal-share",
+      "slug": "typal-share",
+      "taggingCount": 77
+    },
+    {
+      "name": "type errata hound",
+      "slug": "type-errata-hound",
+      "taggingCount": 77
+    },
+    {
+      "name": "counterspell-reusable",
+      "slug": "counterspell-reusable",
+      "taggingCount": 76
+    },
+    {
+      "name": "man-o'-war",
+      "slug": "man-o-war",
+      "taggingCount": 76
+    },
+    {
+      "name": "overrun",
+      "slug": "overrun",
+      "taggingCount": 76
+    },
+    {
+      "name": "typal-wizard",
+      "slug": "typal-wizard",
+      "taggingCount": 76
+    },
+    {
+      "name": "untapper-permanent",
+      "slug": "untapper-permanent",
+      "taggingCount": 76
+    },
+    {
+      "name": "forced attacker",
+      "slug": "forced-attacker",
+      "taggingCount": 75
+    },
+    {
+      "name": "homeward effect",
+      "slug": "homeward-effect",
+      "taggingCount": 75
+    },
+    {
+      "name": "maro-sorcerer",
+      "slug": "maro-sorcerer",
+      "taggingCount": 75
+    },
+    {
+      "name": "quadratic",
+      "slug": "quadratic",
+      "taggingCount": 75
+    },
+    {
+      "name": "donate",
+      "slug": "donate",
+      "taggingCount": 74
+    },
+    {
+      "name": "lhurgoyf",
+      "slug": "lhurgoyf",
+      "taggingCount": 74
+    },
+    {
+      "name": "curiosity-like",
+      "slug": "curiosity-like",
+      "taggingCount": 73
+    },
+    {
+      "name": "enchantmentfall",
+      "slug": "enchantmentfall",
+      "taggingCount": 73
+    },
+    {
+      "name": "hellbending",
+      "slug": "hellbending",
+      "taggingCount": 73
+    },
+    {
+      "name": "synergy-multicolor",
+      "slug": "synergy-multicolor",
+      "taggingCount": 73
+    },
+    {
+      "name": "animate artifact",
+      "slug": "animate-artifact",
+      "taggingCount": 72
+    },
+    {
+      "name": "clone",
+      "slug": "clone",
+      "taggingCount": 72
+    },
+    {
+      "name": "discard to exile",
+      "slug": "discard-to-exile",
+      "taggingCount": 72
+    },
+    {
+      "name": "drain creature",
+      "slug": "drain-creature",
+      "taggingCount": 72
+    },
+    {
+      "name": "leaves battlefield trigger",
+      "slug": "leaves-battlefield-trigger",
+      "taggingCount": 72
+    },
+    {
+      "name": "life-total-matters-self",
+      "slug": "life-total-matters-self",
+      "taggingCount": 72
+    },
+    {
+      "name": "named token",
+      "slug": "named-token",
+      "taggingCount": 72
+    },
+    {
+      "name": "ramp with set's mechanic",
+      "slug": "ramp-with-set-s-mechanic",
+      "taggingCount": 72
+    },
+    {
+      "name": "scales with power",
+      "slug": "scales-with-power",
+      "taggingCount": 72
+    },
+    {
+      "name": "turns off defender-self",
+      "slug": "turns-off-defender-self",
+      "taggingCount": 72
+    },
+    {
+      "name": "cost increaser",
+      "slug": "cost-increaser",
+      "taggingCount": 71
+    },
+    {
+      "name": "enrage",
+      "slug": "enrage",
+      "taggingCount": 71
+    },
+    {
+      "name": "phasing",
+      "slug": "phasing",
+      "taggingCount": 71
+    },
+    {
+      "name": "regrowth-sorcery",
+      "slug": "regrowth-sorcery",
+      "taggingCount": 71
+    },
+    {
+      "name": "sneak-land",
+      "slug": "sneak-land",
+      "taggingCount": 71
+    },
+    {
+      "name": "conjure-duplicate",
+      "slug": "conjure-duplicate",
+      "taggingCount": 70
+    },
+    {
+      "name": "creates token of a card",
+      "slug": "creates-token-of-a-card",
+      "taggingCount": 70
+    },
+    {
+      "name": "regrowth-instant",
+      "slug": "regrowth-instant",
+      "taggingCount": 70
+    },
+    {
+      "name": "second spell matters",
+      "slug": "second-spell-matters",
+      "taggingCount": 70
+    },
+    {
+      "name": "unique cr reference",
+      "slug": "unique-cr-reference",
+      "taggingCount": 70
+    },
+    {
+      "name": "warlord",
+      "slug": "warlord",
+      "taggingCount": 70
+    },
+    {
+      "name": "plunder",
+      "slug": "plunder",
+      "taggingCount": 69
+    },
+    {
+      "name": "type errata name self",
+      "slug": "type-errata-name-self",
+      "taggingCount": 69
+    },
+    {
+      "name": "werewolf mechanic",
+      "slug": "werewolf-mechanic",
+      "taggingCount": 69
+    },
+    {
+      "name": "color spent matters",
+      "slug": "color-spent-matters",
+      "taggingCount": 68
+    },
+    {
+      "name": "french vanilla walker",
+      "slug": "french-vanilla-walker",
+      "taggingCount": 68
+    },
+    {
+      "name": "reanimate-artifact",
+      "slug": "reanimate-artifact",
+      "taggingCount": 68
+    },
+    {
+      "name": "scales with multiple",
+      "slug": "scales-with-multiple",
+      "taggingCount": 68
+    },
+    {
+      "name": "synergy-low-power",
+      "slug": "synergy-low-power",
+      "taggingCount": 68
+    },
+    {
+      "name": "dexterity",
+      "slug": "dexterity",
+      "taggingCount": 67
+    },
+    {
+      "name": "move counters",
+      "slug": "move-counters",
+      "taggingCount": 67
+    },
+    {
+      "name": "tapper-artifact",
+      "slug": "tapper-artifact",
+      "taggingCount": 67
+    },
+    {
+      "name": "defector",
+      "slug": "defector",
+      "taggingCount": 66
+    },
+    {
+      "name": "inverted effects",
+      "slug": "inverted-effects",
+      "taggingCount": 66
+    },
+    {
+      "name": "prevent activation",
+      "slug": "prevent-activation",
+      "taggingCount": 66
+    },
+    {
+      "name": "rescue-land",
+      "slug": "rescue-land",
+      "taggingCount": 66
+    },
+    {
+      "name": "state trigger",
+      "slug": "state-trigger",
+      "taggingCount": 66
+    },
+    {
+      "name": "copy-artifact",
+      "slug": "copy-artifact",
+      "taggingCount": 65
+    },
+    {
+      "name": "gives ward",
+      "slug": "gives-ward",
+      "taggingCount": 65
+    },
+    {
+      "name": "impulse",
+      "slug": "impulse",
+      "taggingCount": 65
+    },
+    {
+      "name": "pseudo-fog",
+      "slug": "pseudo-fog",
+      "taggingCount": 65
+    },
+    {
+      "name": "restock-to-top",
+      "slug": "restock-to-top",
+      "taggingCount": 65
+    },
+    {
+      "name": "consult-onto-battlefield",
+      "slug": "consult-onto-battlefield",
+      "taggingCount": 64
+    },
+    {
+      "name": "extra turn",
+      "slug": "extra-turn",
+      "taggingCount": 64
+    },
+    {
+      "name": "set life total",
+      "slug": "set-life-total",
+      "taggingCount": 64
+    },
+    {
+      "name": "counter fuel-charge",
+      "slug": "counter-fuel-charge",
+      "taggingCount": 63
+    },
+    {
+      "name": "exhaust",
+      "slug": "exhaust",
+      "taggingCount": 63
+    },
+    {
+      "name": "madness",
+      "slug": "madness",
+      "taggingCount": 63
+    },
+    {
+      "name": "mana ability with extra effect",
+      "slug": "mana-ability-with-extra-effect",
+      "taggingCount": 63
+    },
+    {
+      "name": "synergy-colorless",
+      "slug": "synergy-colorless",
+      "taggingCount": 63
+    },
+    {
+      "name": "usg-storyline-in-cards",
+      "slug": "usg-storyline-in-cards",
+      "taggingCount": 63
+    },
+    {
+      "name": "hate full hand",
+      "slug": "hate-full-hand",
+      "taggingCount": 62
+    },
+    {
+      "name": "reanimate-land",
+      "slug": "reanimate-land",
+      "taggingCount": 62
+    },
+    {
+      "name": "reanimate-permanent",
+      "slug": "reanimate-permanent",
+      "taggingCount": 62
+    },
+    {
+      "name": "sacrifice outlet-enchantment",
+      "slug": "sacrifice-outlet-enchantment",
+      "taggingCount": 62
+    },
+    {
+      "name": "tap fuel-artifact",
+      "slug": "tap-fuel-artifact",
+      "taggingCount": 62
+    },
+    {
+      "name": "twiddle",
+      "slug": "twiddle",
+      "taggingCount": 62
+    },
+    {
+      "name": "vanity card",
+      "slug": "vanity-card",
+      "taggingCount": 62
+    },
+    {
+      "name": "dnd item",
+      "slug": "dnd-item",
+      "taggingCount": 61
+    },
+    {
+      "name": "gains hexproof",
+      "slug": "gains-hexproof",
+      "taggingCount": 61
+    },
+    {
+      "name": "gives flash",
+      "slug": "gives-flash",
+      "taggingCount": 61
+    },
+    {
+      "name": "mana increaser",
+      "slug": "mana-increaser",
+      "taggingCount": 61
+    },
+    {
+      "name": "specter ability",
+      "slug": "specter-ability",
+      "taggingCount": 61
+    },
+    {
+      "name": "typal-dinosaur",
+      "slug": "typal-dinosaur",
+      "taggingCount": 61
+    },
+    {
+      "name": "disintegrate",
+      "slug": "disintegrate",
+      "taggingCount": 60
+    },
+    {
+      "name": "doom blade",
+      "slug": "doom-blade",
+      "taggingCount": 60
+    },
+    {
+      "name": "gains double strike",
+      "slug": "gains-double-strike",
+      "taggingCount": 60
+    },
+    {
+      "name": "keyword errata flash",
+      "slug": "keyword-errata-flash",
+      "taggingCount": 60
+    },
+    {
+      "name": "mill-each",
+      "slug": "mill-each",
+      "taggingCount": 60
+    },
+    {
+      "name": "real life animal name",
+      "slug": "real-life-animal-name",
+      "taggingCount": 60
+    },
+    {
+      "name": "regrowth-artifact",
+      "slug": "regrowth-artifact",
+      "taggingCount": 60
+    },
+    {
+      "name": "regrowth-permanent",
+      "slug": "regrowth-permanent",
+      "taggingCount": 60
+    },
+    {
+      "name": "restock-self",
+      "slug": "restock-self",
+      "taggingCount": 60
+    },
+    {
+      "name": "shapesharing",
+      "slug": "shapesharing",
+      "taggingCount": 60
+    },
+    {
+      "name": "speech matters",
+      "slug": "speech-matters",
+      "taggingCount": 60
+    },
+    {
+      "name": "synergy-activated-ability",
+      "slug": "synergy-activated-ability",
+      "taggingCount": 60
+    },
+    {
+      "name": "synergy-basic",
+      "slug": "synergy-basic",
+      "taggingCount": 60
+    },
+    {
+      "name": "tmp-storyline-in-cards",
+      "slug": "tmp-storyline-in-cards",
+      "taggingCount": 60
+    },
+    {
+      "name": "typal-army",
+      "slug": "typal-army",
+      "taggingCount": 60
+    },
+    {
+      "name": "artifactify",
+      "slug": "artifactify",
+      "taggingCount": 59
+    },
+    {
+      "name": "counter doubler",
+      "slug": "counter-doubler",
+      "taggingCount": 59
+    },
+    {
+      "name": "delayed cantrip",
+      "slug": "delayed-cantrip",
+      "taggingCount": 59
+    },
+    {
+      "name": "free discard outlet",
+      "slug": "free-discard-outlet",
+      "taggingCount": 59
+    },
+    {
+      "name": "synergy-plains",
+      "slug": "synergy-plains",
+      "taggingCount": 59
+    },
+    {
+      "name": "synergy-snow",
+      "slug": "synergy-snow",
+      "taggingCount": 59
+    },
+    {
+      "name": "tapland",
+      "slug": "tapland",
+      "taggingCount": 59
+    },
+    {
+      "name": "tuck-self",
+      "slug": "tuck-self",
+      "taggingCount": 59
+    },
+    {
+      "name": "unique keyword",
+      "slug": "unique-keyword",
+      "taggingCount": 59
+    },
+    {
+      "name": "class type only",
+      "slug": "class-type-only",
+      "taggingCount": 58
+    },
+    {
+      "name": "discarded type matters",
+      "slug": "discarded-type-matters",
+      "taggingCount": 58
+    },
+    {
+      "name": "draw hate",
+      "slug": "draw-hate",
+      "taggingCount": 58
+    },
+    {
+      "name": "mana fix",
+      "slug": "mana-fix",
+      "taggingCount": 58
+    },
+    {
+      "name": "multi character card",
+      "slug": "multi-character-card",
+      "taggingCount": 58
+    },
+    {
+      "name": "power doubler",
+      "slug": "power-doubler",
+      "taggingCount": 58
+    },
+    {
+      "name": "type errata viashino",
+      "slug": "type-errata-viashino",
+      "taggingCount": 58
+    },
+    {
+      "name": "wish",
+      "slug": "wish",
+      "taggingCount": 58
+    },
+    {
+      "name": "creature-ability-noncreature",
+      "slug": "creature-ability-noncreature",
+      "taggingCount": 57
+    },
+    {
+      "name": "dnd mechanic",
+      "slug": "dnd-mechanic",
+      "taggingCount": 57
+    },
+    {
+      "name": "fog-selective",
+      "slug": "fog-selective",
+      "taggingCount": 57
+    },
+    {
+      "name": "hatebear",
+      "slug": "hatebear",
+      "taggingCount": 57
+    },
+    {
+      "name": "hate-planeswalker",
+      "slug": "hate-planeswalker",
+      "taggingCount": 57
+    },
+    {
+      "name": "hate-target",
+      "slug": "hate-target",
+      "taggingCount": 57
+    },
+    {
+      "name": "synergy-color-each",
+      "slug": "synergy-color-each",
+      "taggingCount": 57
+    },
+    {
+      "name": "auto equip",
+      "slug": "auto-equip",
+      "taggingCount": 56
+    },
+    {
+      "name": "opponent lifegain",
+      "slug": "opponent-lifegain",
+      "taggingCount": 56
+    },
+    {
+      "name": "sacrifice outlet-permanent",
+      "slug": "sacrifice-outlet-permanent",
+      "taggingCount": 56
+    },
+    {
+      "name": "splits on death",
+      "slug": "splits-on-death",
+      "taggingCount": 56
+    },
+    {
+      "name": "typal-warrior",
+      "slug": "typal-warrior",
+      "taggingCount": 56
+    },
+    {
+      "name": "copy-token",
+      "slug": "copy-token",
+      "taggingCount": 55
+    },
+    {
+      "name": "mass reanimation",
+      "slug": "mass-reanimation",
+      "taggingCount": 55
+    },
+    {
+      "name": "prevent cast",
+      "slug": "prevent-cast",
+      "taggingCount": 55
+    },
+    {
+      "name": "repeatable food",
+      "slug": "repeatable-food",
+      "taggingCount": 55
+    },
+    {
+      "name": "synergy-burn",
+      "slug": "synergy-burn",
+      "taggingCount": 55
+    },
+    {
+      "name": "tapper-land",
+      "slug": "tapper-land",
+      "taggingCount": 55
+    },
+    {
+      "name": "hellbent",
+      "slug": "hellbent",
+      "taggingCount": 54
+    },
+    {
+      "name": "regrowth-any",
+      "slug": "regrowth-any",
+      "taggingCount": 54
+    },
+    {
+      "name": "second draw matters",
+      "slug": "second-draw-matters",
+      "taggingCount": 54
+    },
+    {
+      "name": "support",
+      "slug": "support",
+      "taggingCount": 54
+    },
+    {
+      "name": "theft-artifact",
+      "slug": "theft-artifact",
+      "taggingCount": 54
+    },
+    {
+      "name": "day/night",
+      "slug": "day-night",
+      "taggingCount": 53
+    },
+    {
+      "name": "discard outlet-land",
+      "slug": "discard-outlet-land",
+      "taggingCount": 53
+    },
+    {
+      "name": "extra combat phase",
+      "slug": "extra-combat-phase",
+      "taggingCount": 53
+    },
+    {
+      "name": "roll d20",
+      "slug": "roll-d20",
+      "taggingCount": 53
+    },
+    {
+      "name": "changeling",
+      "slug": "changeling",
+      "taggingCount": 52
+    },
+    {
+      "name": "earthquake",
+      "slug": "earthquake",
+      "taggingCount": 52
+    },
+    {
+      "name": "graveyard seal",
+      "slug": "graveyard-seal",
+      "taggingCount": 52
+    },
+    {
+      "name": "hand size increase",
+      "slug": "hand-size-increase",
+      "taggingCount": 52
+    },
+    {
+      "name": "interrupt",
+      "slug": "interrupt",
+      "taggingCount": 52
+    },
+    {
+      "name": "mana storage",
+      "slug": "mana-storage",
+      "taggingCount": 52
+    },
+    {
+      "name": "ritual",
+      "slug": "ritual",
+      "taggingCount": 52
+    },
+    {
+      "name": "tutor-to-top",
+      "slug": "tutor-to-top",
+      "taggingCount": 52
+    },
+    {
+      "name": "conjure-to-battlefield",
+      "slug": "conjure-to-battlefield",
+      "taggingCount": 51
+    },
+    {
+      "name": "counterspell-ability",
+      "slug": "counterspell-ability",
+      "taggingCount": 51
+    },
+    {
+      "name": "damage multiplier",
+      "slug": "damage-multiplier",
+      "taggingCount": 51
+    },
+    {
+      "name": "damage redirection",
+      "slug": "damage-redirection",
+      "taggingCount": 51
+    },
+    {
+      "name": "precognition engine",
+      "slug": "precognition-engine",
+      "taggingCount": 51
+    },
+    {
+      "name": "repeatable mulch",
+      "slug": "repeatable-mulch",
+      "taggingCount": 51
+    },
+    {
+      "name": "rules nightmare",
+      "slug": "rules-nightmare",
+      "taggingCount": 51
+    },
+    {
+      "name": "tapper-permanent",
+      "slug": "tapper-permanent",
+      "taggingCount": 51
+    },
+    {
+      "name": "typal-soldier",
+      "slug": "typal-soldier",
+      "taggingCount": 51
+    },
+    {
+      "name": "counterspell-creature",
+      "slug": "counterspell-creature",
+      "taggingCount": 50
+    },
+    {
+      "name": "french vanilla equipment",
+      "slug": "french-vanilla-equipment",
+      "taggingCount": 50
+    },
+    {
+      "name": "gains mm counters",
+      "slug": "gains-mm-counters",
+      "taggingCount": 50
+    },
+    {
+      "name": "hate-enchantment",
+      "slug": "hate-enchantment",
+      "taggingCount": 50
+    },
+    {
+      "name": "reanimate copy",
+      "slug": "reanimate-copy",
+      "taggingCount": 50
+    },
+    {
+      "name": "synergy-treasure",
+      "slug": "synergy-treasure",
+      "taggingCount": 50
+    },
+    {
+      "name": "unique evasion",
+      "slug": "unique-evasion",
+      "taggingCount": 50
+    },
+    {
+      "name": "catalog",
+      "slug": "catalog",
+      "taggingCount": 49
+    },
+    {
+      "name": "division",
+      "slug": "division",
+      "taggingCount": 49
+    },
+    {
+      "name": "gains flash",
+      "slug": "gains-flash",
+      "taggingCount": 49
+    },
+    {
+      "name": "gives shroud",
+      "slug": "gives-shroud",
+      "taggingCount": 49
+    },
+    {
+      "name": "hate-low-power",
+      "slug": "hate-low-power",
+      "taggingCount": 49
+    },
+    {
+      "name": "synergy-tapped",
+      "slug": "synergy-tapped",
+      "taggingCount": 49
+    },
+    {
+      "name": "the ring tempts you",
+      "slug": "the-ring-tempts-you",
+      "taggingCount": 49
+    },
+    {
+      "name": "threaten with set's mechanic",
+      "slug": "threaten-with-set-s-mechanic",
+      "taggingCount": 49
+    },
+    {
+      "name": "tutor-land-forest",
+      "slug": "tutor-land-forest",
+      "taggingCount": 49
+    },
+    {
+      "name": "typal-knight",
+      "slug": "typal-knight",
+      "taggingCount": 49
+    },
+    {
+      "name": "unheroic",
+      "slug": "unheroic",
+      "taggingCount": 49
+    },
+    {
+      "name": "unique creature type",
+      "slug": "unique-creature-type",
+      "taggingCount": 49
+    },
+    {
+      "name": "copy-ability",
+      "slug": "copy-ability",
+      "taggingCount": 48
+    },
+    {
+      "name": "cost-reducer-creature",
+      "slug": "cost-reducer-creature",
+      "taggingCount": 48
+    },
+    {
+      "name": "counter fuel-other",
+      "slug": "counter-fuel-other",
+      "taggingCount": 48
+    },
+    {
+      "name": "enchantmentize",
+      "slug": "enchantmentize",
+      "taggingCount": 48
+    },
+    {
+      "name": "legendary team-up",
+      "slug": "legendary-team-up",
+      "taggingCount": 48
+    },
+    {
+      "name": "lure-limited",
+      "slug": "lure-limited",
+      "taggingCount": 48
+    },
+    {
+      "name": "raid",
+      "slug": "raid",
+      "taggingCount": 48
+    },
+    {
+      "name": "synergy-color-share",
+      "slug": "synergy-color-share",
+      "taggingCount": 48
+    },
+    {
+      "name": "trumpet blast",
+      "slug": "trumpet-blast",
+      "taggingCount": 48
+    },
+    {
+      "name": "typal-pirate",
+      "slug": "typal-pirate",
+      "taggingCount": 48
+    },
+    {
+      "name": "untapper-artifact",
+      "slug": "untapper-artifact",
+      "taggingCount": 48
+    },
+    {
+      "name": "manaless land",
+      "slug": "manaless-land",
+      "taggingCount": 47
+    },
+    {
+      "name": "reanimate-from-opponent",
+      "slug": "reanimate-from-opponent",
+      "taggingCount": 47
+    },
+    {
+      "name": "scry like",
+      "slug": "scry-like",
+      "taggingCount": 47
+    },
+    {
+      "name": "slith ability",
+      "slug": "slith-ability",
+      "taggingCount": 47
+    },
+    {
+      "name": "staple with set's mechanic",
+      "slug": "staple-with-set-s-mechanic",
+      "taggingCount": 47
+    },
+    {
+      "name": "synergy-cycling",
+      "slug": "synergy-cycling",
+      "taggingCount": 47
+    },
+    {
+      "name": "synergy-haste",
+      "slug": "synergy-haste",
+      "taggingCount": 47
+    },
+    {
+      "name": "typal-elemental",
+      "slug": "typal-elemental",
+      "taggingCount": 47
+    },
+    {
+      "name": "change target",
+      "slug": "change-target",
+      "taggingCount": 46
+    },
+    {
+      "name": "charm",
+      "slug": "charm",
+      "taggingCount": 46
+    },
+    {
+      "name": "mass shrink",
+      "slug": "mass-shrink",
+      "taggingCount": 46
+    },
+    {
+      "name": "open attraction",
+      "slug": "open-attraction",
+      "taggingCount": 46
+    },
+    {
+      "name": "remove counters-other",
+      "slug": "remove-counters-other",
+      "taggingCount": 46
+    },
+    {
+      "name": "synergy-modified",
+      "slug": "synergy-modified",
+      "taggingCount": 46
+    },
+    {
+      "name": "tutor-artifact",
+      "slug": "tutor-artifact",
+      "taggingCount": 46
+    },
+    {
+      "name": "tutor-land-plains",
+      "slug": "tutor-land-plains",
+      "taggingCount": 46
+    },
+    {
+      "name": "anagram",
+      "slug": "anagram",
+      "taggingCount": 45
+    },
+    {
+      "name": "bushido",
+      "slug": "bushido",
+      "taggingCount": 45
+    },
+    {
+      "name": "discard outlet-random",
+      "slug": "discard-outlet-random",
+      "taggingCount": 45
+    },
+    {
+      "name": "exalted",
+      "slug": "exalted",
+      "taggingCount": 45
+    },
+    {
+      "name": "leaves graveyard trigger",
+      "slug": "leaves-graveyard-trigger",
+      "taggingCount": 45
+    },
+    {
+      "name": "play additional land",
+      "slug": "play-additional-land",
+      "taggingCount": 45
+    },
+    {
+      "name": "restock-all",
+      "slug": "restock-all",
+      "taggingCount": 45
+    },
+    {
+      "name": "restock-to-bottom",
+      "slug": "restock-to-bottom",
+      "taggingCount": 45
+    },
+    {
+      "name": "sliver-stackable",
+      "slug": "sliver-stackable",
+      "taggingCount": 45
+    },
+    {
+      "name": "synergy-historic",
+      "slug": "synergy-historic",
+      "taggingCount": 45
+    },
+    {
+      "name": "wheel-one-sided",
+      "slug": "wheel-one-sided",
+      "taggingCount": 45
+    },
+    {
+      "name": "creature type name",
+      "slug": "creature-type-name",
+      "taggingCount": 44
+    },
+    {
+      "name": "exchange control",
+      "slug": "exchange-control",
+      "taggingCount": 44
+    },
+    {
+      "name": "extract",
+      "slug": "extract",
+      "taggingCount": 44
+    },
+    {
+      "name": "miniwheel",
+      "slug": "miniwheel",
+      "taggingCount": 44
+    },
+    {
+      "name": "ninjutsu",
+      "slug": "ninjutsu",
+      "taggingCount": 44
+    },
+    {
+      "name": "parasitic aura",
+      "slug": "parasitic-aura",
+      "taggingCount": 44
+    },
+    {
+      "name": "prevent mass blockers",
+      "slug": "prevent-mass-blockers",
+      "taggingCount": 44
+    },
+    {
+      "name": "remove counters-you",
+      "slug": "remove-counters-you",
+      "taggingCount": 44
+    },
+    {
+      "name": "shares name with a mechanic",
+      "slug": "shares-name-with-a-mechanic",
+      "taggingCount": 44
+    },
+    {
+      "name": "synergy-graveyard-cast",
+      "slug": "synergy-graveyard-cast",
+      "taggingCount": 44
+    },
+    {
+      "name": "token errata",
+      "slug": "token-errata",
+      "taggingCount": 44
+    },
+    {
+      "name": "unblocked trigger",
+      "slug": "unblocked-trigger",
+      "taggingCount": 44
+    },
+    {
+      "name": "armoring",
+      "slug": "armoring",
+      "taggingCount": 43
+    },
+    {
+      "name": "counter preservation-self",
+      "slug": "counter-preservation-self",
+      "taggingCount": 43
+    },
+    {
+      "name": "guess",
+      "slug": "guess",
+      "taggingCount": 43
+    },
+    {
+      "name": "modal inverse choices",
+      "slug": "modal-inverse-choices",
+      "taggingCount": 43
+    },
+    {
+      "name": "sacrifice outlet-token",
+      "slug": "sacrifice-outlet-token",
+      "taggingCount": 43
+    },
+    {
+      "name": "combat timing restriction",
+      "slug": "combat-timing-restriction",
+      "taggingCount": 42
+    },
+    {
+      "name": "dnd spell",
+      "slug": "dnd-spell",
+      "taggingCount": 42
+    },
+    {
+      "name": "doesn't untap",
+      "slug": "doesn-t-untap",
+      "taggingCount": 42
+    },
+    {
+      "name": "flying counter",
+      "slug": "flying-counter",
+      "taggingCount": 42
+    },
+    {
+      "name": "gains protection",
+      "slug": "gains-protection",
+      "taggingCount": 42
+    },
+    {
+      "name": "impact effect",
+      "slug": "impact-effect",
+      "taggingCount": 42
+    },
+    {
+      "name": "impulse-artifact",
+      "slug": "impulse-artifact",
+      "taggingCount": 42
+    },
+    {
+      "name": "monarch matters",
+      "slug": "monarch-matters",
+      "taggingCount": 42
+    },
+    {
+      "name": "synergy-poison",
+      "slug": "synergy-poison",
+      "taggingCount": 42
+    },
+    {
+      "name": "synergy-sticker",
+      "slug": "synergy-sticker",
+      "taggingCount": 42
+    },
+    {
+      "name": "tutor-land-any",
+      "slug": "tutor-land-any",
+      "taggingCount": 42
+    },
+    {
+      "name": "unique protection",
+      "slug": "unique-protection",
+      "taggingCount": 42
+    },
+    {
+      "name": "affinity for artifacts",
+      "slug": "affinity-for-artifacts",
+      "taggingCount": 41
+    },
+    {
+      "name": "any player ability",
+      "slug": "any-player-ability",
+      "taggingCount": 41
+    },
+    {
+      "name": "copy-permanent-spell",
+      "slug": "copy-permanent-spell",
+      "taggingCount": 41
+    },
+    {
+      "name": "mana egg",
+      "slug": "mana-egg",
+      "taggingCount": 41
+    },
+    {
+      "name": "phyrexian mana cost",
+      "slug": "phyrexian-mana-cost",
+      "taggingCount": 41
+    },
+    {
+      "name": "planeswalker deck face card",
+      "slug": "planeswalker-deck-face-card",
+      "taggingCount": 41
+    },
+    {
+      "name": "trigger doubler",
+      "slug": "trigger-doubler",
+      "taggingCount": 41
+    },
+    {
+      "name": "ball lightning",
+      "slug": "ball-lightning",
+      "taggingCount": 40
+    },
+    {
+      "name": "copy-legendary",
+      "slug": "copy-legendary",
+      "taggingCount": 40
+    },
+    {
+      "name": "daunt",
+      "slug": "daunt",
+      "taggingCount": 40
+    },
+    {
+      "name": "inscryption achievement",
+      "slug": "inscryption-achievement",
+      "taggingCount": 40
+    },
+    {
+      "name": "metalcraft",
+      "slug": "metalcraft",
+      "taggingCount": 40
+    },
+    {
+      "name": "regrowth-land",
+      "slug": "regrowth-land",
+      "taggingCount": 40
+    },
+    {
+      "name": "remove-from-stack",
+      "slug": "remove-from-stack",
+      "taggingCount": 40
+    },
+    {
+      "name": "repeatable seek",
+      "slug": "repeatable-seek",
+      "taggingCount": 40
+    },
+    {
+      "name": "tax attack",
+      "slug": "tax-attack",
+      "taggingCount": 40
+    },
+    {
+      "name": "type errata naga",
+      "slug": "type-errata-naga",
+      "taggingCount": 40
+    },
+    {
+      "name": "abyss",
+      "slug": "abyss",
+      "taggingCount": 39
+    },
+    {
+      "name": "cost-reducer-instant-sorcery",
+      "slug": "cost-reducer-instant-sorcery",
+      "taggingCount": 39
+    },
+    {
+      "name": "deal with the devil",
+      "slug": "deal-with-the-devil",
+      "taggingCount": 39
+    },
+    {
+      "name": "deprecated p/t counter",
+      "slug": "deprecated-p-t-counter",
+      "taggingCount": 39
+    },
+    {
+      "name": "has identical token",
+      "slug": "has-identical-token",
+      "taggingCount": 39
+    },
+    {
+      "name": "mm counter cost",
+      "slug": "mm-counter-cost",
+      "taggingCount": 39
+    },
+    {
+      "name": "named choice",
+      "slug": "named-choice",
+      "taggingCount": 39
+    },
+    {
+      "name": "polymorph",
+      "slug": "polymorph",
+      "taggingCount": 39
+    },
+    {
+      "name": "pridemate",
+      "slug": "pridemate",
+      "taggingCount": 39
+    },
+    {
+      "name": "synergy-party",
+      "slug": "synergy-party",
+      "taggingCount": 39
+    },
+    {
+      "name": "unique p/t",
+      "slug": "unique-p-t",
+      "taggingCount": 39
+    },
+    {
+      "name": "paradox",
+      "slug": "paradox",
+      "taggingCount": 38
+    },
+    {
+      "name": "protects-artifact",
+      "slug": "protects-artifact",
+      "taggingCount": 38
+    },
+    {
+      "name": "pwdeck-sidekick",
+      "slug": "pwdeck-sidekick",
+      "taggingCount": 38
+    },
+    {
+      "name": "random discard",
+      "slug": "random-discard",
+      "taggingCount": 38
+    },
+    {
+      "name": "restock-creature",
+      "slug": "restock-creature",
+      "taggingCount": 38
+    },
+    {
+      "name": "wheel-symmetrical",
+      "slug": "wheel-symmetrical",
+      "taggingCount": 38
+    },
+    {
+      "name": "clash-like",
+      "slug": "clash-like",
+      "taggingCount": 37
+    },
+    {
+      "name": "counterspell-exile",
+      "slug": "counterspell-exile",
+      "taggingCount": 37
+    },
+    {
+      "name": "high x matters",
+      "slug": "high-x-matters",
+      "taggingCount": 37
+    },
+    {
+      "name": "repeatable noncreature tokens",
+      "slug": "repeatable-noncreature-tokens",
+      "taggingCount": 37
+    },
+    {
+      "name": "soul warden ability",
+      "slug": "soul-warden-ability",
+      "taggingCount": 37
+    },
+    {
+      "name": "synergy-dice",
+      "slug": "synergy-dice",
+      "taggingCount": 37
+    },
+    {
+      "name": "transform-improvement",
+      "slug": "transform-improvement",
+      "taggingCount": 37
+    },
+    {
+      "name": "typal-bird",
+      "slug": "typal-bird",
+      "taggingCount": 37
+    },
+    {
+      "name": "typal-rat",
+      "slug": "typal-rat",
+      "taggingCount": 37
+    },
+    {
+      "name": "unique planeswalker type",
+      "slug": "unique-planeswalker-type",
+      "taggingCount": 37
+    },
+    {
+      "name": "alternate-cost-sacrifice",
+      "slug": "alternate-cost-sacrifice",
+      "taggingCount": 36
+    },
+    {
+      "name": "counterspell-automatic",
+      "slug": "counterspell-automatic",
+      "taggingCount": 36
+    },
+    {
+      "name": "cycle-ust-functional-variant",
+      "slug": "cycle-ust-functional-variant",
+      "taggingCount": 36
+    },
+    {
+      "name": "earthbend",
+      "slug": "earthbend",
+      "taggingCount": 36
+    },
+    {
+      "name": "extra land",
+      "slug": "extra-land",
+      "taggingCount": 36
+    },
+    {
+      "name": "filterland",
+      "slug": "filterland",
+      "taggingCount": 36
+    },
+    {
+      "name": "flicker-self",
+      "slug": "flicker-self",
+      "taggingCount": 36
+    },
+    {
+      "name": "lobotomy",
+      "slug": "lobotomy",
+      "taggingCount": 36
+    },
+    {
+      "name": "mimic",
+      "slug": "mimic",
+      "taggingCount": 36
+    },
+    {
+      "name": "monstrosity",
+      "slug": "monstrosity",
+      "taggingCount": 36
+    },
+    {
+      "name": "potentially free",
+      "slug": "potentially-free",
+      "taggingCount": 36
+    },
+    {
+      "name": "pwdeck-tutor",
+      "slug": "pwdeck-tutor",
+      "taggingCount": 36
+    },
+    {
+      "name": "ransom",
+      "slug": "ransom",
+      "taggingCount": 36
+    },
+    {
+      "name": "regrowth",
+      "slug": "regrowth",
+      "taggingCount": 36
+    },
+    {
+      "name": "seek-mv",
+      "slug": "seek-mv",
+      "taggingCount": 36
+    },
+    {
+      "name": "soothsaying",
+      "slug": "soothsaying",
+      "taggingCount": 36
+    },
+    {
+      "name": "typal-mount",
+      "slug": "typal-mount",
+      "taggingCount": 36
+    },
+    {
+      "name": "unpreventable-damage",
+      "slug": "unpreventable-damage",
+      "taggingCount": 36
+    },
+    {
+      "name": "variable effect, same ability",
+      "slug": "variable-effect-same-ability",
+      "taggingCount": 36
+    },
+    {
+      "name": "breaks-ktk-morph-rule",
+      "slug": "breaks-ktk-morph-rule",
+      "taggingCount": 35
+    },
+    {
+      "name": "fog",
+      "slug": "fog",
+      "taggingCount": 35
+    },
+    {
+      "name": "landhome",
+      "slug": "landhome",
+      "taggingCount": 35
+    },
+    {
+      "name": "old blocking deathtouch",
+      "slug": "old-blocking-deathtouch",
+      "taggingCount": 35
+    },
+    {
+      "name": "power matters-individual",
+      "slug": "power-matters-individual",
+      "taggingCount": 35
+    },
+    {
+      "name": "rescue-permanent",
+      "slug": "rescue-permanent",
+      "taggingCount": 35
+    },
+    {
+      "name": "revolt",
+      "slug": "revolt",
+      "taggingCount": 35
+    },
+    {
+      "name": "seek-nonland",
+      "slug": "seek-nonland",
+      "taggingCount": 35
+    },
+    {
+      "name": "theft-permanent",
+      "slug": "theft-permanent",
+      "taggingCount": 35
+    },
+    {
+      "name": "whirlpool",
+      "slug": "whirlpool",
+      "taggingCount": 35
+    },
+    {
+      "name": "young pyromancer ability",
+      "slug": "young-pyromancer-ability",
+      "taggingCount": 35
+    },
+    {
+      "name": "5c set mechanic commander",
+      "slug": "5c-set-mechanic-commander",
+      "taggingCount": 34
+    },
+    {
+      "name": "delayed replacement effect",
+      "slug": "delayed-replacement-effect",
+      "taggingCount": 34
+    },
+    {
+      "name": "eponymous planeswalker",
+      "slug": "eponymous-planeswalker",
+      "taggingCount": 34
+    },
+    {
+      "name": "force blocker",
+      "slug": "force-blocker",
+      "taggingCount": 34
+    },
+    {
+      "name": "hate-lifegain",
+      "slug": "hate-lifegain",
+      "taggingCount": 34
+    },
+    {
+      "name": "high flying",
+      "slug": "high-flying",
+      "taggingCount": 34
+    },
+    {
+      "name": "hurricane",
+      "slug": "hurricane",
+      "taggingCount": 34
+    },
+    {
+      "name": "inspired",
+      "slug": "inspired",
+      "taggingCount": 34
+    },
+    {
+      "name": "life-and-death-trigger-self",
+      "slug": "life-and-death-trigger-self",
+      "taggingCount": 34
+    },
+    {
+      "name": "painland",
+      "slug": "painland",
+      "taggingCount": 34
+    },
+    {
+      "name": "regrowth-enchantment",
+      "slug": "regrowth-enchantment",
+      "taggingCount": 34
+    },
+    {
+      "name": "spite damage",
+      "slug": "spite-damage",
+      "taggingCount": 34
+    },
+    {
+      "name": "sth-storyline-in-cards",
+      "slug": "sth-storyline-in-cards",
+      "taggingCount": 34
+    },
+    {
+      "name": "synergy-clue",
+      "slug": "synergy-clue",
+      "taggingCount": 34
+    },
+    {
+      "name": "tutor-to-graveyard",
+      "slug": "tutor-to-graveyard",
+      "taggingCount": 34
+    },
+    {
+      "name": "typal-assassin",
+      "slug": "typal-assassin",
+      "taggingCount": 34
+    },
+    {
+      "name": "voting",
+      "slug": "voting",
+      "taggingCount": 34
+    },
+    {
+      "name": "counter fuel-any",
+      "slug": "counter-fuel-any",
+      "taggingCount": 33
+    },
+    {
+      "name": "counterspell-noncreature",
+      "slug": "counterspell-noncreature",
+      "taggingCount": 33
+    },
+    {
+      "name": "demilich effect",
+      "slug": "demilich-effect",
+      "taggingCount": 33
+    },
+    {
+      "name": "gives uncounterable",
+      "slug": "gives-uncounterable",
+      "taggingCount": 33
+    },
+    {
+      "name": "hate-wide",
+      "slug": "hate-wide",
+      "taggingCount": 33
+    },
+    {
+      "name": "ingest",
+      "slug": "ingest",
+      "taggingCount": 33
+    },
+    {
+      "name": "magecraft",
+      "slug": "magecraft",
+      "taggingCount": 33
+    },
+    {
+      "name": "opponent-discard matters",
+      "slug": "opponent-discard-matters",
+      "taggingCount": 33
+    },
+    {
+      "name": "start of game",
+      "slug": "start-of-game",
+      "taggingCount": 33
+    },
+    {
+      "name": "synergy-gate",
+      "slug": "synergy-gate",
+      "taggingCount": 33
+    },
+    {
+      "name": "tutor-land-basic-plains",
+      "slug": "tutor-land-basic-plains",
+      "taggingCount": 33
+    },
+    {
+      "name": "tutor-land-mountain",
+      "slug": "tutor-land-mountain",
+      "taggingCount": 33
+    },
+    {
+      "name": "typal-cleric",
+      "slug": "typal-cleric",
+      "taggingCount": 33
+    },
+    {
+      "name": "typal-giant",
+      "slug": "typal-giant",
+      "taggingCount": 33
+    },
+    {
+      "name": "untapped matters-self",
+      "slug": "untapped-matters-self",
+      "taggingCount": 33
+    },
+    {
+      "name": "vanilla equipment",
+      "slug": "vanilla-equipment",
+      "taggingCount": 33
+    },
+    {
+      "name": "cards in exile matter",
+      "slug": "cards-in-exile-matter",
+      "taggingCount": 32
+    },
+    {
+      "name": "consult",
+      "slug": "consult",
+      "taggingCount": 32
+    },
+    {
+      "name": "day zero errata",
+      "slug": "day-zero-errata",
+      "taggingCount": 32
+    },
+    {
+      "name": "mirrored knight",
+      "slug": "mirrored-knight",
+      "taggingCount": 32
+    },
+    {
+      "name": "reanimate-enchantment",
+      "slug": "reanimate-enchantment",
+      "taggingCount": 32
+    },
+    {
+      "name": "sneak-permanent",
+      "slug": "sneak-permanent",
+      "taggingCount": 32
+    },
+    {
+      "name": "synergy-battle",
+      "slug": "synergy-battle",
+      "taggingCount": 32
+    },
+    {
+      "name": "tormenting voice",
+      "slug": "tormenting-voice",
+      "taggingCount": 32
+    },
+    {
+      "name": "typal-faerie",
+      "slug": "typal-faerie",
+      "taggingCount": 32
+    },
+    {
+      "name": "unique enchant target",
+      "slug": "unique-enchant-target",
+      "taggingCount": 32
+    },
+    {
+      "name": "abrade",
+      "slug": "abrade",
+      "taggingCount": 31
+    },
+    {
+      "name": "counterspell-sacrifice",
+      "slug": "counterspell-sacrifice",
+      "taggingCount": 31
+    },
+    {
+      "name": "fling",
+      "slug": "fling",
+      "taggingCount": 31
+    },
+    {
+      "name": "hate-damaged",
+      "slug": "hate-damaged",
+      "taggingCount": 31
+    },
+    {
+      "name": "protects-permanent",
+      "slug": "protects-permanent",
+      "taggingCount": 31
+    },
+    {
+      "name": "shares name with a set",
+      "slug": "shares-name-with-a-set",
+      "taggingCount": 31
+    },
+    {
+      "name": "synergy-desert",
+      "slug": "synergy-desert",
+      "taggingCount": 31
+    },
+    {
+      "name": "synergy-solo-attack",
+      "slug": "synergy-solo-attack",
+      "taggingCount": 31
+    },
+    {
+      "name": "tutor-land-swamp",
+      "slug": "tutor-land-swamp",
+      "taggingCount": 31
+    },
+    {
+      "name": "unique-type-exclusion",
+      "slug": "unique-type-exclusion",
+      "taggingCount": 31
+    },
+    {
+      "name": "wind drake with set's mechanic",
+      "slug": "wind-drake-with-set-s-mechanic",
+      "taggingCount": 31
+    },
+    {
+      "name": "wingman",
+      "slug": "wingman",
+      "taggingCount": 31
+    },
+    {
+      "name": "alternate loss condition",
+      "slug": "alternate-loss-condition",
+      "taggingCount": 30
+    },
+    {
+      "name": "block additional",
+      "slug": "block-additional",
+      "taggingCount": 30
+    },
+    {
+      "name": "buff mana",
+      "slug": "buff-mana",
+      "taggingCount": 30
+    },
+    {
+      "name": "counterspell-instant",
+      "slug": "counterspell-instant",
+      "taggingCount": 30
+    },
+    {
+      "name": "delve",
+      "slug": "delve",
+      "taggingCount": 30
+    },
+    {
+      "name": "impulse-permanent",
+      "slug": "impulse-permanent",
+      "taggingCount": 30
+    },
+    {
+      "name": "lure",
+      "slug": "lure",
+      "taggingCount": 30
+    },
+    {
+      "name": "misnomer",
+      "slug": "misnomer",
+      "taggingCount": 30
+    },
+    {
+      "name": "mutual sacrifice",
+      "slug": "mutual-sacrifice",
+      "taggingCount": 30
+    },
+    {
+      "name": "off-turn casting matters",
+      "slug": "off-turn-casting-matters",
+      "taggingCount": 30
+    },
+    {
+      "name": "players outside game matter",
+      "slug": "players-outside-game-matter",
+      "taggingCount": 30
+    },
+    {
+      "name": "secretly choose",
+      "slug": "secretly-choose",
+      "taggingCount": 30
+    },
+    {
+      "name": "synergy-exile-cast",
+      "slug": "synergy-exile-cast",
+      "taggingCount": 30
+    },
+    {
+      "name": "synergy-trample",
+      "slug": "synergy-trample",
+      "taggingCount": 30
+    },
+    {
+      "name": "tapped matters-self",
+      "slug": "tapped-matters-self",
+      "taggingCount": 30
+    },
+    {
+      "name": "turn-face-up-trigger",
+      "slug": "turn-face-up-trigger",
+      "taggingCount": 30
+    },
+    {
+      "name": "typal-demon",
+      "slug": "typal-demon",
+      "taggingCount": 30
+    },
+    {
+      "name": "typal-rogue",
+      "slug": "typal-rogue",
+      "taggingCount": 30
+    },
+    {
+      "name": "alt-commander",
+      "slug": "alt-commander",
+      "taggingCount": 29
+    },
+    {
+      "name": "blood artist ability",
+      "slug": "blood-artist-ability",
+      "taggingCount": 29
+    },
+    {
+      "name": "draft matters",
+      "slug": "draft-matters",
+      "taggingCount": 29
+    },
+    {
+      "name": "hungry demon",
+      "slug": "hungry-demon",
+      "taggingCount": 29
+    },
+    {
+      "name": "illusion ability",
+      "slug": "illusion-ability",
+      "taggingCount": 29
+    },
+    {
+      "name": "kismet effect",
+      "slug": "kismet-effect",
+      "taggingCount": 29
+    },
+    {
+      "name": "old lifelink",
+      "slug": "old-lifelink",
+      "taggingCount": 29
+    },
+    {
+      "name": "shield counter",
+      "slug": "shield-counter",
+      "taggingCount": 29
+    },
+    {
+      "name": "theft-mass",
+      "slug": "theft-mass",
+      "taggingCount": 29
+    },
+    {
+      "name": "typal-squirrel",
+      "slug": "typal-squirrel",
+      "taggingCount": 29
+    },
+    {
+      "name": "copy-equipment",
+      "slug": "copy-equipment",
+      "taggingCount": 28
+    },
+    {
+      "name": "counterspell-sorcery",
+      "slug": "counterspell-sorcery",
+      "taggingCount": 28
+    },
+    {
+      "name": "cr 107.3f x card",
+      "slug": "cr-107-3f-x-card",
+      "taggingCount": 28
+    },
+    {
+      "name": "damage increaser",
+      "slug": "damage-increaser",
+      "taggingCount": 28
+    },
+    {
+      "name": "deck requirement",
+      "slug": "deck-requirement",
+      "taggingCount": 28
+    },
+    {
+      "name": "discard outlet-creature",
+      "slug": "discard-outlet-creature",
+      "taggingCount": 28
+    },
+    {
+      "name": "gives fear",
+      "slug": "gives-fear",
+      "taggingCount": 28
+    },
+    {
+      "name": "hate-noncreature",
+      "slug": "hate-noncreature",
+      "taggingCount": 28
+    },
+    {
+      "name": "hate-vehicle",
+      "slug": "hate-vehicle",
+      "taggingCount": 28
+    },
+    {
+      "name": "lands in graveyard matter",
+      "slug": "lands-in-graveyard-matter",
+      "taggingCount": 28
+    },
+    {
+      "name": "life divider",
+      "slug": "life-divider",
+      "taggingCount": 28
+    },
+    {
+      "name": "maro",
+      "slug": "maro",
+      "taggingCount": 28
+    },
+    {
+      "name": "provoke lite",
+      "slug": "provoke-lite",
+      "taggingCount": 28
+    },
+    {
+      "name": "removal-aura",
+      "slug": "removal-aura",
+      "taggingCount": 28
+    },
+    {
+      "name": "synergy-dungeon",
+      "slug": "synergy-dungeon",
+      "taggingCount": 28
+    },
+    {
+      "name": "synergy-lesson",
+      "slug": "synergy-lesson",
+      "taggingCount": 28
+    },
+    {
+      "name": "synergy-shrine",
+      "slug": "synergy-shrine",
+      "taggingCount": 28
+    },
+    {
+      "name": "synergy-theft",
+      "slug": "synergy-theft",
+      "taggingCount": 28
+    },
+    {
+      "name": "three-letter name",
+      "slug": "three-letter-name",
+      "taggingCount": 28
+    },
+    {
+      "name": "tutor-land-island",
+      "slug": "tutor-land-island",
+      "taggingCount": 28
+    },
+    {
+      "name": "typal-ninja",
+      "slug": "typal-ninja",
+      "taggingCount": 28
+    },
+    {
+      "name": "typal-non-human",
+      "slug": "typal-non-human",
+      "taggingCount": 28
+    },
+    {
+      "name": "typal-spider",
+      "slug": "typal-spider",
+      "taggingCount": 28
+    },
+    {
+      "name": "wheel",
+      "slug": "wheel",
+      "taggingCount": 28
+    },
+    {
+      "name": "alternate-equip-cost",
+      "slug": "alternate-equip-cost",
+      "taggingCount": 27
+    },
+    {
+      "name": "art matters",
+      "slug": "art-matters",
+      "taggingCount": 27
+    },
+    {
+      "name": "donate rampant growth",
+      "slug": "donate-rampant-growth",
+      "taggingCount": 27
+    },
+    {
+      "name": "game name",
+      "slug": "game-name",
+      "taggingCount": 27
+    },
+    {
+      "name": "graveyard fuel-artifact",
+      "slug": "graveyard-fuel-artifact",
+      "taggingCount": 27
+    },
+    {
+      "name": "graveyard fuel-instant",
+      "slug": "graveyard-fuel-instant",
+      "taggingCount": 27
+    },
+    {
+      "name": "hate-aura",
+      "slug": "hate-aura",
+      "taggingCount": 27
+    },
+    {
+      "name": "hate-color-share",
+      "slug": "hate-color-share",
+      "taggingCount": 27
+    },
+    {
+      "name": "hate-token",
+      "slug": "hate-token",
+      "taggingCount": 27
+    },
+    {
+      "name": "lifelink counter",
+      "slug": "lifelink-counter",
+      "taggingCount": 27
+    },
+    {
+      "name": "mm counters matter",
+      "slug": "mm-counters-matter",
+      "taggingCount": 27
+    },
+    {
+      "name": "removes flying",
+      "slug": "removes-flying",
+      "taggingCount": 27
+    },
+    {
+      "name": "retaliate to damage",
+      "slug": "retaliate-to-damage",
+      "taggingCount": 27
+    },
+    {
+      "name": "sunburst",
+      "slug": "sunburst",
+      "taggingCount": 27
+    },
+    {
+      "name": "synergy-face-down",
+      "slug": "synergy-face-down",
+      "taggingCount": 27
+    },
+    {
+      "name": "synergy-vigilance",
+      "slug": "synergy-vigilance",
+      "taggingCount": 27
+    },
+    {
+      "name": "tunneling",
+      "slug": "tunneling",
+      "taggingCount": 27
+    },
+    {
+      "name": "tutor-land-basic-forest",
+      "slug": "tutor-land-basic-forest",
+      "taggingCount": 27
+    },
+    {
+      "name": "typal-kithkin",
+      "slug": "typal-kithkin",
+      "taggingCount": 27
+    },
+    {
+      "name": "typal-lupine",
+      "slug": "typal-lupine",
+      "taggingCount": 27
+    },
+    {
+      "name": "type errata cephalid",
+      "slug": "type-errata-cephalid",
+      "taggingCount": 27
+    },
+    {
+      "name": "color-choose-land",
+      "slug": "color-choose-land",
+      "taggingCount": 26
+    },
+    {
+      "name": "creatureland",
+      "slug": "creatureland",
+      "taggingCount": 26
+    },
+    {
+      "name": "damage prevention-planeswalker",
+      "slug": "damage-prevention-planeswalker",
+      "taggingCount": 26
+    },
+    {
+      "name": "devour",
+      "slug": "devour",
+      "taggingCount": 26
+    },
+    {
+      "name": "gives evasion",
+      "slug": "gives-evasion",
+      "taggingCount": 26
+    },
+    {
+      "name": "graveyard fuel-sorcery",
+      "slug": "graveyard-fuel-sorcery",
+      "taggingCount": 26
+    },
+    {
+      "name": "hate-activation",
+      "slug": "hate-activation",
+      "taggingCount": 26
+    },
+    {
+      "name": "hate-island",
+      "slug": "hate-island",
+      "taggingCount": 26
+    },
+    {
+      "name": "hate-typal-wall",
+      "slug": "hate-typal-wall",
+      "taggingCount": 26
+    },
+    {
+      "name": "keyword soup",
+      "slug": "keyword-soup",
+      "taggingCount": 26
+    },
+    {
+      "name": "leveler",
+      "slug": "leveler",
+      "taggingCount": 26
+    },
+    {
+      "name": "mana dork egg",
+      "slug": "mana-dork-egg",
+      "taggingCount": 26
+    },
+    {
+      "name": "naya ferocious",
+      "slug": "naya-ferocious",
+      "taggingCount": 26
+    },
+    {
+      "name": "persist",
+      "slug": "persist",
+      "taggingCount": 26
+    },
+    {
+      "name": "playtest forecast",
+      "slug": "playtest-forecast",
+      "taggingCount": 26
+    },
+    {
+      "name": "rampage",
+      "slug": "rampage",
+      "taggingCount": 26
+    },
+    {
+      "name": "silence",
+      "slug": "silence",
+      "taggingCount": 26
+    },
+    {
+      "name": "synergy-deathtouch",
+      "slug": "synergy-deathtouch",
+      "taggingCount": 26
+    },
+    {
+      "name": "synergy-room",
+      "slug": "synergy-room",
+      "taggingCount": 26
+    },
+    {
+      "name": "theft-land",
+      "slug": "theft-land",
+      "taggingCount": 26
+    },
+    {
+      "name": "copy-planeswalker",
+      "slug": "copy-planeswalker",
+      "taggingCount": 25
+    },
+    {
+      "name": "counter fuel-oil",
+      "slug": "counter-fuel-oil",
+      "taggingCount": 25
+    },
+    {
+      "name": "counts as a type",
+      "slug": "counts-as-a-type",
+      "taggingCount": 25
+    },
+    {
+      "name": "cycle-mm3-draft-signpost",
+      "slug": "cycle-mm3-draft-signpost",
+      "taggingCount": 25
+    },
+    {
+      "name": "gains reach",
+      "slug": "gains-reach",
+      "taggingCount": 25
+    },
+    {
+      "name": "landfall other",
+      "slug": "landfall-other",
+      "taggingCount": 25
+    },
+    {
+      "name": "outnumber",
+      "slug": "outnumber",
+      "taggingCount": 25
+    },
+    {
+      "name": "processing",
+      "slug": "processing",
+      "taggingCount": 25
+    },
+    {
+      "name": "recycle",
+      "slug": "recycle",
+      "taggingCount": 25
+    },
+    {
+      "name": "remove from combat",
+      "slug": "remove-from-combat",
+      "taggingCount": 25
+    },
+    {
+      "name": "restock-any",
+      "slug": "restock-any",
+      "taggingCount": 25
+    },
+    {
+      "name": "special action",
+      "slug": "special-action",
+      "taggingCount": 25
+    },
+    {
+      "name": "stalking",
+      "slug": "stalking",
+      "taggingCount": 25
+    },
+    {
+      "name": "storm count matters",
+      "slug": "storm-count-matters",
+      "taggingCount": 25
+    },
+    {
+      "name": "synergy-first-strike",
+      "slug": "synergy-first-strike",
+      "taggingCount": 25
+    },
+    {
+      "name": "synergy-suspend",
+      "slug": "synergy-suspend",
+      "taggingCount": 25
+    },
+    {
+      "name": "tap fuel-land",
+      "slug": "tap-fuel-land",
+      "taggingCount": 25
+    },
+    {
+      "name": "tokenlink",
+      "slug": "tokenlink",
+      "taggingCount": 25
+    },
+    {
+      "name": "tutor-self",
+      "slug": "tutor-self",
+      "taggingCount": 25
+    },
+    {
+      "name": "tutor-to-exile",
+      "slug": "tutor-to-exile",
+      "taggingCount": 25
+    },
+    {
+      "name": "typal-beast",
+      "slug": "typal-beast",
+      "taggingCount": 25
+    },
+    {
+      "name": "type errata lord",
+      "slug": "type-errata-lord",
+      "taggingCount": 25
+    },
+    {
+      "name": "useless in singleton formats",
+      "slug": "useless-in-singleton-formats",
+      "taggingCount": 25
+    },
+    {
+      "name": "virtual proliferate",
+      "slug": "virtual-proliferate",
+      "taggingCount": 25
+    },
+    {
+      "name": "absorb",
+      "slug": "absorb",
+      "taggingCount": 24
+    },
+    {
+      "name": "auto buyback",
+      "slug": "auto-buyback",
+      "taggingCount": 24
+    },
+    {
+      "name": "bounceable aura",
+      "slug": "bounceable-aura",
+      "taggingCount": 24
+    },
+    {
+      "name": "copy-aura",
+      "slug": "copy-aura",
+      "taggingCount": 24
+    },
+    {
+      "name": "creates oracle token",
+      "slug": "creates-oracle-token",
+      "taggingCount": 24
+    },
+    {
+      "name": "discard matters",
+      "slug": "discard-matters",
+      "taggingCount": 24
+    },
+    {
+      "name": "even/odd matters",
+      "slug": "even-odd-matters",
+      "taggingCount": 24
+    },
+    {
+      "name": "impulse-enchantment",
+      "slug": "impulse-enchantment",
+      "taggingCount": 24
+    },
+    {
+      "name": "mana spent matters",
+      "slug": "mana-spent-matters",
+      "taggingCount": 24
+    },
+    {
+      "name": "random card",
+      "slug": "random-card",
+      "taggingCount": 24
+    },
+    {
+      "name": "scene",
+      "slug": "scene",
+      "taggingCount": 24
+    },
+    {
+      "name": "sleeping enchantment",
+      "slug": "sleeping-enchantment",
+      "taggingCount": 24
+    },
+    {
+      "name": "synergy-defender",
+      "slug": "synergy-defender",
+      "taggingCount": 24
+    },
+    {
+      "name": "text change",
+      "slug": "text-change",
+      "taggingCount": 24
+    },
+    {
+      "name": "typal-saproling",
+      "slug": "typal-saproling",
+      "taggingCount": 24
+    },
+    {
+      "name": "typal-treefolk",
+      "slug": "typal-treefolk",
+      "taggingCount": 24
+    },
+    {
+      "name": "type addition noble",
+      "slug": "type-addition-noble",
+      "taggingCount": 24
+    },
+    {
+      "name": "cost-reducer-activated-ability",
+      "slug": "cost-reducer-activated-ability",
+      "taggingCount": 23
+    },
+    {
+      "name": "cranial plating",
+      "slug": "cranial-plating",
+      "taggingCount": 23
+    },
+    {
+      "name": "damage prevention-player",
+      "slug": "damage-prevention-player",
+      "taggingCount": 23
+    },
+    {
+      "name": "gives player hexproof",
+      "slug": "gives-player-hexproof",
+      "taggingCount": 23
+    },
+    {
+      "name": "graveyard order matters",
+      "slug": "graveyard-order-matters",
+      "taggingCount": 23
+    },
+    {
+      "name": "indestructible counter",
+      "slug": "indestructible-counter",
+      "taggingCount": 23
+    },
+    {
+      "name": "old damage deathtouch",
+      "slug": "old-damage-deathtouch",
+      "taggingCount": 23
+    },
+    {
+      "name": "removes-mm-counters-self",
+      "slug": "removes-mm-counters-self",
+      "taggingCount": 23
+    },
+    {
+      "name": "self life loss matters",
+      "slug": "self-life-loss-matters",
+      "taggingCount": 23
+    },
+    {
+      "name": "synergy-double-strike",
+      "slug": "synergy-double-strike",
+      "taggingCount": 23
+    },
+    {
+      "name": "take the initiative",
+      "slug": "take-the-initiative",
+      "taggingCount": 23
+    },
+    {
+      "name": "tutor-instant",
+      "slug": "tutor-instant",
+      "taggingCount": 23
+    },
+    {
+      "name": "un-keyword",
+      "slug": "un-keyword",
+      "taggingCount": 23
+    },
+    {
+      "name": "affects dice roll",
+      "slug": "affects-dice-roll",
+      "taggingCount": 22
+    },
+    {
+      "name": "battalion",
+      "slug": "battalion",
+      "taggingCount": 22
+    },
+    {
+      "name": "borrow ability",
+      "slug": "borrow-ability",
+      "taggingCount": 22
+    },
+    {
+      "name": "bribery",
+      "slug": "bribery",
+      "taggingCount": 22
+    },
+    {
+      "name": "bring your own crew",
+      "slug": "bring-your-own-crew",
+      "taggingCount": 22
+    },
+    {
+      "name": "buttstrike",
+      "slug": "buttstrike",
+      "taggingCount": 22
+    },
+    {
+      "name": "discard to library",
+      "slug": "discard-to-library",
+      "taggingCount": 22
+    },
+    {
+      "name": "donate mana",
+      "slug": "donate-mana",
+      "taggingCount": 22
+    },
+    {
+      "name": "fact or fiction",
+      "slug": "fact-or-fiction",
+      "taggingCount": 22
+    },
+    {
+      "name": "hate-multicolor",
+      "slug": "hate-multicolor",
+      "taggingCount": 22
+    },
+    {
+      "name": "improvise",
+      "slug": "improvise",
+      "taggingCount": 22
+    },
+    {
+      "name": "neo-regenerate",
+      "slug": "neo-regenerate",
+      "taggingCount": 22
+    },
+    {
+      "name": "phase manipulation",
+      "slug": "phase-manipulation",
+      "taggingCount": 22
+    },
+    {
+      "name": "quick enchant",
+      "slug": "quick-enchant",
+      "taggingCount": 22
+    },
+    {
+      "name": "removal-equipment",
+      "slug": "removal-equipment",
+      "taggingCount": 22
+    },
+    {
+      "name": "seek-to-battlefield",
+      "slug": "seek-to-battlefield",
+      "taggingCount": 22
+    },
+    {
+      "name": "set matters",
+      "slug": "set-matters",
+      "taggingCount": 22
+    },
+    {
+      "name": "sneaky-self-trigger",
+      "slug": "sneaky-self-trigger",
+      "taggingCount": 22
+    },
+    {
+      "name": "synergy-enchantment-creature",
+      "slug": "synergy-enchantment-creature",
+      "taggingCount": 22
+    },
+    {
+      "name": "synergy-menace",
+      "slug": "synergy-menace",
+      "taggingCount": 22
+    },
+    {
+      "name": "synergy-scry",
+      "slug": "synergy-scry",
+      "taggingCount": 22
+    },
+    {
+      "name": "transferrable aura",
+      "slug": "transferrable-aura",
+      "taggingCount": 22
+    },
+    {
+      "name": "typal-cat",
+      "slug": "typal-cat",
+      "taggingCount": 22
+    },
+    {
+      "name": "typal-phyrexian",
+      "slug": "typal-phyrexian",
+      "taggingCount": 22
+    },
+    {
+      "name": "type addition sorcerer",
+      "slug": "type-addition-sorcerer",
+      "taggingCount": 22
+    },
+    {
+      "name": "unique noncreature token",
+      "slug": "unique-noncreature-token",
+      "taggingCount": 22
+    },
+    {
+      "name": "ablative armor",
+      "slug": "ablative-armor",
+      "taggingCount": 21
+    },
+    {
+      "name": "conjure-artifact",
+      "slug": "conjure-artifact",
+      "taggingCount": 21
+    },
+    {
+      "name": "drain strength",
+      "slug": "drain-strength",
+      "taggingCount": 21
+    },
+    {
+      "name": "hate-artifact-creature",
+      "slug": "hate-artifact-creature",
+      "taggingCount": 21
+    },
+    {
+      "name": "impulse-cast",
+      "slug": "impulse-cast",
+      "taggingCount": 21
+    },
+    {
+      "name": "magic term name",
+      "slug": "magic-term-name",
+      "taggingCount": 21
+    },
+    {
+      "name": "pariah",
+      "slug": "pariah",
+      "taggingCount": 21
+    },
+    {
+      "name": "quote name",
+      "slug": "quote-name",
+      "taggingCount": 21
+    },
+    {
+      "name": "reanimate-aura",
+      "slug": "reanimate-aura",
+      "taggingCount": 21
+    },
+    {
+      "name": "reanimate matters",
+      "slug": "reanimate-matters",
+      "taggingCount": 21
+    },
+    {
+      "name": "reanimate-nonland",
+      "slug": "reanimate-nonland",
+      "taggingCount": 21
+    },
+    {
+      "name": "seek-creature",
+      "slug": "seek-creature",
+      "taggingCount": 21
+    },
+    {
+      "name": "serpent-like",
+      "slug": "serpent-like",
+      "taggingCount": 21
+    },
+    {
+      "name": "surge",
+      "slug": "surge",
+      "taggingCount": 21
+    },
+    {
+      "name": "synergy-color-choose",
+      "slug": "synergy-color-choose",
+      "taggingCount": 21
+    },
+    {
+      "name": "synergy-exiling",
+      "slug": "synergy-exiling",
+      "taggingCount": 21
+    },
+    {
+      "name": "synergy-lifelink",
+      "slug": "synergy-lifelink",
+      "taggingCount": 21
+    },
+    {
+      "name": "synergy-name-sticker",
+      "slug": "synergy-name-sticker",
+      "taggingCount": 21
+    },
+    {
+      "name": "synergy-warp",
+      "slug": "synergy-warp",
+      "taggingCount": 21
+    },
+    {
+      "name": "theft",
+      "slug": "theft",
+      "taggingCount": 21
+    },
+    {
+      "name": "typal-angel",
+      "slug": "typal-angel",
+      "taggingCount": 21
+    },
+    {
+      "name": "alternative crewing",
+      "slug": "alternative-crewing",
+      "taggingCount": 20
+    },
+    {
+      "name": "artist matters",
+      "slug": "artist-matters",
+      "taggingCount": 20
+    },
+    {
+      "name": "blood moon effect",
+      "slug": "blood-moon-effect",
+      "taggingCount": 20
+    },
+    {
+      "name": "conjure-spellbook",
+      "slug": "conjure-spellbook",
+      "taggingCount": 20
+    },
+    {
+      "name": "cost-reducer-colored-mana",
+      "slug": "cost-reducer-colored-mana",
+      "taggingCount": 20
+    },
+    {
+      "name": "crewless vehicle",
+      "slug": "crewless-vehicle",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-2x2-draft-signpost",
+      "slug": "cycle-2x2-draft-signpost",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-2xm-r-two-color",
+      "slug": "cycle-2xm-r-two-color",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-dsk-draft-signpost",
+      "slug": "cycle-dsk-draft-signpost",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-fin-draft-signpost",
+      "slug": "cycle-fin-draft-signpost",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-ltr-draft-signpost",
+      "slug": "cycle-ltr-draft-signpost",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-ltr-r-two-color",
+      "slug": "cycle-ltr-r-two-color",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-mm2-draft-signpost",
+      "slug": "cycle-mm2-draft-signpost",
+      "taggingCount": 20
+    },
+    {
+      "name": "cycle-war-r-two-color",
+      "slug": "cycle-war-r-two-color",
+      "taggingCount": 20
+    },
+    {
+      "name": "deanimate",
+      "slug": "deanimate",
+      "taggingCount": 20
+    },
+    {
+      "name": "doctor who episode name",
+      "slug": "doctor-who-episode-name",
+      "taggingCount": 20
+    },
+    {
+      "name": "face-commander",
+      "slug": "face-commander",
+      "taggingCount": 20
+    },
+    {
+      "name": "gains shroud",
+      "slug": "gains-shroud",
+      "taggingCount": 20
+    },
+    {
+      "name": "hate-typal-non-wall",
+      "slug": "hate-typal-non-wall",
+      "taggingCount": 20
+    },
+    {
+      "name": "impulse-instant",
+      "slug": "impulse-instant",
+      "taggingCount": 20
+    },
+    {
+      "name": "impulse-sorcery",
+      "slug": "impulse-sorcery",
+      "taggingCount": 20
+    },
+    {
+      "name": "legends retold",
+      "slug": "legends-retold",
+      "taggingCount": 20
+    },
+    {
+      "name": "offcolor mana generation",
+      "slug": "offcolor-mana-generation",
+      "taggingCount": 20
+    },
+    {
+      "name": "offspring token",
+      "slug": "offspring-token",
+      "taggingCount": 20
+    },
+    {
+      "name": "poison opponents",
+      "slug": "poison-opponents",
+      "taggingCount": 20
+    },
+    {
+      "name": "protects-land",
+      "slug": "protects-land",
+      "taggingCount": 20
+    },
+    {
+      "name": "radiate",
+      "slug": "radiate",
+      "taggingCount": 20
+    },
+    {
+      "name": "renown",
+      "slug": "renown",
+      "taggingCount": 20
+    },
+    {
+      "name": "skip draw step",
+      "slug": "skip-draw-step",
+      "taggingCount": 20
+    },
+    {
+      "name": "spell with no casting cost",
+      "slug": "spell-with-no-casting-cost",
+      "taggingCount": 20
+    },
+    {
+      "name": "synergy-creatureland",
+      "slug": "synergy-creatureland",
+      "taggingCount": 20
+    },
+    {
+      "name": "synergy-reach",
+      "slug": "synergy-reach",
+      "taggingCount": 20
+    },
+    {
+      "name": "table order matters",
+      "slug": "table-order-matters",
+      "taggingCount": 20
+    },
+    {
+      "name": "theft-nonland",
+      "slug": "theft-nonland",
+      "taggingCount": 20
+    },
+    {
+      "name": "toughness matters-self",
+      "slug": "toughness-matters-self",
+      "taggingCount": 20
+    },
+    {
+      "name": "trample counter",
+      "slug": "trample-counter",
+      "taggingCount": 20
+    },
+    {
+      "name": "tutor-artifact-equipment",
+      "slug": "tutor-artifact-equipment",
+      "taggingCount": 20
+    },
+    {
+      "name": "twin creature",
+      "slug": "twin-creature",
+      "taggingCount": 20
+    },
+    {
+      "name": "x cost matters",
+      "slug": "x-cost-matters",
+      "taggingCount": 20
+    },
+    {
+      "name": "berserk",
+      "slug": "berserk",
+      "taggingCount": 19
+    },
+    {
+      "name": "conjure-instant",
+      "slug": "conjure-instant",
+      "taggingCount": 19
+    },
+    {
+      "name": "converge",
+      "slug": "converge",
+      "taggingCount": 19
+    },
+    {
+      "name": "cost-reducer-equip-ability",
+      "slug": "cost-reducer-equip-ability",
+      "taggingCount": 19
+    },
+    {
+      "name": "counter increaser",
+      "slug": "counter-increaser",
+      "taggingCount": 19
+    },
+    {
+      "name": "deathtouch counter",
+      "slug": "deathtouch-counter",
+      "taggingCount": 19
+    },
+    {
+      "name": "doctor who episode saga",
+      "slug": "doctor-who-episode-saga",
+      "taggingCount": 19
+    },
+    {
+      "name": "fateseal",
+      "slug": "fateseal",
+      "taggingCount": 19
+    },
+    {
+      "name": "four plus creature types",
+      "slug": "four-plus-creature-types",
+      "taggingCount": 19
+    },
+    {
+      "name": "gives flashback",
+      "slug": "gives-flashback",
+      "taggingCount": 19
+    },
+    {
+      "name": "hate-legendary",
+      "slug": "hate-legendary",
+      "taggingCount": 19
+    },
+    {
+      "name": "hate-snow",
+      "slug": "hate-snow",
+      "taggingCount": 19
+    },
+    {
+      "name": "hate-theft",
+      "slug": "hate-theft",
+      "taggingCount": 19
+    },
+    {
+      "name": "impulsive curiosity",
+      "slug": "impulsive-curiosity",
+      "taggingCount": 19
+    },
+    {
+      "name": "multicolor kicker",
+      "slug": "multicolor-kicker",
+      "taggingCount": 19
+    },
+    {
+      "name": "preexisting dnd background",
+      "slug": "preexisting-dnd-background",
+      "taggingCount": 19
+    },
+    {
+      "name": "prevents win/loss",
+      "slug": "prevents-win-loss",
+      "taggingCount": 19
+    },
+    {
+      "name": "repeatable blood",
+      "slug": "repeatable-blood",
+      "taggingCount": 19
+    },
+    {
+      "name": "spree",
+      "slug": "spree",
+      "taggingCount": 19
+    },
+    {
+      "name": "synergy-indestructible",
+      "slug": "synergy-indestructible",
+      "taggingCount": 19
+    },
+    {
+      "name": "typal-outlaw",
+      "slug": "typal-outlaw",
+      "taggingCount": 19
+    },
+    {
+      "name": "vigilance counter",
+      "slug": "vigilance-counter",
+      "taggingCount": 19
+    },
+    {
+      "name": "zoo",
+      "slug": "zoo",
+      "taggingCount": 19
+    },
+    {
+      "name": "battle cry",
+      "slug": "battle-cry",
+      "taggingCount": 18
+    },
+    {
+      "name": "conjure-to-library",
+      "slug": "conjure-to-library",
+      "taggingCount": 18
+    },
+    {
+      "name": "detain",
+      "slug": "detain",
+      "taggingCount": 18
+    },
+    {
+      "name": "external prop",
+      "slug": "external-prop",
+      "taggingCount": 18
+    },
+    {
+      "name": "gives cascade",
+      "slug": "gives-cascade",
+      "taggingCount": 18
+    },
+    {
+      "name": "gives intimidate",
+      "slug": "gives-intimidate",
+      "taggingCount": 18
+    },
+    {
+      "name": "graveyard fuel-self",
+      "slug": "graveyard-fuel-self",
+      "taggingCount": 18
+    },
+    {
+      "name": "hate-storm",
+      "slug": "hate-storm",
+      "taggingCount": 18
+    },
+    {
+      "name": "multiple kicker costs",
+      "slug": "multiple-kicker-costs",
+      "taggingCount": 18
+    },
+    {
+      "name": "noncreature french vanilla",
+      "slug": "noncreature-french-vanilla",
+      "taggingCount": 18
+    },
+    {
+      "name": "noted tracked information",
+      "slug": "noted-tracked-information",
+      "taggingCount": 18
+    },
+    {
+      "name": "permanentfall",
+      "slug": "permanentfall",
+      "taggingCount": 18
+    },
+    {
+      "name": "protects-planeswalker",
+      "slug": "protects-planeswalker",
+      "taggingCount": 18
+    },
+    {
+      "name": "reanimate-planeswalker",
+      "slug": "reanimate-planeswalker",
+      "taggingCount": 18
+    },
+    {
+      "name": "recursion from exile",
+      "slug": "recursion-from-exile",
+      "taggingCount": 18
+    },
+    {
+      "name": "synergy-adventure",
+      "slug": "synergy-adventure",
+      "taggingCount": 18
+    },
+    {
+      "name": "synergy-blood",
+      "slug": "synergy-blood",
+      "taggingCount": 18
+    },
+    {
+      "name": "synergy-hexproof",
+      "slug": "synergy-hexproof",
+      "taggingCount": 18
+    },
+    {
+      "name": "team matters",
+      "slug": "team-matters",
+      "taggingCount": 18
+    },
+    {
+      "name": "tokenfall",
+      "slug": "tokenfall",
+      "taggingCount": 18
+    },
+    {
+      "name": "typal-eldrazi",
+      "slug": "typal-eldrazi",
+      "taggingCount": 18
+    },
+    {
+      "name": "typal-neo-solo-attack",
+      "slug": "typal-neo-solo-attack",
+      "taggingCount": 18
+    },
+    {
+      "name": "white elephant",
+      "slug": "white-elephant",
+      "taggingCount": 18
+    },
+    {
+      "name": "addendum",
+      "slug": "addendum",
+      "taggingCount": 17
+    },
+    {
+      "name": "afflict",
+      "slug": "afflict",
+      "taggingCount": 17
+    },
+    {
+      "name": "cast tax",
+      "slug": "cast-tax",
+      "taggingCount": 17
+    },
+    {
+      "name": "combat ping",
+      "slug": "combat-ping",
+      "taggingCount": 17
+    },
+    {
+      "name": "copy-permanent",
+      "slug": "copy-permanent",
+      "taggingCount": 17
+    },
+    {
+      "name": "cost-reducer-artifact",
+      "slug": "cost-reducer-artifact",
+      "taggingCount": 17
+    },
+    {
+      "name": "enchantment engine",
+      "slug": "enchantment-engine",
+      "taggingCount": 17
+    },
+    {
+      "name": "exile with tax",
+      "slug": "exile-with-tax",
+      "taggingCount": 17
+    },
+    {
+      "name": "fetchland",
+      "slug": "fetchland",
+      "taggingCount": 17
+    },
+    {
+      "name": "formidable",
+      "slug": "formidable",
+      "taggingCount": 17
+    },
+    {
+      "name": "genesis effect",
+      "slug": "genesis-effect",
+      "taggingCount": 17
+    },
+    {
+      "name": "gives castable from library",
+      "slug": "gives-castable-from-library",
+      "taggingCount": 17
+    },
+    {
+      "name": "gives changeling",
+      "slug": "gives-changeling",
+      "taggingCount": 17
+    },
+    {
+      "name": "hate-tutor",
+      "slug": "hate-tutor",
+      "taggingCount": 17
+    },
+    {
+      "name": "hate-typal-zombie",
+      "slug": "hate-typal-zombie",
+      "taggingCount": 17
+    },
+    {
+      "name": "keyword errata surveil",
+      "slug": "keyword-errata-surveil",
+      "taggingCount": 17
+    },
+    {
+      "name": "oil counters matter",
+      "slug": "oil-counters-matter",
+      "taggingCount": 17
+    },
+    {
+      "name": "o-ring with set mechanic",
+      "slug": "o-ring-with-set-mechanic",
+      "taggingCount": 17
+    },
+    {
+      "name": "skulk",
+      "slug": "skulk",
+      "taggingCount": 17
+    },
+    {
+      "name": "sneak-artifact",
+      "slug": "sneak-artifact",
+      "taggingCount": 17
+    },
+    {
+      "name": "starting player matters",
+      "slug": "starting-player-matters",
+      "taggingCount": 17
+    },
+    {
+      "name": "storm-like",
+      "slug": "storm-like",
+      "taggingCount": 17
+    },
+    {
+      "name": "synergy-saga",
+      "slug": "synergy-saga",
+      "taggingCount": 17
+    },
+    {
+      "name": "tapper-nonland",
+      "slug": "tapper-nonland",
+      "taggingCount": 17
+    },
+    {
+      "name": "the doctor",
+      "slug": "the-doctor",
+      "taggingCount": 17
+    },
+    {
+      "name": "token doubler",
+      "slug": "token-doubler",
+      "taggingCount": 17
+    },
+    {
+      "name": "torment",
+      "slug": "torment",
+      "taggingCount": 17
+    },
+    {
+      "name": "tutor-copy",
+      "slug": "tutor-copy",
+      "taggingCount": 17
+    },
+    {
+      "name": "tutor-from-opponent",
+      "slug": "tutor-from-opponent",
+      "taggingCount": 17
+    },
+    {
+      "name": "tutor-land-basic-mountain",
+      "slug": "tutor-land-basic-mountain",
+      "taggingCount": 17
+    },
+    {
+      "name": "wth-storyline-in-cards",
+      "slug": "wth-storyline-in-cards",
+      "taggingCount": 17
+    },
+    {
+      "name": "animate vehicle",
+      "slug": "animate-vehicle",
+      "taggingCount": 16
+    },
+    {
+      "name": "armament ability",
+      "slug": "armament-ability",
+      "taggingCount": 16
+    },
+    {
+      "name": "behold",
+      "slug": "behold",
+      "taggingCount": 16
+    },
+    {
+      "name": "birthing pod",
+      "slug": "birthing-pod",
+      "taggingCount": 16
+    },
+    {
+      "name": "catch-22",
+      "slug": "catch-22",
+      "taggingCount": 16
+    },
+    {
+      "name": "commander tax matters",
+      "slug": "commander-tax-matters",
+      "taggingCount": 16
+    },
+    {
+      "name": "conditional tapland",
+      "slug": "conditional-tapland",
+      "taggingCount": 16
+    },
+    {
+      "name": "conjure-land",
+      "slug": "conjure-land",
+      "taggingCount": 16
+    },
+    {
+      "name": "conjure-sorcery",
+      "slug": "conjure-sorcery",
+      "taggingCount": 16
+    },
+    {
+      "name": "copy-enchantment",
+      "slug": "copy-enchantment",
+      "taggingCount": 16
+    },
+    {
+      "name": "copy-land",
+      "slug": "copy-land",
+      "taggingCount": 16
+    },
+    {
+      "name": "frost armor",
+      "slug": "frost-armor",
+      "taggingCount": 16
+    },
+    {
+      "name": "functional reminder counter",
+      "slug": "functional-reminder-counter",
+      "taggingCount": 16
+    },
+    {
+      "name": "gives castable from nonhand",
+      "slug": "gives-castable-from-nonhand",
+      "taggingCount": 16
+    },
+    {
+      "name": "guest designer",
+      "slug": "guest-designer",
+      "taggingCount": 16
+    },
+    {
+      "name": "hatebird",
+      "slug": "hatebird",
+      "taggingCount": 16
+    },
+    {
+      "name": "hate-landwalk",
+      "slug": "hate-landwalk",
+      "taggingCount": 16
+    },
+    {
+      "name": "hate-mountain",
+      "slug": "hate-mountain",
+      "taggingCount": 16
+    },
+    {
+      "name": "hate-swamp",
+      "slug": "hate-swamp",
+      "taggingCount": 16
+    },
+    {
+      "name": "hate-typal-spirit",
+      "slug": "hate-typal-spirit",
+      "taggingCount": 16
+    },
+    {
+      "name": "instant-sorcery-dichotomous",
+      "slug": "instant-sorcery-dichotomous",
+      "taggingCount": 16
+    },
+    {
+      "name": "land or hand",
+      "slug": "land-or-hand",
+      "taggingCount": 16
+    },
+    {
+      "name": "legacy",
+      "slug": "legacy",
+      "taggingCount": 16
+    },
+    {
+      "name": "legendfall",
+      "slug": "legendfall",
+      "taggingCount": 16
+    },
+    {
+      "name": "lifegain-to-damage",
+      "slug": "lifegain-to-damage",
+      "taggingCount": 16
+    },
+    {
+      "name": "mathy name",
+      "slug": "mathy-name",
+      "taggingCount": 16
+    },
+    {
+      "name": "opaline effect",
+      "slug": "opaline-effect",
+      "taggingCount": 16
+    },
+    {
+      "name": "rack effect",
+      "slug": "rack-effect",
+      "taggingCount": 16
+    },
+    {
+      "name": "repeatable powerstones",
+      "slug": "repeatable-powerstones",
+      "taggingCount": 16
+    },
+    {
+      "name": "rules text matters",
+      "slug": "rules-text-matters",
+      "taggingCount": 16
+    },
+    {
+      "name": "sift",
+      "slug": "sift",
+      "taggingCount": 16
+    },
+    {
+      "name": "sneak from library",
+      "slug": "sneak-from-library",
+      "taggingCount": 16
+    },
+    {
+      "name": "synergy-transform",
+      "slug": "synergy-transform",
+      "taggingCount": 16
+    },
+    {
+      "name": "turn-face-up",
+      "slug": "turn-face-up",
+      "taggingCount": 16
+    },
+    {
+      "name": "tutor-land-basic-island",
+      "slug": "tutor-land-basic-island",
+      "taggingCount": 16
+    },
+    {
+      "name": "tutor-land-basic-swamp",
+      "slug": "tutor-land-basic-swamp",
+      "taggingCount": 16
+    },
+    {
+      "name": "tutor-sorcery",
+      "slug": "tutor-sorcery",
+      "taggingCount": 16
+    },
+    {
+      "name": "typal-orc",
+      "slug": "typal-orc",
+      "taggingCount": 16
+    },
+    {
+      "name": "typal-snake",
+      "slug": "typal-snake",
+      "taggingCount": 16
+    },
+    {
+      "name": "type errata dinosaur",
+      "slug": "type-errata-dinosaur",
+      "taggingCount": 16
+    },
+    {
+      "name": "uril ability",
+      "slug": "uril-ability",
+      "taggingCount": 16
+    },
+    {
+      "name": "arc lightning",
+      "slug": "arc-lightning",
+      "taggingCount": 15
+    },
+    {
+      "name": "awaken",
+      "slug": "awaken",
+      "taggingCount": 15
+    },
+    {
+      "name": "brainstorm",
+      "slug": "brainstorm",
+      "taggingCount": 15
+    },
+    {
+      "name": "conjure-enchantment",
+      "slug": "conjure-enchantment",
+      "taggingCount": 15
+    },
+    {
+      "name": "conjure-random",
+      "slug": "conjure-random",
+      "taggingCount": 15
+    },
+    {
+      "name": "counterspell-artifact",
+      "slug": "counterspell-artifact",
+      "taggingCount": 15
+    },
+    {
+      "name": "counterspell-bounce",
+      "slug": "counterspell-bounce",
+      "taggingCount": 15
+    },
+    {
+      "name": "creature type ship",
+      "slug": "creature-type-ship",
+      "taggingCount": 15
+    },
+    {
+      "name": "dice roll",
+      "slug": "dice-roll",
+      "taggingCount": 15
+    },
+    {
+      "name": "embalm token",
+      "slug": "embalm-token",
+      "taggingCount": 15
+    },
+    {
+      "name": "enters-and-leaves-trigger-self",
+      "slug": "enters-and-leaves-trigger-self",
+      "taggingCount": 15
+    },
+    {
+      "name": "first strike counter",
+      "slug": "first-strike-counter",
+      "taggingCount": 15
+    },
+    {
+      "name": "gifts ungiven",
+      "slug": "gifts-ungiven",
+      "taggingCount": 15
+    },
+    {
+      "name": "gives defender",
+      "slug": "gives-defender",
+      "taggingCount": 15
+    },
+    {
+      "name": "hand disruption",
+      "slug": "hand-disruption",
+      "taggingCount": 15
+    },
+    {
+      "name": "hand size decrease",
+      "slug": "hand-size-decrease",
+      "taggingCount": 15
+    },
+    {
+      "name": "hate-equipment",
+      "slug": "hate-equipment",
+      "taggingCount": 15
+    },
+    {
+      "name": "hate-plains",
+      "slug": "hate-plains",
+      "taggingCount": 15
+    },
+    {
+      "name": "hate-typal-choose",
+      "slug": "hate-typal-choose",
+      "taggingCount": 15
+    },
+    {
+      "name": "hate-typal-goblin",
+      "slug": "hate-typal-goblin",
+      "taggingCount": 15
+    },
+    {
+      "name": "impulse-to-top",
+      "slug": "impulse-to-top",
+      "taggingCount": 15
+    },
+    {
+      "name": "lockdown-artifact",
+      "slug": "lockdown-artifact",
+      "taggingCount": 15
+    },
+    {
+      "name": "menace counter",
+      "slug": "menace-counter",
+      "taggingCount": 15
+    },
+    {
+      "name": "old banish templating",
+      "slug": "old-banish-templating",
+      "taggingCount": 15
+    },
+    {
+      "name": "onomatopoeia",
+      "slug": "onomatopoeia",
+      "taggingCount": 15
+    },
+    {
+      "name": "play from top",
+      "slug": "play-from-top",
+      "taggingCount": 15
+    },
+    {
+      "name": "removal-noncreature",
+      "slug": "removal-noncreature",
+      "taggingCount": 15
+    },
+    {
+      "name": "reveal hand",
+      "slug": "reveal-hand",
+      "taggingCount": 15
+    },
+    {
+      "name": "sacrifice outlet-nonland",
+      "slug": "sacrifice-outlet-nonland",
+      "taggingCount": 15
+    },
+    {
+      "name": "seek-card",
+      "slug": "seek-card",
+      "taggingCount": 15
+    },
+    {
+      "name": "sneak",
+      "slug": "sneak",
+      "taggingCount": 15
+    },
+    {
+      "name": "stasis",
+      "slug": "stasis",
+      "taggingCount": 15
+    },
+    {
+      "name": "synergy-kicker",
+      "slug": "synergy-kicker",
+      "taggingCount": 15
+    },
+    {
+      "name": "theft-ownership",
+      "slug": "theft-ownership",
+      "taggingCount": 15
+    },
+    {
+      "name": "titan immortality",
+      "slug": "titan-immortality",
+      "taggingCount": 15
+    },
+    {
+      "name": "token version of a card",
+      "slug": "token-version-of-a-card",
+      "taggingCount": 15
+    },
+    {
+      "name": "tutor-enchantment",
+      "slug": "tutor-enchantment",
+      "taggingCount": 15
+    },
+    {
+      "name": "wannabe dark confidant",
+      "slug": "wannabe-dark-confidant",
+      "taggingCount": 15
+    },
+    {
+      "name": "attacking opponents matters",
+      "slug": "attacking-opponents-matters",
+      "taggingCount": 14
+    },
+    {
+      "name": "divvy",
+      "slug": "divvy",
+      "taggingCount": 14
+    },
+    {
+      "name": "emerge-from-creature",
+      "slug": "emerge-from-creature",
+      "taggingCount": 14
+    },
+    {
+      "name": "ethereal armor",
+      "slug": "ethereal-armor",
+      "taggingCount": 14
+    },
+    {
+      "name": "exo-storyline-in-cards",
+      "slug": "exo-storyline-in-cards",
+      "taggingCount": 14
+    },
+    {
+      "name": "flavor text matters",
+      "slug": "flavor-text-matters",
+      "taggingCount": 14
+    },
+    {
+      "name": "flicker-artifact",
+      "slug": "flicker-artifact",
+      "taggingCount": 14
+    },
+    {
+      "name": "flicker-permanent",
+      "slug": "flicker-permanent",
+      "taggingCount": 14
+    },
+    {
+      "name": "gives banding",
+      "slug": "gives-banding",
+      "taggingCount": 14
+    },
+    {
+      "name": "gives convoke",
+      "slug": "gives-convoke",
+      "taggingCount": 14
+    },
+    {
+      "name": "gives player protection",
+      "slug": "gives-player-protection",
+      "taggingCount": 14
+    },
+    {
+      "name": "gives suspend",
+      "slug": "gives-suspend",
+      "taggingCount": 14
+    },
+    {
+      "name": "grim return",
+      "slug": "grim-return",
+      "taggingCount": 14
+    },
+    {
+      "name": "hate-colorless",
+      "slug": "hate-colorless",
+      "taggingCount": 14
+    },
+    {
+      "name": "hate empty hand",
+      "slug": "hate-empty-hand",
+      "taggingCount": 14
+    },
+    {
+      "name": "hate-forest",
+      "slug": "hate-forest",
+      "taggingCount": 14
+    },
+    {
+      "name": "impulse-planeswalker",
+      "slug": "impulse-planeswalker",
+      "taggingCount": 14
+    },
+    {
+      "name": "lich effect",
+      "slug": "lich-effect",
+      "taggingCount": 14
+    },
+    {
+      "name": "marauder",
+      "slug": "marauder",
+      "taggingCount": 14
+    },
+    {
+      "name": "planechase mechanic",
+      "slug": "planechase-mechanic",
+      "taggingCount": 14
+    },
+    {
+      "name": "prevent sacrifice",
+      "slug": "prevent-sacrifice",
+      "taggingCount": 14
+    },
+    {
+      "name": "pseudo-shroud",
+      "slug": "pseudo-shroud",
+      "taggingCount": 14
+    },
+    {
+      "name": "regrowth-planeswalker",
+      "slug": "regrowth-planeswalker",
+      "taggingCount": 14
+    },
+    {
+      "name": "rescue-nonland",
+      "slug": "rescue-nonland",
+      "taggingCount": 14
+    },
+    {
+      "name": "skip turn",
+      "slug": "skip-turn",
+      "taggingCount": 14
+    },
+    {
+      "name": "sneak-self",
+      "slug": "sneak-self",
+      "taggingCount": 14
+    },
+    {
+      "name": "synergy-attraction",
+      "slug": "synergy-attraction",
+      "taggingCount": 14
+    },
+    {
+      "name": "synergy-spacecraft",
+      "slug": "synergy-spacecraft",
+      "taggingCount": 14
+    },
+    {
+      "name": "triggers at cleanup step",
+      "slug": "triggers-at-cleanup-step",
+      "taggingCount": 14
+    },
+    {
+      "name": "tutor-creature-dragon",
+      "slug": "tutor-creature-dragon",
+      "taggingCount": 14
+    },
+    {
+      "name": "typal-doctor",
+      "slug": "typal-doctor",
+      "taggingCount": 14
+    },
+    {
+      "name": "typal-mercenary",
+      "slug": "typal-mercenary",
+      "taggingCount": 14
+    },
+    {
+      "name": "typal-minotaur",
+      "slug": "typal-minotaur",
+      "taggingCount": 14
+    },
+    {
+      "name": "typal-rebel",
+      "slug": "typal-rebel",
+      "taggingCount": 14
+    },
+    {
+      "name": "typal-shaman",
+      "slug": "typal-shaman",
+      "taggingCount": 14
+    },
+    {
+      "name": "unstoppable",
+      "slug": "unstoppable",
+      "taggingCount": 14
+    },
+    {
+      "name": "affinity undergrowth",
+      "slug": "affinity-undergrowth",
+      "taggingCount": 13
+    },
+    {
+      "name": "booster tutor",
+      "slug": "booster-tutor",
+      "taggingCount": 13
+    },
+    {
+      "name": "burn battle",
+      "slug": "burn-battle",
+      "taggingCount": 13
+    },
+    {
+      "name": "burn-self",
+      "slug": "burn-self",
+      "taggingCount": 13
+    },
+    {
+      "name": "command",
+      "slug": "command",
+      "taggingCount": 13
+    },
+    {
+      "name": "compulsive research",
+      "slug": "compulsive-research",
+      "taggingCount": 13
+    },
+    {
+      "name": "conditional aura",
+      "slug": "conditional-aura",
+      "taggingCount": 13
+    },
+    {
+      "name": "conjure-to-graveyard",
+      "slug": "conjure-to-graveyard",
+      "taggingCount": 13
+    },
+    {
+      "name": "counterspell-free",
+      "slug": "counterspell-free",
+      "taggingCount": 13
+    },
+    {
+      "name": "digital to paper",
+      "slug": "digital-to-paper",
+      "taggingCount": 13
+    },
+    {
+      "name": "eternalize token",
+      "slug": "eternalize-token",
+      "taggingCount": 13
+    },
+    {
+      "name": "gains fear",
+      "slug": "gains-fear",
+      "taggingCount": 13
+    },
+    {
+      "name": "gives ingest",
+      "slug": "gives-ingest",
+      "taggingCount": 13
+    },
+    {
+      "name": "gives shadow",
+      "slug": "gives-shadow",
+      "taggingCount": 13
+    },
+    {
+      "name": "gives stalking",
+      "slug": "gives-stalking",
+      "taggingCount": 13
+    },
+    {
+      "name": "hate-monocolor",
+      "slug": "hate-monocolor",
+      "taggingCount": 13
+    },
+    {
+      "name": "hate-typal-human",
+      "slug": "hate-typal-human",
+      "taggingCount": 13
+    },
+    {
+      "name": "hunger",
+      "slug": "hunger",
+      "taggingCount": 13
+    },
+    {
+      "name": "library size matters",
+      "slug": "library-size-matters",
+      "taggingCount": 13
+    },
+    {
+      "name": "lifegain increaser",
+      "slug": "lifegain-increaser",
+      "taggingCount": 13
+    },
+    {
+      "name": "lightning bolt redux",
+      "slug": "lightning-bolt-redux",
+      "taggingCount": 13
+    },
+    {
+      "name": "loner",
+      "slug": "loner",
+      "taggingCount": 13
+    },
+    {
+      "name": "mana gorger",
+      "slug": "mana-gorger",
+      "taggingCount": 13
+    },
+    {
+      "name": "mechanical foreshadow",
+      "slug": "mechanical-foreshadow",
+      "taggingCount": 13
+    },
+    {
+      "name": "nonfunctional reminder counter",
+      "slug": "nonfunctional-reminder-counter",
+      "taggingCount": 13
+    },
+    {
+      "name": "other games matter",
+      "slug": "other-games-matter",
+      "taggingCount": 13
+    },
+    {
+      "name": "pillowfort",
+      "slug": "pillowfort",
+      "taggingCount": 13
+    },
+    {
+      "name": "pseudo-equipment",
+      "slug": "pseudo-equipment",
+      "taggingCount": 13
+    },
+    {
+      "name": "reach counter",
+      "slug": "reach-counter",
+      "taggingCount": 13
+    },
+    {
+      "name": "reanimate-equipment",
+      "slug": "reanimate-equipment",
+      "taggingCount": 13
+    },
+    {
+      "name": "relentless",
+      "slug": "relentless",
+      "taggingCount": 13
+    },
+    {
+      "name": "removal-vehicle",
+      "slug": "removal-vehicle",
+      "taggingCount": 13
+    },
+    {
+      "name": "roman numeral",
+      "slug": "roman-numeral",
+      "taggingCount": 13
+    },
+    {
+      "name": "rule of law",
+      "slug": "rule-of-law",
+      "taggingCount": 13
+    },
+    {
+      "name": "specific power matters",
+      "slug": "specific-power-matters",
+      "taggingCount": 13
+    },
+    {
+      "name": "sports name",
+      "slug": "sports-name",
+      "taggingCount": 13
+    },
+    {
+      "name": "super-menace",
+      "slug": "super-menace",
+      "taggingCount": 13
+    },
+    {
+      "name": "synergy-flashback",
+      "slug": "synergy-flashback",
+      "taggingCount": 13
+    },
+    {
+      "name": "synergy-ring",
+      "slug": "synergy-ring",
+      "taggingCount": 13
+    },
+    {
+      "name": "synergy-surveil",
+      "slug": "synergy-surveil",
+      "taggingCount": 13
+    },
+    {
+      "name": "theft-spell",
+      "slug": "theft-spell",
+      "taggingCount": 13
+    },
+    {
+      "name": "token increaser",
+      "slug": "token-increaser",
+      "taggingCount": 13
+    },
+    {
+      "name": "token without a card",
+      "slug": "token-without-a-card",
+      "taggingCount": 13
+    },
+    {
+      "name": "turns taken matter",
+      "slug": "turns-taken-matter",
+      "taggingCount": 13
+    },
+    {
+      "name": "tutor-enchantment-aura",
+      "slug": "tutor-enchantment-aura",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-dwarf",
+      "slug": "typal-dwarf",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-frog",
+      "slug": "typal-frog",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-insect",
+      "slug": "typal-insect",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-mouse",
+      "slug": "typal-mouse",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-mutant",
+      "slug": "typal-mutant",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-villain",
+      "slug": "typal-villain",
+      "taggingCount": 13
+    },
+    {
+      "name": "typal-wall",
+      "slug": "typal-wall",
+      "taggingCount": 13
+    },
+    {
+      "name": "vigor effect",
+      "slug": "vigor-effect",
+      "taggingCount": 13
+    },
+    {
+      "name": "watermark matters",
+      "slug": "watermark-matters",
+      "taggingCount": 13
+    },
+    {
+      "name": "banish-hand",
+      "slug": "banish-hand",
+      "taggingCount": 12
+    },
+    {
+      "name": "block unlimited",
+      "slug": "block-unlimited",
+      "taggingCount": 12
+    },
+    {
+      "name": "bounty",
+      "slug": "bounty",
+      "taggingCount": 12
+    },
+    {
+      "name": "coin flips matter",
+      "slug": "coin-flips-matter",
+      "taggingCount": 12
+    },
+    {
+      "name": "counterspell-tuck",
+      "slug": "counterspell-tuck",
+      "taggingCount": 12
+    },
+    {
+      "name": "creature type townsfolk",
+      "slug": "creature-type-townsfolk",
+      "taggingCount": 12
+    },
+    {
+      "name": "cycle-zodiac-creature",
+      "slug": "cycle-zodiac-creature",
+      "taggingCount": 12
+    },
+    {
+      "name": "dehydration with set mechanic",
+      "slug": "dehydration-with-set-mechanic",
+      "taggingCount": 12
+    },
+    {
+      "name": "fling-self",
+      "slug": "fling-self",
+      "taggingCount": 12
+    },
+    {
+      "name": "fractional power/toughness",
+      "slug": "fractional-power-toughness",
+      "taggingCount": 12
+    },
+    {
+      "name": "fulfilled futureshift",
+      "slug": "fulfilled-futureshift",
+      "taggingCount": 12
+    },
+    {
+      "name": "gives affinity",
+      "slug": "gives-affinity",
+      "taggingCount": 12
+    },
+    {
+      "name": "harmonic",
+      "slug": "harmonic",
+      "taggingCount": 12
+    },
+    {
+      "name": "hate-colored",
+      "slug": "hate-colored",
+      "taggingCount": 12
+    },
+    {
+      "name": "hate-flash",
+      "slug": "hate-flash",
+      "taggingCount": 12
+    },
+    {
+      "name": "hate-free-spell",
+      "slug": "hate-free-spell",
+      "taggingCount": 12
+    },
+    {
+      "name": "hate-shadow",
+      "slug": "hate-shadow",
+      "taggingCount": 12
+    },
+    {
+      "name": "howlgeist ability",
+      "slug": "howlgeist-ability",
+      "taggingCount": 12
+    },
+    {
+      "name": "impulsive recursion",
+      "slug": "impulsive-recursion",
+      "taggingCount": 12
+    },
+    {
+      "name": "landslow",
+      "slug": "landslow",
+      "taggingCount": 12
+    },
+    {
+      "name": "mana abilities matter",
+      "slug": "mana-abilities-matter",
+      "taggingCount": 12
+    },
+    {
+      "name": "mass fight",
+      "slug": "mass-fight",
+      "taggingCount": 12
+    },
+    {
+      "name": "nevermore",
+      "slug": "nevermore",
+      "taggingCount": 12
+    },
+    {
+      "name": "phoenix with set's mechanic",
+      "slug": "phoenix-with-set-s-mechanic",
+      "taggingCount": 12
+    },
+    {
+      "name": "power matters-total",
+      "slug": "power-matters-total",
+      "taggingCount": 12
+    },
+    {
+      "name": "protects-enchantment",
+      "slug": "protects-enchantment",
+      "taggingCount": 12
+    },
+    {
+      "name": "pseudo-dethrone",
+      "slug": "pseudo-dethrone",
+      "taggingCount": 12
+    },
+    {
+      "name": "recasting commander matters",
+      "slug": "recasting-commander-matters",
+      "taggingCount": 12
+    },
+    {
+      "name": "references keyword",
+      "slug": "references-keyword",
+      "taggingCount": 12
+    },
+    {
+      "name": "removal-battle",
+      "slug": "removal-battle",
+      "taggingCount": 12
+    },
+    {
+      "name": "removes indestructible",
+      "slug": "removes-indestructible",
+      "taggingCount": 12
+    },
+    {
+      "name": "sacrifice outlet-planeswalker",
+      "slug": "sacrifice-outlet-planeswalker",
+      "taggingCount": 12
+    },
+    {
+      "name": "sol land",
+      "slug": "sol-land",
+      "taggingCount": 12
+    },
+    {
+      "name": "substance",
+      "slug": "substance",
+      "taggingCount": 12
+    },
+    {
+      "name": "synergy-cave",
+      "slug": "synergy-cave",
+      "taggingCount": 12
+    },
+    {
+      "name": "synergy-land-graveyard",
+      "slug": "synergy-land-graveyard",
+      "taggingCount": 12
+    },
+    {
+      "name": "top deck manipulation",
+      "slug": "top-deck-manipulation",
+      "taggingCount": 12
+    },
+    {
+      "name": "turns off defender",
+      "slug": "turns-off-defender",
+      "taggingCount": 12
+    },
+    {
+      "name": "typal-bat",
+      "slug": "typal-bat",
+      "taggingCount": 12
+    },
+    {
+      "name": "typal-lizard",
+      "slug": "typal-lizard",
+      "taggingCount": 12
+    },
+    {
+      "name": "typal-samurai",
+      "slug": "typal-samurai",
+      "taggingCount": 12
+    },
+    {
+      "name": "un-color",
+      "slug": "un-color",
+      "taggingCount": 12
+    },
+    {
+      "name": "x doesn't matter",
+      "slug": "x-doesn-t-matter",
+      "taggingCount": 12
+    },
+    {
+      "name": "affinity for party",
+      "slug": "affinity-for-party",
+      "taggingCount": 11
+    },
+    {
+      "name": "animate enchantment",
+      "slug": "animate-enchantment",
+      "taggingCount": 11
+    },
+    {
+      "name": "bottom of library matters",
+      "slug": "bottom-of-library-matters",
+      "taggingCount": 11
+    },
+    {
+      "name": "change name",
+      "slug": "change-name",
+      "taggingCount": 11
+    },
+    {
+      "name": "commander tax evasion",
+      "slug": "commander-tax-evasion",
+      "taggingCount": 11
+    },
+    {
+      "name": "conjure-card",
+      "slug": "conjure-card",
+      "taggingCount": 11
+    },
+    {
+      "name": "control blocker",
+      "slug": "control-blocker",
+      "taggingCount": 11
+    },
+    {
+      "name": "counter preservation",
+      "slug": "counter-preservation",
+      "taggingCount": 11
+    },
+    {
+      "name": "cycle-rav-bounceland",
+      "slug": "cycle-rav-bounceland",
+      "taggingCount": 11
+    },
+    {
+      "name": "cycle-rav-mmn",
+      "slug": "cycle-rav-mmn",
+      "taggingCount": 11
+    },
+    {
+      "name": "distinct echo cost",
+      "slug": "distinct-echo-cost",
+      "taggingCount": 11
+    },
+    {
+      "name": "gives charge counter",
+      "slug": "gives-charge-counter",
+      "taggingCount": 11
+    },
+    {
+      "name": "gives forestwalk",
+      "slug": "gives-forestwalk",
+      "taggingCount": 11
+    },
+    {
+      "name": "gives islandwalk",
+      "slug": "gives-islandwalk",
+      "taggingCount": 11
+    },
+    {
+      "name": "hate-typal-elf",
+      "slug": "hate-typal-elf",
+      "taggingCount": 11
+    },
+    {
+      "name": "hate-typal-vampire",
+      "slug": "hate-typal-vampire",
+      "taggingCount": 11
+    },
+    {
+      "name": "heckbent",
+      "slug": "heckbent",
+      "taggingCount": 11
+    },
+    {
+      "name": "invitational card",
+      "slug": "invitational-card",
+      "taggingCount": 11
+    },
+    {
+      "name": "lose trigger",
+      "slug": "lose-trigger",
+      "taggingCount": 11
+    },
+    {
+      "name": "mob name",
+      "slug": "mob-name",
+      "taggingCount": 11
+    },
+    {
+      "name": "phyrexian token",
+      "slug": "phyrexian-token",
+      "taggingCount": 11
+    },
+    {
+      "name": "poison mechanics",
+      "slug": "poison-mechanics",
+      "taggingCount": 11
+    },
+    {
+      "name": "reanimate",
+      "slug": "reanimate",
+      "taggingCount": 11
+    },
+    {
+      "name": "recurring suspend",
+      "slug": "recurring-suspend",
+      "taggingCount": 11
+    },
+    {
+      "name": "removes hexproof",
+      "slug": "removes-hexproof",
+      "taggingCount": 11
+    },
+    {
+      "name": "restock-instant",
+      "slug": "restock-instant",
+      "taggingCount": 11
+    },
+    {
+      "name": "restock-sorcery",
+      "slug": "restock-sorcery",
+      "taggingCount": 11
+    },
+    {
+      "name": "seek-land-any",
+      "slug": "seek-land-any",
+      "taggingCount": 11
+    },
+    {
+      "name": "skip untap step",
+      "slug": "skip-untap-step",
+      "taggingCount": 11
+    },
+    {
+      "name": "sunder",
+      "slug": "sunder",
+      "taggingCount": 11
+    },
+    {
+      "name": "synergy-speed",
+      "slug": "synergy-speed",
+      "taggingCount": 11
+    },
+    {
+      "name": "synergy-target",
+      "slug": "synergy-target",
+      "taggingCount": 11
+    },
+    {
+      "name": "theft-planeswalker",
+      "slug": "theft-planeswalker",
+      "taggingCount": 11
+    },
+    {
+      "name": "tribute",
+      "slug": "tribute",
+      "taggingCount": 11
+    },
+    {
+      "name": "tuck",
+      "slug": "tuck",
+      "taggingCount": 11
+    },
+    {
+      "name": "tutor-creature-mercenary",
+      "slug": "tutor-creature-mercenary",
+      "taggingCount": 11
+    },
+    {
+      "name": "typal-dog",
+      "slug": "typal-dog",
+      "taggingCount": 11
+    },
+    {
+      "name": "typal-golem",
+      "slug": "typal-golem",
+      "taggingCount": 11
+    },
+    {
+      "name": "typal-otter",
+      "slug": "typal-otter",
+      "taggingCount": 11
+    },
+    {
+      "name": "un-forecast",
+      "slug": "un-forecast",
+      "taggingCount": 11
+    },
+    {
+      "name": "untapper-nonland",
+      "slug": "untapper-nonland",
+      "taggingCount": 11
+    },
+    {
+      "name": "clothing matters",
+      "slug": "clothing-matters",
+      "taggingCount": 10
+    },
+    {
+      "name": "combat arbiter",
+      "slug": "combat-arbiter",
+      "taggingCount": 10
+    },
+    {
+      "name": "commander identity matters",
+      "slug": "commander-identity-matters",
+      "taggingCount": 10
+    },
+    {
+      "name": "cone spell",
+      "slug": "cone-spell",
+      "taggingCount": 10
+    },
+    {
+      "name": "copy-nonland",
+      "slug": "copy-nonland",
+      "taggingCount": 10
+    },
+    {
+      "name": "counterspell-enchantment",
+      "slug": "counterspell-enchantment",
+      "taggingCount": 10
+    },
+    {
+      "name": "creature type guardian",
+      "slug": "creature-type-guardian",
+      "taggingCount": 10
+    },
+    {
+      "name": "crucible of worlds",
+      "slug": "crucible-of-worlds",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-2xm-draft-signpost",
+      "slug": "cycle-2xm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-a25-draft-signpost",
+      "slug": "cycle-a25-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-a25-r-two-color",
+      "slug": "cycle-a25-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-abu-dual-land",
+      "slug": "cycle-abu-dual-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-aer-draft-signpost",
+      "slug": "cycle-aer-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-afr-u-legend",
+      "slug": "cycle-afr-u-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-akh-draft-signpost",
+      "slug": "cycle-akh-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ala-u-two-color",
+      "slug": "cycle-ala-u-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-apc-c-two-color",
+      "slug": "cycle-apc-c-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-apc-u-two-color",
+      "slug": "cycle-apc-u-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-bbd-draft-signpost",
+      "slug": "cycle-bbd-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-bbd-legendary-partner",
+      "slug": "cycle-bbd-legendary-partner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-bbd-u-partner",
+      "slug": "cycle-bbd-u-partner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-bfz-draft-signpost",
+      "slug": "cycle-bfz-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-c-typal-boost",
+      "slug": "cycle-blb-c-typal-boost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-draft-signpost",
+      "slug": "cycle-blb-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-duo",
+      "slug": "cycle-blb-duo",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-hybrid",
+      "slug": "cycle-blb-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-r-two-color-legend",
+      "slug": "cycle-blb-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-blb-u-typal",
+      "slug": "cycle-blb-u-typal",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-c-hybrid",
+      "slug": "cycle-block-rav-c-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-colors-matter",
+      "slug": "cycle-block-rav-colors-matter",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-guild-champion",
+      "slug": "cycle-block-rav-guild-champion",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-guildmage",
+      "slug": "cycle-block-rav-guildmage",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-mnn",
+      "slug": "cycle-block-rav-mnn",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rav-r-hybrid",
+      "slug": "cycle-block-rav-r-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-c-hybrid",
+      "slug": "cycle-block-rtr-c-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-guild-charm",
+      "slug": "cycle-block-rtr-guild-charm",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-guildmage",
+      "slug": "cycle-block-rtr-guildmage",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-guildmaster",
+      "slug": "cycle-block-rtr-guildmaster",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-m-multicolor",
+      "slug": "cycle-block-rtr-m-multicolor",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-off-color",
+      "slug": "cycle-block-rtr-off-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-r-hybrid",
+      "slug": "cycle-block-rtr-r-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-u-guild-kw",
+      "slug": "cycle-block-rtr-u-guild-kw",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-block-rtr-u-hybrid",
+      "slug": "cycle-block-rtr-u-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-bro-draft-signpost",
+      "slug": "cycle-bro-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-c16-m-partner",
+      "slug": "cycle-c16-m-partner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-c21-mono-legend",
+      "slug": "cycle-c21-mono-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clb-draft-signpost",
+      "slug": "cycle-clb-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clb-r-two-color-legend",
+      "slug": "cycle-clb-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clb-tricolor-legend",
+      "slug": "cycle-clb-tricolor-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clb-u-background",
+      "slug": "cycle-clb-u-background",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clu-guild-rare",
+      "slug": "cycle-clu-guild-rare",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clu-r-hybrid",
+      "slug": "cycle-clu-r-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-clu-unc-hybrid",
+      "slug": "cycle-clu-unc-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmm-draft-signpost",
+      "slug": "cycle-cmm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmm-m-mono-legend",
+      "slug": "cycle-cmm-m-mono-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmm-r-two-color-legend",
+      "slug": "cycle-cmm-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmm-tricolor-legend",
+      "slug": "cycle-cmm-tricolor-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmr-backward-partner",
+      "slug": "cycle-cmr-backward-partner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmr-draft-signpost",
+      "slug": "cycle-cmr-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmr-forward-partner",
+      "slug": "cycle-cmr-forward-partner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmr-r-two-color",
+      "slug": "cycle-cmr-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cmr-tricolor-legend",
+      "slug": "cycle-cmr-tricolor-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cn2-draft-signpost",
+      "slug": "cycle-cn2-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cns-draft-signpost",
+      "slug": "cycle-cns-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-cns-r-two-color",
+      "slug": "cycle-cns-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dft-nonvehicle-signpost",
+      "slug": "cycle-dft-nonvehicle-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dft-team-captain",
+      "slug": "cycle-dft-team-captain",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dft-team-vehicle",
+      "slug": "cycle-dft-team-vehicle",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-c-guild-ability",
+      "slug": "cycle-dgm-c-guild-ability",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-cluestones",
+      "slug": "cycle-dgm-cluestones",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-draft-signpost",
+      "slug": "cycle-dgm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-maze-runner",
+      "slug": "cycle-dgm-maze-runner",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-m-two-color",
+      "slug": "cycle-dgm-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dgm-u-fuse",
+      "slug": "cycle-dgm-u-fuse",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dmr-draft-signpost",
+      "slug": "cycle-dmr-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dmu-dual-land",
+      "slug": "cycle-dmu-dual-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dmu-mmn-signpost",
+      "slug": "cycle-dmu-mmn-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dmu-mn-signpost",
+      "slug": "cycle-dmu-mn-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dmu-r-two-color-legend",
+      "slug": "cycle-dmu-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dom-draft-signpost",
+      "slug": "cycle-dom-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dsk-r-two-color",
+      "slug": "cycle-dsk-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dsk-thirteenland",
+      "slug": "cycle-dsk-thirteenland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dual-investigate-tapland",
+      "slug": "cycle-dual-investigate-tapland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-dual-surveil-land",
+      "slug": "cycle-dual-surveil-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eld-hybrid",
+      "slug": "cycle-eld-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eld-r-m-two-color",
+      "slug": "cycle-eld-r-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eld-u-two-color",
+      "slug": "cycle-eld-u-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ema-draft-signpost",
+      "slug": "cycle-ema-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ema-r-two-color",
+      "slug": "cycle-ema-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eoe-draft-signpost",
+      "slug": "cycle-eoe-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eoe-r-two-color",
+      "slug": "cycle-eoe-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-eoe-u-spacecraft",
+      "slug": "cycle-eoe-u-spacecraft",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-fdn-draft-signpost",
+      "slug": "cycle-fdn-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-fdn-r-two-color",
+      "slug": "cycle-fdn-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-fin-dual-town",
+      "slug": "cycle-fin-dual-town",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-fin-r-two-color",
+      "slug": "cycle-fin-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-gtc-m-two-color",
+      "slug": "cycle-gtc-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-guildgate",
+      "slug": "cycle-guildgate",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-hbg-draft-signpost",
+      "slug": "cycle-hbg-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-hbg-u-specialize",
+      "slug": "cycle-hbg-u-specialize",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-iko-companion",
+      "slug": "cycle-iko-companion",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ima-draft-signpost",
+      "slug": "cycle-ima-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ima-r-two-color",
+      "slug": "cycle-ima-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-inr-draft-signpost",
+      "slug": "cycle-inr-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-inr-r-two-color",
+      "slug": "cycle-inr-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-keyrune",
+      "slug": "cycle-keyrune",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-khm-legendary-signpost",
+      "slug": "cycle-khm-legendary-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-khm-realm",
+      "slug": "cycle-khm-realm",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-khm-r-saga",
+      "slug": "cycle-khm-r-saga",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-khm-snow-tapland",
+      "slug": "cycle-khm-snow-tapland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-khm-u-saga",
+      "slug": "cycle-khm-u-saga",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-kld-draft-signpost",
+      "slug": "cycle-kld-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ktk-draft-signpost",
+      "slug": "cycle-ktk-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ktk-enemy-ability",
+      "slug": "cycle-ktk-enemy-ability",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ktk-gainland",
+      "slug": "cycle-ktk-gainland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-lci-draft-signpost",
+      "slug": "cycle-lci-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-lci-r-two-color",
+      "slug": "cycle-lci-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-m19-draft-signpost",
+      "slug": "cycle-m19-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-m20-draft-signpost",
+      "slug": "cycle-m20-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-m21-draft-signpost",
+      "slug": "cycle-m21-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh1-draft-signpost",
+      "slug": "cycle-mh1-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh1-r-two-color",
+      "slug": "cycle-mh1-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh2-bridge",
+      "slug": "cycle-mh2-bridge",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh2-c-draft-signpost",
+      "slug": "cycle-mh2-c-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh2-r-two-color-new",
+      "slug": "cycle-mh2-r-two-color-new",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh2-u-draft-signpost",
+      "slug": "cycle-mh2-u-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-c-draft-signpost",
+      "slug": "cycle-mh3-c-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-landscape",
+      "slug": "cycle-mh3-landscape",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-mdfc-dual-land",
+      "slug": "cycle-mh3-mdfc-dual-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-mdfc-mono-land",
+      "slug": "cycle-mh3-mdfc-mono-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-r-m-two-color",
+      "slug": "cycle-mh3-r-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mh3-u-draft-signpost",
+      "slug": "cycle-mh3-u-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mid-draft-signpost",
+      "slug": "cycle-mid-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mid-r-flashback",
+      "slug": "cycle-mid-r-flashback",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mid-r-two-color-legend",
+      "slug": "cycle-mid-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mid-u-flashback",
+      "slug": "cycle-mid-u-flashback",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-draft-signpost",
+      "slug": "cycle-mkm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-hybrid-disguise",
+      "slug": "cycle-mkm-hybrid-disguise",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-m-two-color",
+      "slug": "cycle-mkm-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-r-2c-noncreature",
+      "slug": "cycle-mkm-r-2c-noncreature",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-r-two-color-legend",
+      "slug": "cycle-mkm-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mkm-u-gold-noncreature",
+      "slug": "cycle-mkm-u-gold-noncreature",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mm2-r-two-color",
+      "slug": "cycle-mm2-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mm3-r-two-color",
+      "slug": "cycle-mm3-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mom-draft-signpost",
+      "slug": "cycle-mom-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mom-invasion-signpost",
+      "slug": "cycle-mom-invasion-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mom-two-color-team-up",
+      "slug": "cycle-mom-two-color-team-up",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-mom-u-mono-invasion",
+      "slug": "cycle-mom-u-mono-invasion",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-neo-draft-signpost",
+      "slug": "cycle-neo-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ogw-draft-signpost",
+      "slug": "cycle-ogw-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-one-draft-signpost",
+      "slug": "cycle-one-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-one-r-two-color",
+      "slug": "cycle-one-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ori-draft-signpost",
+      "slug": "cycle-ori-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-otj-draft-signpost",
+      "slug": "cycle-otj-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-otj-pingland",
+      "slug": "cycle-otj-pingland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-otj-u-legend",
+      "slug": "cycle-otj-u-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-pls-r-two-color",
+      "slug": "cycle-pls-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-backward-ability",
+      "slug": "cycle-rav-backward-ability",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-backward-boost",
+      "slug": "cycle-rav-backward-boost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-forward-ability",
+      "slug": "cycle-rav-forward-ability",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-forward-boost",
+      "slug": "cycle-rav-forward-boost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-guild-artifact",
+      "slug": "cycle-rav-guild-artifact",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-guildhall",
+      "slug": "cycle-rav-guildhall",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-guildmaster",
+      "slug": "cycle-rav-guildmaster",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-shockland",
+      "slug": "cycle-rav-shockland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rav-signet",
+      "slug": "cycle-rav-signet",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rix-c-typal-boost",
+      "slug": "cycle-rix-c-typal-boost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rix-draft-signpost",
+      "slug": "cycle-rix-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rtr-m-two-color",
+      "slug": "cycle-rtr-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rvr-c-hybrid",
+      "slug": "cycle-rvr-c-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rvr-c-two-color",
+      "slug": "cycle-rvr-c-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rvr-r-guild-spell",
+      "slug": "cycle-rvr-r-guild-spell",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rvr-r-two-color-legend",
+      "slug": "cycle-rvr-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-rvr-u-two-color",
+      "slug": "cycle-rvr-u-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-shm-liege",
+      "slug": "cycle-shm-liege",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-soi-draft-signpost",
+      "slug": "cycle-soi-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-spm-c-legend",
+      "slug": "cycle-spm-c-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-spm-draft-signpost",
+      "slug": "cycle-spm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-spm-r-two-color",
+      "slug": "cycle-spm-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tdm-draft-signpost",
+      "slug": "cycle-tdm-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tdm-r-tricolor",
+      "slug": "cycle-tdm-r-tricolor",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-thb-draft-signpost",
+      "slug": "cycle-thb-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-thb-r-m-two-color",
+      "slug": "cycle-thb-r-m-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ths-draft-signpost",
+      "slug": "cycle-ths-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-ths-r-two-color",
+      "slug": "cycle-ths-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tkhm-realm-token",
+      "slug": "cycle-tkhm-realm-token",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tla-c-hybrid",
+      "slug": "cycle-tla-c-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tla-c-tapland",
+      "slug": "cycle-tla-c-tapland",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tla-r-two-color",
+      "slug": "cycle-tla-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tla-u-hybrid",
+      "slug": "cycle-tla-u-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tla-u-two-color",
+      "slug": "cycle-tla-u-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tmt-c-hybrid",
+      "slug": "cycle-tmt-c-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tmt-r-hybrid",
+      "slug": "cycle-tmt-r-hybrid",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tmt-team-up",
+      "slug": "cycle-tmt-team-up",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-tsp-c-sliver",
+      "slug": "cycle-tsp-c-sliver",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-unf-draft-signpost",
+      "slug": "cycle-unf-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-vma-draft-signpost",
+      "slug": "cycle-vma-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-vma-r-two-color",
+      "slug": "cycle-vma-r-two-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-vow-draft-signpost",
+      "slug": "cycle-vow-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-vow-r-two-color-legend",
+      "slug": "cycle-vow-r-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-war-draft-signpost",
+      "slug": "cycle-war-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-war-hybrid-planeswalker",
+      "slug": "cycle-war-hybrid-planeswalker",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-war-u-planeswalker",
+      "slug": "cycle-war-u-planeswalker",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-war-u-two-color-spell",
+      "slug": "cycle-war-u-two-color-spell",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-woe-draft-signpost",
+      "slug": "cycle-woe-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-woe-r-2c-adventurer",
+      "slug": "cycle-woe-r-2c-adventurer",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-woe-u-2c-adventurer",
+      "slug": "cycle-woe-u-2c-adventurer",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-znr-draft-signpost",
+      "slug": "cycle-znr-draft-signpost",
+      "taggingCount": 10
+    },
+    {
+      "name": "cycle-znr-two-color-legend",
+      "slug": "cycle-znr-two-color-legend",
+      "taggingCount": 10
+    },
+    {
+      "name": "drawlink",
+      "slug": "drawlink",
+      "taggingCount": 10
+    },
+    {
+      "name": "eminence",
+      "slug": "eminence",
+      "taggingCount": 10
+    },
+    {
+      "name": "expertise",
+      "slug": "expertise",
+      "taggingCount": 10
+    },
+    {
+      "name": "flicker-nonland",
+      "slug": "flicker-nonland",
+      "taggingCount": 10
+    },
+    {
+      "name": "freeze-land",
+      "slug": "freeze-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "gives exalted",
+      "slug": "gives-exalted",
+      "taggingCount": 10
+    },
+    {
+      "name": "gives horsemanship",
+      "slug": "gives-horsemanship",
+      "taggingCount": 10
+    },
+    {
+      "name": "gives keyword counter",
+      "slug": "gives-keyword-counter",
+      "taggingCount": 10
+    },
+    {
+      "name": "gives wither",
+      "slug": "gives-wither",
+      "taggingCount": 10
+    },
+    {
+      "name": "great-designer-search-3",
+      "slug": "great-designer-search-3",
+      "taggingCount": 10
+    },
+    {
+      "name": "grind",
+      "slug": "grind",
+      "taggingCount": 10
+    },
+    {
+      "name": "hate-first-strike",
+      "slug": "hate-first-strike",
+      "taggingCount": 10
+    },
+    {
+      "name": "just shuffle",
+      "slug": "just-shuffle",
+      "taggingCount": 10
+    },
+    {
+      "name": "lockdown-land",
+      "slug": "lockdown-land",
+      "taggingCount": 10
+    },
+    {
+      "name": "morphling",
+      "slug": "morphling",
+      "taggingCount": 10
+    },
+    {
+      "name": "moxen",
+      "slug": "moxen",
+      "taggingCount": 10
+    },
+    {
+      "name": "old fight",
+      "slug": "old-fight",
+      "taggingCount": 10
+    },
+    {
+      "name": "peek-hand",
+      "slug": "peek-hand",
+      "taggingCount": 10
+    },
+    {
+      "name": "pile",
+      "slug": "pile",
+      "taggingCount": 10
+    },
+    {
+      "name": "platinum angel effect",
+      "slug": "platinum-angel-effect",
+      "taggingCount": 10
+    },
+    {
+      "name": "prevent put counter",
+      "slug": "prevent-put-counter",
+      "taggingCount": 10
+    },
+    {
+      "name": "sneak-aura",
+      "slug": "sneak-aura",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-1/1",
+      "slug": "synergy-1-1",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-art-sticker",
+      "slug": "synergy-art-sticker",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-colored",
+      "slug": "synergy-colored",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-flash",
+      "slug": "synergy-flash",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-incubator",
+      "slug": "synergy-incubator",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-suspect",
+      "slug": "synergy-suspect",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-toxic",
+      "slug": "synergy-toxic",
+      "taggingCount": 10
+    },
+    {
+      "name": "synergy-untapped",
+      "slug": "synergy-untapped",
+      "taggingCount": 10
+    },
+    {
+      "name": "text change color",
+      "slug": "text-change-color",
+      "taggingCount": 10
+    },
+    {
+      "name": "top matters",
+      "slug": "top-matters",
+      "taggingCount": 10
+    },
+    {
+      "name": "turn control",
+      "slug": "turn-control",
+      "taggingCount": 10
+    },
+    {
+      "name": "turn-face-down",
+      "slug": "turn-face-down",
+      "taggingCount": 10
+    },
+    {
+      "name": "tutor-creature-rebel",
+      "slug": "tutor-creature-rebel",
+      "taggingCount": 10
+    },
+    {
+      "name": "typal-fungus",
+      "slug": "typal-fungus",
+      "taggingCount": 10
+    },
+    {
+      "name": "unexile",
+      "slug": "unexile",
+      "taggingCount": 10
+    },
+    {
+      "name": "unique mana symbol",
+      "slug": "unique-mana-symbol",
+      "taggingCount": 10
+    },
+    {
+      "name": "worship",
+      "slug": "worship",
+      "taggingCount": 10
+    }
+  ]
+}
