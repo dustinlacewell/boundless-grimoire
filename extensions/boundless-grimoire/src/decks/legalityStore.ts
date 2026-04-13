@@ -67,7 +67,7 @@ export async function checkLegality(
   for (let i = 0; i < allOracleIds.length; i += BATCH_SIZE) {
     const batch = allOracleIds.slice(i, i + BATCH_SIZE);
     const oracleClause = batch.map((id) => `oracleid:${id}`).join(" OR ");
-    const query = `${formatFragment} (${oracleClause})`;
+    const query = `(${formatFragment}) (${oracleClause})`;
 
     try {
       // Paginate through all results for this batch

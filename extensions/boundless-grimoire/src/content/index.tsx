@@ -7,6 +7,7 @@ import { hydrateCustomFormatStore } from "../filters/customFormatStore";
 import { hydrateCustomQueryStore } from "../filters/customQueryStore";
 import { hydratePresetStore } from "../filters/presetStore";
 import { hydratePrintSizeStore } from "../cards/printSizeStore";
+import { hydrateSettingsStore } from "../settings/settingsStore";
 import { injectStyles } from "../ui/injectStyles";
 import { App } from "./App";
 
@@ -31,6 +32,7 @@ const allHydrated = Promise.allSettled([
   hydratePresetStore(),
   hydrateCustomQueryStore(),
   hydrateCustomFormatStore(),
+  hydrateSettingsStore(),
 ]).then((results) => {
   for (const r of results) {
     if (r.status === "rejected") {

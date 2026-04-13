@@ -98,7 +98,7 @@ export function SearchResults() {
   const formatFragment = deck?.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
   const query = useMemo(() => {
     const base = buildScryfallQuery(filterState);
-    return formatFragment ? `${formatFragment} ${base}`.trim() : base;
+    return formatFragment ? `(${formatFragment}) ${base}`.trim() : base;
   }, [filterState, formatFragment]);
   const { state, loadMore } = useCardSearch(query, sortField, sortDir);
   const pinnedById = usePinnedCardsStore(selectPinnedById);

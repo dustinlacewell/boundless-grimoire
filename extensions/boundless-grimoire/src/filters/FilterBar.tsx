@@ -1,5 +1,9 @@
+import { useMemo } from "react";
+import { useCustomFormatStore } from "./customFormatStore";
 import { useCustomQueryStore } from "./customQueryStore";
+import { useFilterStore } from "./store";
 import { FilterField } from "./FilterField";
+import { buildScryfallQuery } from "./buildQuery";
 import { CardNameFilter } from "./components/CardNameFilter";
 import { CardTextFilter } from "./components/CardTextFilter";
 import { ColorFilter } from "./components/ColorFilter";
@@ -12,6 +16,9 @@ import { SubtypeFilter } from "./components/SubtypeFilter";
 import { SupertypeFilter } from "./components/SupertypeFilter";
 import { TextFilter } from "./components/TextFilter";
 import { TypeFilter } from "./components/TypeFilter";
+import { useSettingsStore } from "../settings/settingsStore";
+import { selectedDeck, useDeckStore } from "../storage/deckStore";
+import { colors } from "../ui/colors";
 
 function CustomQuerySection() {
   const hasHeaders = useCustomQueryStore(
@@ -56,7 +63,41 @@ const rowStyle: React.CSSProperties = {
  * Sort and Reset are NOT here — they live in SearchResultsHeader so
  * they sit directly above the grid.
  */
+function CompiledQueryDisplay() {
+  const filterState = useFilterStore((s) => s.state);
+  const deck = useDeckStore(selectedDeck);
+  const formats = useCustomFormatStore((s) => s.formats);
+  const formatFragment = deck?.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
+
+  const query = useMemo(() => {
+    const base = buildScryfallQuery(filterState);
+    return formatFragment ? `(${formatFragment}) ${base}`.trim() : base;
+  }, [filterState, formatFragment]);
+
+  if (!query) return null;
+
+  return (
+    <div
+      style={{
+        background: colors.bg2,
+        border: `1px solid ${colors.border}`,
+        borderRadius: 6,
+        padding: "8px 12px",
+        fontSize: 12,
+        fontFamily: "monospace",
+        color: colors.textMuted,
+        wordBreak: "break-all",
+        lineHeight: 1.5,
+      }}
+    >
+      {query}
+    </div>
+  );
+}
+
 export function FilterBar() {
+  const devMode = useSettingsStore((s) => s.settings.devMode);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <FilterPresets />
@@ -103,6 +144,7 @@ export function FilterBar() {
       </div>
 
       <CustomQuerySection />
+      {devMode && <CompiledQueryDisplay />}
     </div>
   );
 }

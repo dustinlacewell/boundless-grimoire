@@ -15,6 +15,7 @@ import {
   useCustomQueryStore,
 } from "../filters/customQueryStore";
 import { colors } from "../ui/colors";
+import { setDevMode, useSettingsStore } from "./settingsStore";
 
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
@@ -132,7 +133,7 @@ const footerStyle: React.CSSProperties = {
   alignItems: "center",
 };
 
-type Tab = "filters" | "formats";
+type Tab = "general" | "filters" | "formats";
 
 interface Props {
   onClose: () => void;
@@ -141,9 +142,10 @@ interface Props {
 export function SettingsModal({ onClose }: Props) {
   const queries = useCustomQueryStore((s) => s.queries);
   const formats = useCustomFormatStore((s) => s.formats);
+  const devMode = useSettingsStore((s) => s.settings.devMode);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
   const [formatText, setFormatText] = useState(() => formatsToText(formats));
-  const [tab, setTab] = useState<Tab>("filters");
+  const [tab, setTab] = useState<Tab>("general");
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -187,6 +189,9 @@ export function SettingsModal({ onClose }: Props) {
         </div>
 
         <div style={tabBarStyle}>
+          <button type="button" style={tabStyle(tab === "general")} onClick={() => setTab("general")}>
+            General
+          </button>
           <button type="button" style={tabStyle(tab === "filters")} onClick={() => setTab("filters")}>
             Filters
           </button>
@@ -196,6 +201,22 @@ export function SettingsModal({ onClose }: Props) {
         </div>
 
         <div style={bodyStyle}>
+          {tab === "general" && (
+            <>
+              <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={devMode}
+                  onChange={(e) => setDevMode(e.target.checked)}
+                  style={{ accentColor: colors.accent, width: 16, height: 16 }}
+                />
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Developer Mode</span>
+              </label>
+              <div style={hintStyle}>
+                Shows the compiled Scryfall query below the filter bar.
+              </div>
+            </>
+          )}
           {tab === "filters" && (
             <>
               <div style={hintStyle}>
