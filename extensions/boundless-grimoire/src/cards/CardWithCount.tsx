@@ -41,6 +41,8 @@ interface Props {
    * to add to sideboard, and by the deck view to move between zones.
    */
   onAltClick?: (snapshot: CardSnapshot) => void;
+  /** Ctrl+right-click sets this card as the deck cover art. */
+  onSetCover?: (snapshot: CardSnapshot) => void;
   /** Show the pin indicator badge centered on the card art. */
   pinned?: boolean;
   /** Show the favorite indicator badge centered on the card art. */
@@ -53,6 +55,7 @@ interface TitleOpts {
   canPin: boolean;
   canFavorite: boolean;
   canAlt: boolean;
+  canSetCover: boolean;
   altLabel?: string;
   pinned: boolean;
   favorited: boolean;
@@ -69,6 +72,7 @@ const buildTitle = (name: string, opts: TitleOpts): string => {
     parts.push(`shift-right-click ${opts.favorited ? "unfavorite" : "favorite"}`);
   }
   if (opts.canAlt) parts.push(`alt-click ${opts.altLabel ?? "sideboard"}`);
+  if (opts.canSetCover) parts.push("ctrl-right-click set as cover");
   parts.push("Ctrl-hover preview");
   return `${name} — ${parts.join(", ")}`;
 };
@@ -95,6 +99,7 @@ export function CardWithCount({
   onShiftClick,
   onShiftContextMenu,
   onAltClick,
+  onSetCover,
   pinned = false,
   favorited = false,
   illegal = false,
@@ -117,6 +122,10 @@ export function CardWithCount({
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (e.ctrlKey && onSetCover) {
+      onSetCover(snapshot);
+      return;
+    }
     if (e.shiftKey && onShiftContextMenu) {
       onShiftContextMenu(snapshot);
       return;
@@ -149,6 +158,7 @@ export function CardWithCount({
         canPin: !!onShiftClick,
         canFavorite: !!onShiftContextMenu,
         canAlt: !!onAltClick,
+        canSetCover: !!onSetCover,
         pinned,
         favorited,
       })}

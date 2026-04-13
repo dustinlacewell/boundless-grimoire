@@ -12,6 +12,7 @@ interface Props {
   onDecrement: (cardId: string) => void;
   onPickPrint?: (snapshot: CardSnapshot) => void;
   onAltClick?: (snapshot: CardSnapshot) => void;
+  onSetCover?: (snapshot: CardSnapshot) => void;
   illegalCards?: Set<string>;
 }
 
@@ -35,6 +36,7 @@ export function CategoryStack({
   onDecrement,
   onPickPrint,
   onAltClick,
+  onSetCover,
   illegalCards,
 }: Props) {
   const cardH = cardHeightFor(cardWidth);
@@ -75,6 +77,7 @@ export function CategoryStack({
               onDecrement={onDecrement}
               onPickPrint={onPickPrint}
               onAltClick={onAltClick}
+              onSetCover={onSetCover}
               illegal={illegalCards?.has(entry.snapshot.id)}
             />
           </div>

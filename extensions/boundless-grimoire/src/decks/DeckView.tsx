@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { categorizeDeck } from "../cards/categorize";
 import { openPrintPicker } from "../cards/printPickerStore";
 import { useCustomFormatStore } from "../filters/customFormatStore";
-import { decrementCard, incrementCard, moveCardToZone } from "../storage/deckStore";
+import { decrementCard, incrementCard, moveCardToZone, setDeckCover } from "../storage/deckStore";
 import type { CardSnapshot, Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
@@ -65,6 +65,7 @@ export function DeckView({ deck, cardWidth = 180 }: Props) {
   const onDecrement = (cardId: string) => decrementCard(deck.id, cardId);
   const onPickPrint = (snapshot: CardSnapshot) => openPrintPicker(deck.id, snapshot);
   const onAltClickMain = (snapshot: CardSnapshot) => moveCardToZone(deck.id, snapshot.id, "main");
+  const onSetCover = (snapshot: CardSnapshot) => setDeckCover(deck.id, snapshot.id);
 
   const onSideIncrement = (snapshot: CardSnapshot) => incrementCard(deck.id, snapshot, "sideboard");
   const onSideDecrement = (cardId: string) => decrementCard(deck.id, cardId, "sideboard");
@@ -83,6 +84,7 @@ export function DeckView({ deck, cardWidth = 180 }: Props) {
               onDecrement={onDecrement}
               onPickPrint={onPickPrint}
               onAltClick={onAltClickMain}
+              onSetCover={onSetCover}
               illegalCards={illegalSet}
             />
           ))}
@@ -103,6 +105,7 @@ export function DeckView({ deck, cardWidth = 180 }: Props) {
                 onDecrement={onSideDecrement}
                 onPickPrint={onPickPrint}
                 onAltClick={onAltClickSide}
+                onSetCover={onSetCover}
                 illegalCards={illegalSet}
               />
             ))}

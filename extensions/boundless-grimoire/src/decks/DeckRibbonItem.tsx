@@ -45,8 +45,11 @@ export function DeckRibbonItem({
   isDragging,
 }: Props) {
   const [hovered, setHovered] = useState(false);
-  const first = firstCardSnapshot(deck);
-  const bg = first ? imageUrl(first, "art_crop") ?? imageUrl(first, "normal") : null;
+  const cover = deck.coverCardId
+    ? (deck.cards[deck.coverCardId]?.snapshot ?? deck.sideboard[deck.coverCardId]?.snapshot)
+    : null;
+  const hero = cover ?? firstCardSnapshot(deck);
+  const bg = hero ? imageUrl(hero, "art_crop") ?? imageUrl(hero, "normal") : null;
   const count = deckCardCount(deck);
 
   return (

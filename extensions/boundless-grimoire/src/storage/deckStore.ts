@@ -271,6 +271,17 @@ export function setDeckFormat(deckId: string, formatIndex: number | null): void 
   });
 }
 
+export function setDeckCover(deckId: string, cardId: string): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    return {
+      ...lib,
+      decks: { ...lib.decks, [deckId]: touch({ ...deck, coverCardId: cardId }) },
+    };
+  });
+}
+
 export function selectDeck(deckId: string | null): void {
   mutate((lib) => ({ ...lib, selectedId: deckId }));
 }

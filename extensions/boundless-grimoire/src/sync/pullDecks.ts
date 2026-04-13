@@ -38,7 +38,7 @@ import {
   type DeckCard,
   type DeckLibrary,
 } from "../storage/types";
-import { enrichDeckCards } from "./enrichDeck";
+import { enrichDeckInPlace } from "./reEnrich";
 import { suppressFromNextPush } from "./pushSchedule";
 
 const UNTAP_DB_NAME = "untap";
@@ -203,39 +203,5 @@ function commitImported(newDecks: Deck[]): void {
 }
 
 // ── Phase 2: per-deck background enrichment ───────────────────────────────────
-
-async function enrichDeckInPlace(localDeckId: string): Promise<void> {
-  const deck = useDeckStore.getState().library.decks[localDeckId];
-  if (!deck) return;
-
-  const [enrichedCards, enrichedSideboard] = await Promise.all([
-    enrichDeckCards(deck.cards),
-    enrichDeckCards(deck.sideboard),
-  ]);
-
-  // Suppress BEFORE the setState. The deckStore subscriber fires
-  // synchronously inside setState, and that's when `schedulePush`
-  // consults the suppression set. Setting the flag afterwards would
-  // be a no-op — the push would have already been scheduled, and we'd
-  // push the just-enriched deck right back to untap.in.
-  suppressFromNextPush(localDeckId);
-
-  useDeckStore.setState((s) => {
-    const current = s.library.decks[localDeckId];
-    if (!current) return s;
-    return {
-      library: {
-        ...s.library,
-        decks: {
-          ...s.library.decks,
-          [localDeckId]: {
-            ...current,
-            cards: enrichedCards,
-            sideboard: enrichedSideboard,
-            enriching: false,
-          },
-        },
-      },
-    };
-  });
-}
+// enrichDeckInPlace is imported from ./reEnrich so it can also be called
+// at boot time to recover cards that failed enrichment on a prior session.

@@ -58,6 +58,8 @@ export interface Deck {
   filters: FilterState;
   /** Index into the custom formats list, or null for no format. */
   formatIndex: number | null;
+  /** Scryfall card id chosen as the deck's cover art for the ribbon tile. */
+  coverCardId?: string;
   /** Linked untap.in deck UUID, set after first sync. */
   untapDeckUid?: string;
   /**

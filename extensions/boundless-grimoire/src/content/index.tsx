@@ -44,6 +44,7 @@ const allHydrated = Promise.allSettled([
 // with the other store hydrations and with the React mount below.
 void deckHydrated.then(() => {
   void import("../sync/untapSync").then(({ pullUntapDecks }) => pullUntapDecks());
+  void import("../sync/reEnrich").then(({ reEnrichThinDecks }) => reEnrichThinDecks());
 });
 
 let root: Root | null = null;
