@@ -76,10 +76,13 @@ useDeckStore.subscribe((state, prev) => {
 });
 
 function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
-  // Lazy import to avoid circular dep at module load time
+  // Lazy import to avoid circular dep at module load time.
+  // Await the bridge so early edits/deletes aren't silently dropped.
   void import("../sync/untapSync").then(
-    ({ schedulePush, deleteUntapDeck, cancelPendingPush, isUntapAvailable }) => {
-      if (!isUntapAvailable()) return;
+    async ({ schedulePush, deleteUntapDeck, cancelPendingPush }) => {
+      const { waitForBridge } = await import("../sync/untapApi");
+      const bridgeUp = await waitForBridge();
+      if (!bridgeUp) return;
 
       // Pushes for added or modified decks.
       for (const [id, deck] of Object.entries(next.decks)) {
