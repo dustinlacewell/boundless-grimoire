@@ -80,12 +80,12 @@ function symbolUrl(color: ManaColor): string {
 
 export function ColorManaChart({ deck }: Props) {
   const { demand, supply } = useMemo(() => computeColorDemandSupply(deck.cards), [deck.cards]);
+  const activeColors = MANA_COLORS.filter((c) => demand[c] > 0 || supply[c] > 0);
+  if (activeColors.length === 0) return null;
   const maxValue = Math.max(
-    ...MANA_COLORS.map((c) => Math.max(demand[c], supply[c])),
+    ...activeColors.map((c) => Math.max(demand[c], supply[c])),
     1,
   );
-  const total = MANA_COLORS.reduce((sum, c) => sum + demand[c] + supply[c], 0);
-  if (total === 0) return null;
 
   const maxBarHeight = CHART_HEIGHT - 24;
 
@@ -93,7 +93,7 @@ export function ColorManaChart({ deck }: Props) {
     <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
       <div style={titleStyle}>Cost vs Production</div>
       <div style={chartAreaStyle}>
-        {MANA_COLORS.map((color) => {
+        {activeColors.map((color) => {
           const d = demand[color];
           const s = supply[color];
           const dHeight = (d / maxValue) * maxBarHeight;

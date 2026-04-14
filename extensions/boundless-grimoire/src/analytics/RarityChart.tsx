@@ -60,7 +60,11 @@ const labelStyle: React.CSSProperties = {
 };
 
 export function RarityChart({ deck }: Props) {
-  const entries = useMemo(() => computeRarityBreakdown(deck.cards), [deck.cards]);
+  const entries = useMemo(
+    () => computeRarityBreakdown(deck.cards).filter((e) => e.count > 0),
+    [deck.cards],
+  );
+  if (entries.length === 0) return null;
   const maxCount = Math.max(...entries.map((e) => e.count), 1);
 
   return (
