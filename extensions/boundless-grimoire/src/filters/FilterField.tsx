@@ -7,16 +7,20 @@ interface Props {
   style?: React.CSSProperties;
   /** Optional right-aligned element next to the label (e.g. mode toggle). */
   action?: ReactNode;
+  /** Label alignment. "start" (default) hugs left; "center" centers the label. */
+  align?: "start" | "center";
 }
 
 /** Vertical label + control wrapper used by every filter row entry. */
-export function FilterField({ label, children, style, action }: Props) {
+export function FilterField({ label, children, style, action, align = "start" }: Props) {
+  const labelJustify = align === "center" ? "center" : "flex-start";
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 4, ...style }}>
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: labelJustify,
           gap: 6,
           fontSize: 10,
           letterSpacing: 1.2,
@@ -26,7 +30,9 @@ export function FilterField({ label, children, style, action }: Props) {
         }}
       >
         <span>{label}</span>
-        {action && <span style={{ marginLeft: "auto" }}>{action}</span>}
+        {action && (
+          <span style={{ marginLeft: align === "center" ? 0 : "auto" }}>{action}</span>
+        )}
       </div>
       {children}
     </div>

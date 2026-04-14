@@ -55,12 +55,18 @@ const bodyStyle: React.CSSProperties = {
   gap: 16,
 };
 
+// Level-1 section heading used by the top-level panes (Decks, Analytics,
+// Browse · Filters, Results). Larger, bolder, in full-strength text with
+// a subtle bottom rule so these read clearly as the spine of the layout.
 const sectionLabelStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: 1.2,
+  fontSize: 13,
+  letterSpacing: 2,
   textTransform: "uppercase",
-  color: colors.textMuted,
-  marginBottom: 6,
+  color: colors.text,
+  fontWeight: 800,
+  paddingBottom: 4,
+  marginBottom: 8,
+  borderBottom: `2px solid ${colors.bg3}`,
 };
 
 export function Overlay(_props: Props) {
@@ -90,7 +96,9 @@ export function Overlay(_props: Props) {
               <DeckFormatPicker deckId={selected.id} formatIndex={selected.formatIndex} />
             </div>
           ) : (
-            <div style={sectionLabelStyle}>No deck selected</div>
+            <div style={{ fontSize: 12, color: colors.textMuted, fontStyle: "italic" }}>
+              No deck selected
+            </div>
           )}
           {selected ? (
             <DeckView deck={selected} />

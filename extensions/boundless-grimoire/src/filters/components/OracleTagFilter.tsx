@@ -24,12 +24,17 @@ export function CustomQueryModeToggle() {
   );
 }
 
+// Level-3 sub-section header used inside the Custom Filters block.
+// Deliberately quieter than the FilterField labels (level 2): no uppercase,
+// less letter spacing, faded color, lighter weight — so user-defined
+// groupings read as subcontent, not as section headings.
 const sectionLabelStyle: React.CSSProperties = {
-  fontSize: 10,
-  letterSpacing: 1.2,
-  textTransform: "uppercase",
-  color: colors.textMuted,
-  fontWeight: 700,
+  fontSize: 11,
+  letterSpacing: 0.3,
+  color: colors.textFaint,
+  fontWeight: 500,
+  fontStyle: "italic",
+  marginTop: 2,
 };
 
 /**

@@ -28,6 +28,60 @@ function CustomQuerySection() {
   );
 }
 
+const groupLabelStyle: React.CSSProperties = {
+  fontSize: 10,
+  letterSpacing: 1.2,
+  textTransform: "uppercase",
+  color: colors.textMuted,
+  fontWeight: 700,
+  textAlign: "center",
+};
+
+const groupLabelRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 6,
+  ...groupLabelStyle,
+};
+
+const rowCenterStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+};
+
+/**
+ * Combined Rarity + Color block — labels bracket the two icon rows:
+ *
+ *        Rarity
+ *      [] [] [] []
+ *     () () () () () ()
+ *        Color   ⚙
+ */
+function RarityAndColorPanel() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <div style={groupLabelStyle}>Rarity</div>
+      <div style={rowCenterStyle}>
+        <RarityFilter />
+      </div>
+      <div style={{ ...rowCenterStyle, marginTop: 2 }}>
+        <ColorFilter />
+      </div>
+      <div style={{ ...groupLabelStyle, display: "flex", alignItems: "center" }}>
+        {/* Three-column: left flex spacer | centered "Color" | right gear.
+            Equal-weight left/right spacers keep "Color" perfectly centered
+            while the gear pins to the far right edge. */}
+        <span style={{ flex: 1 }} />
+        <span>Color</span>
+        <span style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <ColorModeDot />
+        </span>
+      </div>
+    </div>
+  );
+}
+
 const rowStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "row",
@@ -131,29 +185,18 @@ export function FilterBar() {
 
       <TextFilter />
 
-      <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
         <div style={{ flex: "0 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
-          <FilterField label="Rarity">
-            <RarityFilter />
+          <RarityAndColorPanel />
+          <FilterField label="Type" align="center">
+            <TypeFilter />
           </FilterField>
-          <FilterField label="Color" action={<ColorModeDot />}>
-            <ColorFilter />
+          <FilterField label="Subtype" align="center">
+            <SubtypeFilter />
           </FilterField>
-
-          <div style={rowStyle}>
-            <FilterField label="Type">
-              <TypeFilter />
-            </FilterField>
-          </div>
-
-          <div style={rowStyle}>
-            <FilterField label="Supertype">
-              <SupertypeFilter />
-            </FilterField>
-            <FilterField label="Subtype">
-              <SubtypeFilter />
-            </FilterField>
-          </div>
+          <FilterField label="Supertype" align="center">
+            <SupertypeFilter />
+          </FilterField>
         </div>
 
         <div style={{ flex: "1 1 240px", minWidth: 0 }}>

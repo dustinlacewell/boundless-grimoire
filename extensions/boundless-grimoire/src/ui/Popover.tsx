@@ -23,6 +23,11 @@ interface Props {
   maxHeight?: number;
   /** Anchor edge of the trigger to align the panel to. */
   align?: "left" | "right";
+  /**
+   * If true, the trigger wrapper spans its container (display: block).
+   * Default false keeps the legacy inline-block behavior.
+   */
+  triggerFullWidth?: boolean;
 }
 
 interface Position {
@@ -68,6 +73,7 @@ export function Popover({
   minWidth,
   maxHeight = 320,
   align = "left",
+  triggerFullWidth = false,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -164,7 +170,11 @@ export function Popover({
     <>
       <div
         ref={wrapperRef}
-        style={{ position: "relative", display: "inline-block" }}
+        style={{
+          position: "relative",
+          display: triggerFullWidth ? "block" : "inline-block",
+          width: triggerFullWidth ? "100%" : undefined,
+        }}
       >
         {trigger}
       </div>

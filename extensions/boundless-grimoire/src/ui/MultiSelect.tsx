@@ -107,6 +107,7 @@ export function MultiSelect<T extends string>({
         open={open}
         onClose={() => setOpen(false)}
         align="left"
+        triggerFullWidth
         trigger={
           <div style={triggerWrapper(open)} onClick={() => setOpen(true)}>
             {selectedOptions.length === 0 && (
