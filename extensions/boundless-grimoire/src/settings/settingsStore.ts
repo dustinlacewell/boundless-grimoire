@@ -3,8 +3,11 @@ import { attachPersistence } from "../storage/persistedSlice";
 
 const STORAGE_KEY = "boundless-grimoire:settings";
 
+export type AnalyticsLayout = "scroll" | "wrap";
+
 export interface Settings {
   devMode: boolean;
+  analyticsLayout: AnalyticsLayout;
 }
 
 interface SettingsStoreState {
@@ -14,6 +17,7 @@ interface SettingsStoreState {
 
 const DEFAULT_SETTINGS: Settings = {
   devMode: false,
+  analyticsLayout: "scroll",
 };
 
 export const useSettingsStore = create<SettingsStoreState>(() => ({
@@ -37,5 +41,11 @@ export const hydrateSettingsStore = hydrate;
 export function setDevMode(enabled: boolean): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, devMode: enabled },
+  }));
+}
+
+export function setAnalyticsLayout(layout: AnalyticsLayout): void {
+  useSettingsStore.setState((s) => ({
+    settings: { ...s.settings, analyticsLayout: layout },
   }));
 }

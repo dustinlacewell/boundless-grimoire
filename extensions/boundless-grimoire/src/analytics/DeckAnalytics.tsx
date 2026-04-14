@@ -1,3 +1,4 @@
+import { useSettingsStore } from "../settings/settingsStore";
 import type { Deck } from "../storage/types";
 import { HScroll } from "../ui/HScroll";
 import { ColorManaChart } from "./ColorManaChart";
@@ -13,15 +14,16 @@ interface Props {
 }
 
 /**
- * Horizontally-scrolling strip of analytics charts for the active deck.
- * Add new chart components here as they're built.
+ * Analytics charts for the active deck. Layout (scroll vs wrap) follows
+ * the user's setting. Add new chart components here as they're built.
  */
 export function DeckAnalytics({ deck }: Props) {
+  const layout = useSettingsStore((s) => s.settings.analyticsLayout);
   const hasCards = Object.keys(deck.cards).length > 0;
   if (!hasCards) return null;
 
-  return (
-    <HScroll gap={12} wheelToHorizontal>
+  const charts = (
+    <>
       <ManaCurveChart deck={deck} />
       <ColorManaChart deck={deck} />
       <CurveByTypeChart deck={deck} />
@@ -29,6 +31,20 @@ export function DeckAnalytics({ deck }: Props) {
       <ToughnessCurveChart deck={deck} />
       <RarityChart deck={deck} />
       <CountByChart deck={deck} />
+    </>
+  );
+
+  if (layout === "wrap") {
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-start" }}>
+        {charts}
+      </div>
+    );
+  }
+
+  return (
+    <HScroll gap={12} wheelToHorizontal>
+      {charts}
     </HScroll>
   );
 }
