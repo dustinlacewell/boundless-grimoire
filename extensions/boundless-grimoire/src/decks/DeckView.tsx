@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { categorizeDeck } from "../cards/categorize";
+import { stackReveal } from "../cards/CategoryStack";
 import { openPrintPicker } from "../cards/printPickerStore";
 import { useCustomFormatStore } from "../filters/customFormatStore";
 import { useGridSizeStore } from "../search/gridSizeStore";
@@ -15,23 +16,21 @@ interface Props {
   deck: Deck;
 }
 
-const scrollWrapperStyle: React.CSSProperties = {
+const scrollWrapperBase: React.CSSProperties = {
   display: "flex",
   flexDirection: "row",
   gap: 24,
   alignItems: "flex-start",
   overflowX: "auto",
   overflowY: "visible",
-  padding: "4px 4px 16px",
 };
 
-const wrapWrapperStyle: React.CSSProperties = {
+const wrapWrapperBase: React.CSSProperties = {
   display: "flex",
   flexDirection: "row",
   flexWrap: "wrap",
   gap: 24,
   alignItems: "flex-start",
-  padding: "4px 4px 16px",
 };
 
 const emptyStyle: React.CSSProperties = {
@@ -54,7 +53,15 @@ const sideboardLabelStyle: React.CSSProperties = {
 export function DeckView({ deck }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
   const deckLayout = useSettingsStore((s) => s.settings.deckLayout);
-  const wrapperStyle = deckLayout === "wrap" ? wrapWrapperStyle : scrollWrapperStyle;
+  // Reserve bottom space equal to the worst-case hover-slide on the
+  // deepest card. Applied only once at the wrapper bottom rather than
+  // per-column, so only the last row of cards pushes the section taller
+  // instead of every column carrying the extra whitespace.
+  const base = deckLayout === "wrap" ? wrapWrapperBase : scrollWrapperBase;
+  const wrapperStyle: React.CSSProperties = {
+    ...base,
+    padding: `4px 4px ${stackReveal(cardWidth)}px`,
+  };
   const formats = useCustomFormatStore((s) => s.formats);
   const formatFragment = deck.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
   const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);

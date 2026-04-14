@@ -19,6 +19,28 @@ interface Props {
 const TRANSITION = "transform 200ms ease-out";
 
 /**
+ * Fraction of card height used for each card's peek-out in the fan.
+ * Keeping the offset proportional to card size makes the stack look the
+ * same density whether the user has zoomed way in or way out.
+ * 14% puts the offset at 36px for the old default ~260px card height.
+ */
+export const STACK_OFFSET_RATIO = 0.14;
+
+/** Offset (each card's peek-out) for a given card width. */
+export function stackOffsetFor(cardWidth: number): number {
+  return Math.round(cardHeightFor(cardWidth) * STACK_OFFSET_RATIO);
+}
+
+/**
+ * Worst-case vertical shift when any card in a stack is hovered. The
+ * deck/sideboard wrapper should reserve this much extra space at its
+ * bottom so slid cards don't overflow into adjacent sections.
+ */
+export function stackReveal(cardWidth: number, offset?: number): number {
+  return cardHeightFor(cardWidth) - (offset ?? stackOffsetFor(cardWidth));
+}
+
+/**
  * Vertically fanned stack of cards (Archidekt-style). Each card is
  * absolutely positioned, offset down from the previous, so the top of
  * every card peeks out and the bottom card shows in full.
@@ -31,7 +53,7 @@ const TRANSITION = "transform 200ms ease-out";
 export function CategoryStack({
   cards,
   cardWidth,
-  offset = 36,
+  offset,
   onIncrement,
   onDecrement,
   onPickPrint,
@@ -39,20 +61,18 @@ export function CategoryStack({
   onSetCover,
   illegalCards,
 }: Props) {
+  // Default offset scales with card size so the fan looks the same at
+  // any zoom level. Callers can still pass an explicit offset to override.
+  const effectiveOffset = offset ?? stackOffsetFor(cardWidth);
   const cardH = cardHeightFor(cardWidth);
-  const stackH = cardH + Math.max(0, cards.length - 1) * offset;
-  const reveal = cardH - offset;
-  // Reserve enough height for the worst-case hover shift (hovering the top
-  // card slides every card below it down by `reveal`). This keeps the deck
-  // area from growing/scrolling when a card is hovered. With 0–1 cards no
-  // sliding is possible, so we don't reserve the extra space.
-  const reservedH = cards.length > 1 ? stackH + reveal : stackH;
+  const stackH = cardH + Math.max(0, cards.length - 1) * effectiveOffset;
+  const reveal = cardH - effectiveOffset;
 
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   return (
     <div
-      style={{ position: "relative", width: cardWidth, height: reservedH }}
+      style={{ position: "relative", width: cardWidth, height: stackH }}
       onMouseLeave={() => setHoverIdx(null)}
     >
       {cards.map((entry, i) => {
@@ -64,7 +84,7 @@ export function CategoryStack({
             onMouseEnter={() => setHoverIdx(i)}
             style={{
               position: "absolute",
-              top: i * offset,
+              top: i * effectiveOffset,
               left: 0,
               transform: slid ? `translateY(${reveal}px)` : "translateY(0)",
               transition: TRANSITION,
