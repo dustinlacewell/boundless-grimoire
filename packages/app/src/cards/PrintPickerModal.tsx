@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { getPrintsByOracleId } from "../scryfall/client";
+import { getPrintsByOracleId } from "../services/scryfall";
 import { toSnapshot } from "../scryfall/snapshot";
 import type { ScryfallCard } from "../scryfall/types";
 import { swapCardPrint } from "../storage/deckStore";

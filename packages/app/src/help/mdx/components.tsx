@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import type { MDXComponents } from "mdx/types";
 import { CardImage } from "../../cards/CardImage";
 import { useCardHoverPreview } from "../../cards/useCardHoverPreview";
-import { getCardByName } from "../../scryfall/client";
+import { getCardByName } from "../../services/scryfall";
 import { toSnapshot } from "../../scryfall/snapshot";
 import type { CardSnapshot } from "../../storage/types";
 import { colors } from "@boundless-grimoire/ui";

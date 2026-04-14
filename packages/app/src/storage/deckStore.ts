@@ -8,7 +8,7 @@
  */
 import { create } from "zustand";
 import type { FilterState, SortDir, SortField } from "../filters/types";
-import { getItem, setItem } from "./chromeStorage";
+import { storage } from "../services/storage";
 import { getServices } from "../services";
 import { migrateLibrary } from "./migrations";
 import {
@@ -38,7 +38,7 @@ export const useDeckStore = create<DeckStoreState>(() => ({
 // ---------- Persistence ----------
 
 export async function hydrateDeckStore(): Promise<void> {
-  const stored = await getItem<DeckLibrary>(STORAGE_KEY);
+  const stored = await storage.get<DeckLibrary>(STORAGE_KEY);
   useDeckStore.setState({
     hydrated: true,
     library: stored ? migrateLibrary(stored) : EMPTY_LIBRARY,
@@ -58,7 +58,7 @@ function persist(library: DeckLibrary): void {
     .catch(() => {
       /* prior failure already logged below — don't poison the chain */
     })
-    .then(() => setItem(STORAGE_KEY, tagged))
+    .then(() => storage.set(STORAGE_KEY, tagged))
     .catch((e) => {
       // chrome.storage.local is bounded (~10 MB). Quota errors and
       // permission errors will surface here. Surfacing them as console
@@ -80,12 +80,11 @@ function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
   const untap = getServices().untap;
   if (!untap) return;
 
-  // Lazy import to avoid pulling extension-specific bridge code into envs
-  // (the demo) that don't have it. Await the bridge so early edits/deletes
-  // aren't silently dropped.
-  void import("../sync/untapApi").then(async ({ waitForBridge }) => {
-    const bridgeUp = await waitForBridge();
-    if (!bridgeUp) return;
+  // Defer until the impl says it's ready (extension waits on the
+  // untap.in MAIN-world bridge). Without this, early edits made before
+  // the bridge handshake completes would be silently dropped.
+  void untap.whenReady().then((ready) => {
+    if (!ready) return;
 
     // Pushes for added or modified decks.
     for (const [id, deck] of Object.entries(next.decks)) {
@@ -368,7 +367,7 @@ export async function importDecklist(
   entries: import("../decks/parseDecklist").DecklistEntry[],
   name = "Imported Deck",
 ): Promise<string> {
-  const { getCardsByIds } = await import("../scryfall/client");
+  const { getCardsByIds } = await import("../services/scryfall");
   const { toSnapshot } = await import("../scryfall/snapshot");
 
   // Dedupe names for the batch lookup

@@ -19,7 +19,7 @@
  * Usage: see `gridSizeStore.ts` for the canonical example.
  */
 import type { StoreApi, UseBoundStore } from "zustand";
-import { getItem, setItem } from "./chromeStorage";
+import { storage } from "../services/storage";
 
 interface AttachOptions<S, V> {
   /** A label used in error messages. Usually the storage key. */
@@ -49,7 +49,7 @@ export function attachPersistence<S, V>(
         /* swallowed below — kept here so a previous failure doesn't poison
          * the chain forever */
       })
-      .then(() => setItem(opts.storageKey, next))
+      .then(() => storage.set(opts.storageKey, next))
       .catch((e) => {
         console.error(`[${opts.label}] persist failed`, e);
       });
@@ -57,7 +57,7 @@ export function attachPersistence<S, V>(
 
   return {
     hydrate: async () => {
-      const loaded = await getItem<V>(opts.storageKey);
+      const loaded = await storage.get<V>(opts.storageKey);
       store.setState(opts.setHydrated(loaded) as Partial<S>);
     },
   };

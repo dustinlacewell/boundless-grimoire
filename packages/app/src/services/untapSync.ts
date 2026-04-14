@@ -17,6 +17,14 @@ import type { Deck } from "../storage/types";
 
 export interface UntapSync {
   /**
+   * Resolves once the underlying transport is reachable. Returns false
+   * if it's not coming up (e.g. the page isn't actually untap.in). Used
+   * by the deck-store sync subscriber to defer the very first push until
+   * the bridge is up.
+   */
+  whenReady(): Promise<boolean>;
+
+  /**
    * One-time pull-then-push at app boot. Pulls untap decks not yet
    * mirrored locally, then pushes every local deck back so untap reflects
    * our state. Idempotent — safe to call once per app start.

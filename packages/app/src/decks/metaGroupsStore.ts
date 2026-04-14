@@ -21,7 +21,7 @@
  */
 import { create } from "zustand";
 import { useCustomQueryStore, type CustomQuery } from "../filters/customQueryStore";
-import { getItem, setItem } from "../storage/chromeStorage";
+import { storage } from "../services/storage";
 import { useDeckStore } from "../storage/deckStore";
 import type { DeckCard, DeckLibrary } from "../storage/types";
 import { classify, type MetaQuery } from "./meta/classify";
@@ -85,13 +85,13 @@ function schedulePersist(): void {
     const snapshot = serializeCache(useMetaGroupsStore.getState().cache);
     writeChain = writeChain
       .catch(() => {})
-      .then(() => setItem(STORAGE_KEY, snapshot))
+      .then(() => storage.set(STORAGE_KEY, snapshot))
       .catch((e) => console.error("[metaGroupsStore] persist failed", e));
   }, PERSIST_DEBOUNCE_MS);
 }
 
 export async function hydrateMetaGroupsStore(): Promise<void> {
-  const stored = await getItem<SerializedCache>(STORAGE_KEY);
+  const stored = await storage.get<SerializedCache>(STORAGE_KEY);
   if (!stored) return;
   const cache = deserializeCache(stored);
   useMetaGroupsStore.setState((s) => ({ cache, version: s.version + 1 }));

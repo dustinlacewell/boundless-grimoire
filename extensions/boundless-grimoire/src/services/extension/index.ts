@@ -5,7 +5,7 @@
  *   scryfall  → background-worker RPC (rate-limited, shared across tabs)
  *   untap     → adapter over the postMessage bridge to untap.in's apiStore
  */
-import type { Services } from "../index";
+import type { Services } from "@boundless-grimoire/app";
 import { chromeStorage } from "./storage";
 import { backgroundScryfall } from "./scryfall";
 import { extensionUntapSync } from "./untapSync";

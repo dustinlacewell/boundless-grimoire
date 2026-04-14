@@ -6,7 +6,7 @@
  * hydrate-on-startup / persist-on-change pattern as deckStore.
  */
 import { create } from "zustand";
-import { getItem, setItem } from "../storage/chromeStorage";
+import { storage } from "../services/storage";
 import type { FilterState } from "./types";
 
 export interface FilterPreset {
@@ -30,7 +30,7 @@ export const usePresetStore = create<PresetStoreState>(() => ({
 // ---------- Persistence ----------
 
 export async function hydratePresetStore(): Promise<void> {
-  const stored = await getItem<FilterPreset[]>(STORAGE_KEY);
+  const stored = await storage.get<FilterPreset[]>(STORAGE_KEY);
   usePresetStore.setState({ hydrated: true, presets: stored ?? [] });
 }
 
@@ -39,7 +39,7 @@ let writeChain: Promise<void> = Promise.resolve();
 function persist(presets: FilterPreset[]): void {
   writeChain = writeChain
     .catch(() => {})
-    .then(() => setItem(STORAGE_KEY, presets))
+    .then(() => storage.set(STORAGE_KEY, presets))
     .catch((e) => console.error("[presetStore] persist failed", e));
 }
 

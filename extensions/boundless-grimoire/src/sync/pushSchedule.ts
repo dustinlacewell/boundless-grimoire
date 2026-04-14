@@ -16,8 +16,8 @@
  * focused on scheduling and lifecycle. After a successful push, if untap
  * minted a new deck_uid, we backfill it into the local deck record.
  */
-import { useDeckStore } from "../storage/deckStore";
-import type { Deck } from "../storage/types";
+import { useDeckStore } from "@boundless-grimoire/app";
+import type { Deck } from "@boundless-grimoire/app";
 import { pushDeck } from "./pushDeck";
 
 const DEBOUNCE_MS = 1500;

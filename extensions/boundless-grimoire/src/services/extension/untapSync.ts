@@ -8,10 +8,14 @@ import { pullUntapDecks } from "../../sync/pullDecks";
 import { deleteUntapDeck } from "../../sync/pushDeck";
 import { cancelPendingPush, schedulePush } from "../../sync/pushSchedule";
 import { reEnrichThinDecks } from "../../sync/reEnrich";
-import type { Deck } from "../../storage/types";
-import type { UntapSync } from "../untapSync";
+import type { Deck, UntapSync } from "@boundless-grimoire/app";
+import { waitForBridge } from "../../sync/untapApi";
 
 export const extensionUntapSync: UntapSync = {
+  whenReady(): Promise<boolean> {
+    return waitForBridge();
+  },
+
   boot(): Promise<void> {
     return bootSync();
   },

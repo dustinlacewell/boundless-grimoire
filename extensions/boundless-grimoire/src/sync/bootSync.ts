@@ -15,7 +15,7 @@
  * Why pull-then-push: pulling first links any untap decks we haven't seen
  * yet, preventing the push phase from creating duplicates on untap.
  */
-import { useDeckStore } from "../storage/deckStore";
+import { useDeckStore } from "@boundless-grimoire/app";
 import { pullUntapDecks } from "./pullDecks";
 import { pushDeck } from "./pushDeck";
 import { backfillUntapDeckUid, suppressFromNextPush } from "./pushSchedule";

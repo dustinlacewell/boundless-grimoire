@@ -16,7 +16,7 @@
  * edit, remove, or add their own.
  */
 import { create } from "zustand";
-import { getItem, setItem } from "../storage/chromeStorage";
+import { storage } from "../services/storage";
 import { META_TAGS } from "./oracleTags";
 
 export interface CustomQuery {
@@ -40,7 +40,7 @@ export const useCustomQueryStore = create<CustomQueryStoreState>(() => ({
 // ---------- Persistence ----------
 
 export async function hydrateCustomQueryStore(): Promise<void> {
-  const stored = await getItem<CustomQuery[]>(STORAGE_KEY);
+  const stored = await storage.get<CustomQuery[]>(STORAGE_KEY);
   useCustomQueryStore.setState({
     hydrated: true,
     queries: stored ?? defaultQueries(),
@@ -52,7 +52,7 @@ let writeChain: Promise<void> = Promise.resolve();
 function persist(queries: CustomQuery[]): void {
   writeChain = writeChain
     .catch(() => {})
-    .then(() => setItem(STORAGE_KEY, queries))
+    .then(() => storage.set(STORAGE_KEY, queries))
     .catch((e) => console.error("[customQueryStore] persist failed", e));
 }
 

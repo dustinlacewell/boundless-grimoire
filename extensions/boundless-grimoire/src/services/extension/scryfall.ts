@@ -7,8 +7,14 @@
  * facade that satisfies the `ScryfallClient` interface.
  */
 import { sendScryfallRpc, unwrapEnvelope, type ScryfallRpcRequest } from "../../scryfall/rpc";
-import type { ScryfallCard, ScryfallSearchResponse } from "../../scryfall/types";
-import type { FetchOpts, ScryfallClient, ScryfallIdentifier, ScryfallSet } from "../scryfall";
+import type {
+  FetchOpts,
+  ScryfallCard,
+  ScryfallClient,
+  ScryfallIdentifier,
+  ScryfallSearchResponse,
+  ScryfallSet,
+} from "@boundless-grimoire/app";
 
 interface ScryfallSetList {
   object: "list";

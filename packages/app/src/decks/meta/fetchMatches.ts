@@ -8,7 +8,7 @@
  * as negative, which is correct: if Scryfall didn't return it for the
  * combined `(fragment) (oracleid:X)` query, it doesn't match.
  */
-import { searchCards, ScryfallError } from "../../scryfall/client";
+import { searchCards, ScryfallError } from "../../services/scryfall";
 
 const BATCH_SIZE = 15;
 

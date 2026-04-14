@@ -13,7 +13,7 @@
  *   My Cube=s:mkm or s:dsk or s:blb
  */
 import { create } from "zustand";
-import { getItem, setItem } from "../storage/chromeStorage";
+import { storage } from "../services/storage";
 
 export interface CustomFormat {
   name: string;
@@ -35,7 +35,7 @@ export const useCustomFormatStore = create<CustomFormatStoreState>(() => ({
 // ---------- Persistence ----------
 
 export async function hydrateCustomFormatStore(): Promise<void> {
-  const stored = await getItem<CustomFormat[]>(STORAGE_KEY);
+  const stored = await storage.get<CustomFormat[]>(STORAGE_KEY);
   useCustomFormatStore.setState({
     hydrated: true,
     formats: stored ?? defaultFormats(),
@@ -47,7 +47,7 @@ let writeChain: Promise<void> = Promise.resolve();
 function persist(formats: CustomFormat[]): void {
   writeChain = writeChain
     .catch(() => {})
-    .then(() => setItem(STORAGE_KEY, formats))
+    .then(() => storage.set(STORAGE_KEY, formats))
     .catch((e) => console.error("[customFormatStore] persist failed", e));
 }
 

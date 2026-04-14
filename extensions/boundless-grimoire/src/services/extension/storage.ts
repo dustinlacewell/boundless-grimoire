@@ -1,4 +1,4 @@
-import type { Storage } from "../storage";
+import type { Storage } from "@boundless-grimoire/app";
 
 /**
  * `chrome.storage.local`-backed Storage. Async by nature in MV3 Chrome

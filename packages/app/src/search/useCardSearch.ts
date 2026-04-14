@@ -14,7 +14,7 @@
  *     constitute "browseable" input.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ScryfallError, searchCards } from "../scryfall/client";
+import { ScryfallError, searchCards } from "../services/scryfall";
 import type { ScryfallCard } from "../scryfall/types";
 import type { SortDir, SortField } from "../filters/types";
 

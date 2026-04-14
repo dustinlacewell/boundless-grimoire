@@ -13,8 +13,7 @@
  * The split lets `scryfall/client.ts` read like a recipe (send, unwrap,
  * return) and keeps the messaging plumbing isolated from error decoding.
  */
-import { ScryfallError, ScryfallRateLimitError } from "./errors";
-import type { ScryfallErrorResponse } from "./types";
+import { ScryfallError, ScryfallRateLimitError, type ScryfallErrorResponse } from "@boundless-grimoire/app";
 import {
   SCRYFALL_ABORT,
   SCRYFALL_REQ,

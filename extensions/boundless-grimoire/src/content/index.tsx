@@ -1,19 +1,19 @@
 import { createRoot, type Root } from "react-dom/client";
 import "../ui/tailwind.css";
 import { injectKeyrune } from "../ui/injectKeyrune";
-import { provideServices, ServicesProvider } from "../services";
+import { provideServices, ServicesProvider } from "@boundless-grimoire/app";
 import { createExtensionServices } from "../services/extension";
-import { hydrateMetaGroupsStore } from "../decks/metaGroupsStore";
-import { hydrateFavoritesStore } from "../search/favoritesStore";
-import { hydrateGridSizeStore } from "../search/gridSizeStore";
-import { hydratePinnedCardsStore } from "../search/pinnedCardsStore";
-import { hydrateDeckStore } from "../storage/deckStore";
-import { hydrateCustomFormatStore } from "../filters/customFormatStore";
-import { hydrateCustomQueryStore } from "../filters/customQueryStore";
-import { hydratePresetStore } from "../filters/presetStore";
-import { hydratePrintSizeStore } from "../cards/printSizeStore";
-import { hydrateSettingsStore } from "../settings/settingsStore";
-import { App } from "./App";
+import { hydrateMetaGroupsStore } from "@boundless-grimoire/app";
+import { hydrateFavoritesStore } from "@boundless-grimoire/app";
+import { hydrateGridSizeStore } from "@boundless-grimoire/app";
+import { hydratePinnedCardsStore } from "@boundless-grimoire/app";
+import { hydrateDeckStore } from "@boundless-grimoire/app";
+import { hydrateCustomFormatStore } from "@boundless-grimoire/app";
+import { hydrateCustomQueryStore } from "@boundless-grimoire/app";
+import { hydratePresetStore } from "@boundless-grimoire/app";
+import { hydratePrintSizeStore } from "@boundless-grimoire/app";
+import { hydrateSettingsStore } from "@boundless-grimoire/app";
+import { App } from "@boundless-grimoire/app";
 
 const HOST_ID = "boundless-grimoire-root";
 

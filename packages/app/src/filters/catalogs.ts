@@ -7,7 +7,7 @@
  * search-bucket capacity.
  */
 import { useEffect, useState } from "react";
-import { getCatalog, getSets, type ScryfallSet } from "../scryfall/client";
+import { getCatalog, getSets, type ScryfallSet } from "../services/scryfall";
 
 export interface Catalogs {
   sets: ScryfallSet[];

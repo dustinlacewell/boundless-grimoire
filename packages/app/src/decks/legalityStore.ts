@@ -9,7 +9,7 @@
  * to find which cards ARE legal. Everything else is illegal.
  */
 import { create } from "zustand";
-import { searchCards, ScryfallError } from "../scryfall/client";
+import { searchCards, ScryfallError } from "../services/scryfall";
 import type { DeckCard } from "../storage/types";
 
 interface LegalityState {
