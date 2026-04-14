@@ -15,7 +15,14 @@ import {
   useCustomQueryStore,
 } from "../filters/customQueryStore";
 import { colors } from "../ui/colors";
-import { setAnalyticsLayout, setDevMode, useSettingsStore, type AnalyticsLayout } from "./settingsStore";
+import {
+  setAnalyticsLayout,
+  setDevMode,
+  setPreviewMode,
+  useSettingsStore,
+  type AnalyticsLayout,
+  type PreviewMode,
+} from "./settingsStore";
 
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
@@ -144,6 +151,7 @@ export function SettingsModal({ onClose }: Props) {
   const formats = useCustomFormatStore((s) => s.formats);
   const devMode = useSettingsStore((s) => s.settings.devMode);
   const analyticsLayout = useSettingsStore((s) => s.settings.analyticsLayout);
+  const previewMode = useSettingsStore((s) => s.settings.previewMode);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
   const [formatText, setFormatText] = useState(() => formatsToText(formats));
   const [tab, setTab] = useState<Tab>("general");
@@ -244,6 +252,38 @@ export function SettingsModal({ onClose }: Props) {
                 <div style={hintStyle}>
                   <strong>Scroll:</strong> horizontal strip, wheel scrolls sideways.{" "}
                   <strong>Wrap:</strong> charts wrap onto multiple rows like a grid.
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Ctrl-Hover Preview</span>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {(["image", "text", "both"] as PreviewMode[]).map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setPreviewMode(opt)}
+                      style={{
+                        padding: "6px 14px",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        background: previewMode === opt ? colors.accent : colors.bg2,
+                        color: previewMode === opt ? "#0a0a0c" : colors.text,
+                        border: `1px solid ${previewMode === opt ? colors.accent : colors.borderStrong}`,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+                <div style={hintStyle}>
+                  What to show when hovering a card with Ctrl held —{" "}
+                  <strong>Image:</strong> just the zoomed card.{" "}
+                  <strong>Text:</strong> just the info panel.{" "}
+                  <strong>Both:</strong> image + info side-by-side.
                 </div>
               </div>
             </>

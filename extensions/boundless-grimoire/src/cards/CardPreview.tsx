@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { MAX_CARD_WIDTH } from "../search/gridSizeStore";
+import { useSettingsStore } from "../settings/settingsStore";
 import { colors } from "../ui/colors";
 import { useCardPreviewStore, mousePos, hideCardPreview } from "./cardPreviewStore";
 import { imageUrl } from "./imageUrl";
@@ -158,9 +159,15 @@ const printLabelStyle: React.CSSProperties = {
 export function CardPreview() {
   const snapshot = useCardPreviewStore((s) => s.snapshot);
   const printMode = useCardPreviewStore((s) => s.printMode);
+  const previewMode = useSettingsStore((s) => s.settings.previewMode);
   const ref = useRef<HTMLDivElement>(null);
 
-  const panelW = printMode ? PRINT_W : PANEL_W;
+  const showImage = previewMode !== "text";
+  const showText = previewMode !== "image";
+
+  // Panel width: image-only / text-only shrinks; both is the full width.
+  const fullPanelW = (showImage ? IMAGE_W : 0) + (showText ? SIDE_W : 0);
+  const panelW = printMode ? PRINT_W : fullPanelW;
   const panelH = printMode ? PRINT_H + LABEL_H : PANEL_H;
 
   // Position the panel imperatively on every mousemove while open. Also
@@ -240,63 +247,71 @@ export function CardPreview() {
   const loyalty = snapshot.loyalty ?? face?.loyalty;
   const manaCost = snapshot.mana_cost ?? face?.mana_cost ?? "";
 
-  return createPortal(
-    <div ref={ref} style={wrapStyle}>
-      <div
-        style={{
-          width: IMAGE_W,
-          height: IMAGE_H,
-          flex: "0 0 auto",
-          background: colors.bg0,
-          borderRadius: `10px 0 0 10px`,
-          overflow: "hidden",
-        }}
-      >
-        {url && (
-          <img
-            src={url}
-            alt={snapshot.name}
-            draggable={false}
-            style={{ width: "100%", height: "100%", display: "block", objectFit: "cover", scale: "1.02" }}
-          />
-        )}
-      </div>
-      <div style={sideStyle}>
-        {/* title · cost */}
-        <div style={{ ...rowStyle, ...dividerStyle }}>
-          <div style={nameStyle}>{snapshot.name}</div>
-          {manaCost && <ManaCost cost={manaCost} size={15} />}
-        </div>
+  // Round only the outer corners based on which half is visible.
+  const imageRadius = showText ? "10px 0 0 10px" : "10px";
+  const textRadius = showImage ? "0 10px 10px 0" : "10px";
 
-        {/* type -- subtype · rarity icon */}
-        <div style={{ ...rowStyle, ...dividerStyle }}>
-          <div style={typeStyle}>{snapshot.type_line ?? ""}</div>
-          {snapshot.rarity && ["common","uncommon","rare","mythic"].includes(snapshot.rarity) && (
-            <RarityIcon rarity={snapshot.rarity as "common"|"uncommon"|"rare"|"mythic"} size={18} />
+  return createPortal(
+    <div ref={ref} style={{ ...wrapStyle, width: fullPanelW }}>
+      {showImage && (
+        <div
+          style={{
+            width: IMAGE_W,
+            height: IMAGE_H,
+            flex: "0 0 auto",
+            background: colors.bg0,
+            borderRadius: imageRadius,
+            overflow: "hidden",
+          }}
+        >
+          {url && (
+            <img
+              src={url}
+              alt={snapshot.name}
+              draggable={false}
+              style={{ width: "100%", height: "100%", display: "block", objectFit: "cover", scale: "1.02" }}
+            />
           )}
         </div>
-
-        {/* one block per ability / paragraph */}
-        {oracleText && (
-          <div style={oracleBlockStyle}>
-            <OracleText text={oracleText} />
+      )}
+      {showText && (
+        <div style={{ ...sideStyle, borderRadius: textRadius }}>
+          {/* title · cost */}
+          <div style={{ ...rowStyle, ...dividerStyle }}>
+            <div style={nameStyle}>{snapshot.name}</div>
+            {manaCost && <ManaCost cost={manaCost} size={15} />}
           </div>
-        )}
 
-        {/* set info · pow/tou */}
-        <div style={{ ...rowStyle, borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: "auto" }}>
-          <div style={setLineStyle}>
-            {snapshot.set_name ?? "—"}
-            {snapshot.set ? ` (${snapshot.set.toUpperCase()})` : ""}
-            {snapshot.collector_number ? ` #${snapshot.collector_number}` : ""}
+          {/* type -- subtype · rarity icon */}
+          <div style={{ ...rowStyle, ...dividerStyle }}>
+            <div style={typeStyle}>{snapshot.type_line ?? ""}</div>
+            {snapshot.rarity && ["common","uncommon","rare","mythic"].includes(snapshot.rarity) && (
+              <RarityIcon rarity={snapshot.rarity as "common"|"uncommon"|"rare"|"mythic"} size={18} />
+            )}
           </div>
-          {(power !== undefined || loyalty !== undefined) && (
-            <div style={ptStyle}>
-              {loyalty !== undefined ? `${loyalty}` : `${power}/${toughness}`}
+
+          {/* one block per ability / paragraph */}
+          {oracleText && (
+            <div style={oracleBlockStyle}>
+              <OracleText text={oracleText} />
             </div>
           )}
+
+          {/* set info · pow/tou */}
+          <div style={{ ...rowStyle, borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: "auto" }}>
+            <div style={setLineStyle}>
+              {snapshot.set_name ?? "—"}
+              {snapshot.set ? ` (${snapshot.set.toUpperCase()})` : ""}
+              {snapshot.collector_number ? ` #${snapshot.collector_number}` : ""}
+            </div>
+            {(power !== undefined || loyalty !== undefined) && (
+              <div style={ptStyle}>
+                {loyalty !== undefined ? `${loyalty}` : `${power}/${toughness}`}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>,
     document.getElementById("boundless-grimoire-root") ?? document.body,
   );
