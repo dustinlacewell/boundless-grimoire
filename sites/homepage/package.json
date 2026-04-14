@@ -10,14 +10,18 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@boundless-grimoire/ui": "workspace:*",
     "@astrojs/react": "^4.2.0",
+    "@boundless-grimoire/app": "workspace:*",
+    "@boundless-grimoire/ui": "workspace:*",
+    "@mdx-js/react": "^3.1.1",
+    "@mdx-js/rollup": "^3.1.1",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^5.1.0",
     "lucide-react": "^0.469.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",

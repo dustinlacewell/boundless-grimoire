@@ -89,3 +89,9 @@ export type {
 } from "./scryfall/types";
 
 export { toSnapshot } from "./scryfall/snapshot";
+
+// Rate-limit primitives. Both the extension's background worker and the
+// site demo's direct-fetch ScryfallClient share these — a single source
+// of truth for the Scryfall throttle policy.
+export { RateLimitedBucket } from "./scryfall/rateLimiter";
+export { bucketFor, searchBucket, defaultBucket } from "./scryfall/buckets";

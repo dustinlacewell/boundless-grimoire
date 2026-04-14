@@ -10,13 +10,14 @@
  * bucket never blocks one going through the default bucket. Worst-case
  * sustained load is 12 req/sec total, which is exactly Scryfall's ceiling.
  *
- * These instances are module-level singletons. Because they live in the
- * one service worker for the extension, every Scryfall call from every
- * surface (content scripts, popup, future MAIN-world bridges) shares the
- * same throttle — there is no way to accidentally double the rate by
- * opening a second tab.
+ * These instances are module-level singletons. In the extension the
+ * module is imported by the background service worker, so every
+ * Scryfall call from every surface (content scripts, popup, MAIN-world
+ * bridges) shares the same throttle — opening a second tab can't
+ * double the rate. In the site demo, the page is the only consumer
+ * and the singletons trivially cover all in-process calls.
  */
-import { RateLimitedBucket } from "./queue";
+import { RateLimitedBucket } from "./rateLimiter";
 
 const SEARCH_PATHS = [
   "/cards/search",

@@ -1,0 +1,11 @@
+---
+import Base from "../layouts/Base.astro";
+import { DemoApp } from "../components/DemoApp";
+---
+
+<Base
+  title="Boundless Grimoire — Live Demo"
+  description="Try the Boundless Grimoire deck-builder right in your browser. No installation, no untap.in account required. Decks save to your browser's localStorage."
+>
+  <DemoApp client:only="react" />
+</Base>

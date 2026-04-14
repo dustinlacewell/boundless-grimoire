@@ -144,9 +144,18 @@ importers:
       '@astrojs/react':
         specifier: ^4.2.0
         version: 4.4.2(@types/node@22.19.17)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(jiti@2.6.1)(lightningcss@1.32.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tsx@4.21.0)
+      '@boundless-grimoire/app':
+        specifier: workspace:*
+        version: link:../../packages/app
       '@boundless-grimoire/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@mdx-js/react':
+        specifier: ^3.1.1
+        version: 3.1.1(@types/react@18.3.28)(react@18.3.1)
+      '@mdx-js/rollup':
+        specifier: ^3.1.1
+        version: 3.1.1(rollup@4.60.1)
       '@tailwindcss/vite':
         specifier: ^4.0.0
         version: 4.2.2(vite@6.4.2(@types/node@22.19.17)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0))
@@ -165,6 +174,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.0
         version: 4.2.2
+      zustand:
+        specifier: ^5.0.1
+        version: 5.0.12(@types/react@18.3.28)(react@18.3.1)
     devDependencies:
       '@types/react':
         specifier: ^18.3.12

@@ -28,8 +28,14 @@ const releasesUrl = `${githubUrl}/releases/latest`;
 
     <div class="flex flex-wrap items-center justify-center gap-3">
       <a
-        href={releasesUrl}
+        href={`${import.meta.env.BASE_URL}demo`}
         class="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-white hover:opacity-90 transition"
+      >
+        Try it in your browser
+      </a>
+      <a
+        href={releasesUrl}
+        class="inline-flex items-center gap-2 rounded-md border border-border-strong bg-bg-2 px-5 py-3 text-sm font-semibold hover:bg-bg-1 transition"
       >
         Download for Chrome
       </a>
