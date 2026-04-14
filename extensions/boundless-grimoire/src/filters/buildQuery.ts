@@ -63,9 +63,10 @@ function orGroup(prefix: string, values: readonly string[]): string {
 export function buildScryfallQuery(state: FilterState): string {
   const parts: string[] = [];
 
-  // Free text
+  // Free text — wrap in parens so any OR/AND inside doesn't leak into the
+  // top-level query and clobber other AND'd clauses.
   const text = state.text.trim();
-  if (text) parts.push(text);
+  if (text) parts.push(`(${text})`);
 
   // Card name
   const cardName = state.cardName?.trim();
@@ -103,7 +104,9 @@ export function buildScryfallQuery(state: FilterState): string {
       .filter(Boolean) as string[];
     const mode = state.customQueryMode ?? "or";
     if (fragments.length === 1) {
-      parts.push(fragments[0]);
+      // Always wrap — a single fragment like "f:standard or f:modern"
+      // would leak its OR into the top-level query without parens.
+      parts.push(`(${fragments[0]})`);
     } else if (fragments.length > 1) {
       if (mode === "and") {
         // AND: each fragment must match — wrap each so operator precedence is safe
