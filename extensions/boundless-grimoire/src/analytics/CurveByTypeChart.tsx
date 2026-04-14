@@ -1,7 +1,7 @@
-import { useMemo, type CSSProperties } from "react";
+import { type CSSProperties, useMemo } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { ChartCard } from "./ChartCard";
 import { computeCurveByType } from "./stats";
 
 interface Props {
@@ -15,14 +15,6 @@ const GAP = 4;
 
 const CREATURE_COLOR = colors.accent;
 const NON_CREATURE_COLOR = "#5b8dd9";
-
-const titleStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: 1.2,
-  textTransform: "uppercase",
-  color: colors.textMuted,
-  marginBottom: 16,
-};
 
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
@@ -77,8 +69,7 @@ export function CurveByTypeChart({ deck, style }: Props) {
   );
 
   return (
-    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
-      <div style={titleStyle}>Curve by Type</div>
+    <ChartCard title="Curve by Type" style={{ minWidth: 240, ...style }}>
       <div style={chartAreaStyle}>
         {curve.labels.map((label, i) => {
           const cCount = curve.creatures[i];
@@ -88,7 +79,7 @@ export function CurveByTypeChart({ deck, style }: Props) {
           const cHeight = (cCount / maxStack) * maxBarHeight;
           const ncHeight = (ncCount / maxStack) * maxBarHeight;
           return (
-            <div key={i} style={barWrapperStyle}>
+            <div key={label} style={barWrapperStyle}>
               <div style={countStyle}>{total > 0 ? total : ""}</div>
               <div style={{ display: "flex", flexDirection: "column", borderRadius: 3, overflow: "hidden", transition: "height 0.2s ease" }}>
                 <div
@@ -115,6 +106,6 @@ export function CurveByTypeChart({ deck, style }: Props) {
         <span><span style={legendDotStyle(CREATURE_COLOR)} />Creatures</span>
         <span><span style={legendDotStyle(NON_CREATURE_COLOR)} />Spells</span>
       </div>
-    </Surface>
+    </ChartCard>
   );
 }

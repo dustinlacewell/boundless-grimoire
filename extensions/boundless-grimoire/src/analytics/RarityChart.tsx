@@ -1,7 +1,7 @@
 import { useMemo, type CSSProperties } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { ChartCard } from "./ChartCard";
 import { computeRarityBreakdown } from "./stats";
 
 interface Props {
@@ -25,14 +25,6 @@ const RARITY_LABELS: Record<string, string> = {
   uncommon: "U",
   rare: "R",
   mythic: "M",
-};
-
-const titleStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: 1.2,
-  textTransform: "uppercase",
-  color: colors.textMuted,
-  marginBottom: 16,
 };
 
 const chartAreaStyle: React.CSSProperties = {
@@ -70,8 +62,7 @@ export function RarityChart({ deck, style }: Props) {
   const maxCount = Math.max(...entries.map((e) => e.count), 1);
 
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
-      <div style={titleStyle}>Rarity</div>
+    <ChartCard title="Rarity" style={style}>
       <div style={chartAreaStyle}>
         {entries.map(({ rarity, count }) => {
           const height = (count / maxCount) * (CHART_HEIGHT - 20);
@@ -93,6 +84,6 @@ export function RarityChart({ deck, style }: Props) {
           );
         })}
       </div>
-    </Surface>
+    </ChartCard>
   );
 }

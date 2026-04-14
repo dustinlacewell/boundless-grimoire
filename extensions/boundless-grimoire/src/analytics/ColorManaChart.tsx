@@ -1,7 +1,7 @@
 import { type CSSProperties, useMemo } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { ChartCard } from "./ChartCard";
 import { computeColorDemandSupply, MANA_COLORS, type ManaColor } from "./stats";
 
 interface Props {
@@ -12,18 +12,10 @@ interface Props {
 const CHART_HEIGHT = 100;
 const BAR_GAP = 2;
 const GROUP_GAP = 10;
-const MAX_BAR_WIDTH = 24;
+const MAX_GROUP_WIDTH = 50;
 
 const DEMAND_COLOR = colors.accent;
 const SUPPLY_COLOR = "#5b8dd9";
-
-const titleStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: 1.2,
-  textTransform: "uppercase",
-  color: colors.textMuted,
-  marginBottom: 16,
-};
 
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
@@ -39,7 +31,7 @@ const groupStyle: React.CSSProperties = {
   alignItems: "center",
   gap: 4,
   flex: 1,
-  maxWidth: MAX_BAR_WIDTH,
+  maxWidth: MAX_GROUP_WIDTH,
 };
 
 const pairStyle: React.CSSProperties = {
@@ -95,7 +87,7 @@ function symbolUrl(color: ManaColor): string {
 
 export function ColorManaChart({ deck, style }: Props) {
   const { demand, supply } = useMemo(() => computeColorDemandSupply(deck.cards), [deck.cards]);
-  const activeColors = MANA_COLORS.filter((c) => demand[c] > 0 || supply[c] > 0);
+  const activeColors = MANA_COLORS.filter((c) => demand[c] > 0);
   if (activeColors.length === 0) return null;
   const maxValue = Math.max(
     ...activeColors.map((c) => Math.max(demand[c], supply[c])),
@@ -105,8 +97,7 @@ export function ColorManaChart({ deck, style }: Props) {
   const maxBarHeight = CHART_HEIGHT - 36;
 
   return (
-    <Surface elevation={2} padding={12} style={{ minWidth: 200, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
-      <div style={titleStyle}>Cost vs Production</div>
+    <ChartCard title="Cost vs Production" style={{ minWidth: 240, ...style }}>
       <div style={chartAreaStyle}>
         {activeColors.map((color) => {
           const d = demand[color];
@@ -159,6 +150,6 @@ export function ColorManaChart({ deck, style }: Props) {
         <span><span style={legendDotStyle(DEMAND_COLOR)} />Cost</span>
         <span><span style={legendDotStyle(SUPPLY_COLOR)} />Production</span>
       </div>
-    </Surface>
+    </ChartCard>
   );
 }

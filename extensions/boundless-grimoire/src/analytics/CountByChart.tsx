@@ -1,9 +1,9 @@
-import { useMemo, useState, type CSSProperties } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { Dropdown, type DropdownOption } from "../ui/Dropdown";
-import { Surface } from "../ui/Surface";
-import { computeCountBy, type CountByMode } from "./stats";
+import { ChartCard } from "./ChartCard";
+import { type CountByMode, computeCountBy } from "./stats";
 
 interface Props {
   deck: Deck;
@@ -24,7 +24,6 @@ const titleRowStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: 8,
-  marginBottom: 16,
 };
 
 const titleStyle: React.CSSProperties = {
@@ -88,12 +87,15 @@ export function CountByChart({ deck, style }: Props) {
   const entries = useMemo(() => computeCountBy(deck.cards, mode), [deck.cards, mode]);
   const maxCount = entries.length > 0 ? entries[0].count : 1;
 
+  const title = (
+    <div style={titleRowStyle}>
+      <div style={titleStyle}>Count by</div>
+      <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} width={110} />
+    </div>
+  );
+
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
-      <div style={titleRowStyle}>
-        <div style={titleStyle}>Count by</div>
-        <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} width={110} />
-      </div>
+    <ChartCard title={title} style={style}>
       <div style={chartAreaStyle}>
         {entries.map(({ label, count }) => {
           const height = (count / maxCount) * (CHART_HEIGHT - 20);
@@ -123,6 +125,6 @@ export function CountByChart({ deck, style }: Props) {
           </div>
         ))}
       </div>
-    </Surface>
+    </ChartCard>
   );
 }

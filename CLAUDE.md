@@ -92,7 +92,7 @@ Abort: sending a `scryfall:abort` message with the request id cancels the in-fli
 - `computeRarityBreakdown` — common/uncommon/rare/mythic counts
 - `computeCountBy(mode)` — group by type category or subtype
 
-Charts render via `DistributionChart` (bar chart, inline SVG-free CSS bars) or custom components. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip in `Overlay`.
+All charts use `ChartCard` as their outer shell (Surface + pinned title + centered body). Distribution-based charts (`ManaCurveChart`, `PowerCurveChart`, `ToughnessCurveChart`) delegate to `DistributionChart` for the bar/label/average body. Custom charts (`RarityChart`, `CurveByTypeChart`, `ColorManaChart`, `CountByChart`) render their own bodies inside `ChartCard`. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip or CSS grid in `Overlay`.
 
 ## untap.in sync
 

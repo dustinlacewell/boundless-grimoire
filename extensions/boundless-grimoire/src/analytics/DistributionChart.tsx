@@ -1,6 +1,5 @@
-import type { CSSProperties } from "react";
 import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { ChartCard } from "./ChartCard";
 import type { Distribution } from "./stats";
 
 interface Props {
@@ -8,21 +7,13 @@ interface Props {
   distribution: Distribution;
   /** Hide the average line. */
   hideAverage?: boolean;
-  /** Additional style merged into the Surface (e.g. width: "100%" for wrap layout). */
-  style?: CSSProperties;
+  /** Additional style merged into the card (e.g. width: "100%" for wrap layout). */
+  style?: React.CSSProperties;
 }
 
 const CHART_HEIGHT = 100;
 const BAR_WIDTH = 24;
 const GAP = 4;
-
-const titleStyle: React.CSSProperties = {
-  fontSize: 11,
-  letterSpacing: 1.2,
-  textTransform: "uppercase",
-  color: colors.textMuted,
-  marginBottom: 16,
-};
 
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
@@ -45,9 +36,18 @@ const countStyle: React.CSSProperties = {
   minHeight: 12,
 };
 
+const labelRowStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  gap: GAP,
+  marginTop: 4,
+};
+
 const labelStyle: React.CSSProperties = {
+  width: BAR_WIDTH,
   fontSize: 10,
   color: colors.textMuted,
+  textAlign: "center",
 };
 
 const averageStyle: React.CSSProperties = {
@@ -63,13 +63,12 @@ export function DistributionChart({ title, distribution, hideAverage, style }: P
   const maxCount = Math.max(...buckets, 1);
 
   return (
-    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
-      <div style={titleStyle}>{title}</div>
+    <ChartCard title={title} style={{ minWidth: 240, ...style }}>
       <div style={chartAreaStyle}>
         {buckets.map((count, i) => {
-          const height = (count / maxCount) * (CHART_HEIGHT - 20);
+          const height = (count / maxCount) * (CHART_HEIGHT - 16);
           return (
-            <div key={i} style={barWrapperStyle}>
+            <div key={labels[i]} style={barWrapperStyle}>
               <div style={countStyle}>{count > 0 ? count : ""}</div>
               <div
                 style={{
@@ -81,14 +80,18 @@ export function DistributionChart({ title, distribution, hideAverage, style }: P
                   transition: "height 0.2s ease",
                 }}
               />
-              <div style={labelStyle}>{labels[i]}</div>
             </div>
           );
         })}
       </div>
+      <div style={labelRowStyle}>
+        {labels.map((label) => (
+          <div key={label} style={labelStyle}>{label}</div>
+        ))}
+      </div>
       {!hideAverage && total > 0 && (
         <div style={averageStyle}>Avg: {average.toFixed(2)}</div>
       )}
-    </Surface>
+    </ChartCard>
   );
 }
