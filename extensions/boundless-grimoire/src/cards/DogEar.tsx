@@ -18,11 +18,12 @@ interface Props {
  * characters but lets you still read most of the name and the cost.
  */
 export function DogEar({ count, cardWidth }: Props) {
-  // 17% of card width, with a 20px floor so two-digit counts fit
-  // comfortably even at the smallest grid sizes. Card height is
-  // irrelevant — the badge is anchored to the top edge regardless of
-  // aspect.
-  const size = Math.max(20, cardWidth * 0.17);
+  // Badge dimensions: wider than tall so the triangle's right vertex
+  // extends further across the top of the card while the left vertex
+  // stays shallow. Scales with card width, with floors so two-digit
+  // counts stay readable at the smallest zoom.
+  const width = Math.max(34, cardWidth * 0.28);
+  const height = Math.max(18, cardWidth * 0.12);
 
   return (
     <div
@@ -31,19 +32,19 @@ export function DogEar({ count, cardWidth }: Props) {
         position: "absolute",
         top: 0,
         left: 0,
-        width: size,
-        height: size,
+        width,
+        height,
         background: colors.accent,
         color: "#0a0a0c",
         fontWeight: 800,
-        fontSize: size * 0.5,
+        fontSize: height * 0.62,
         lineHeight: 1,
         fontFamily: "system-ui, sans-serif",
         display: "flex",
         alignItems: "flex-start",
         justifyContent: "flex-start",
-        paddingTop: size * 0.08,
-        paddingLeft: size * 0.18,
+        paddingTop: height * 0.06,
+        paddingLeft: width * 0.08,
         boxSizing: "border-box",
         // Right triangle filling the top-left half of the box. Hypotenuse
         // runs from the top-right corner down to the bottom-left corner.

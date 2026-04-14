@@ -21,7 +21,17 @@ const labelStyle: React.CSSProperties = {
   color: colors.textMuted,
   marginBottom: 6,
   fontWeight: 700,
+  whiteSpace: "nowrap",
 };
+
+/**
+ * Minimum column width so the category heading never wraps, regardless
+ * of how far the user zooms out. Sized for the longest category
+ * ("Planeswalkers") + " · NN" at the label font. The card art inside
+ * still renders at `cardWidth`; any extra width shows as empty space
+ * to the right of the stack.
+ */
+const MIN_COLUMN_WIDTH = 150;
 
 /**
  * One column in the deck view: a category title above its CategoryStack.
@@ -44,7 +54,7 @@ export function DeckCategoryColumn({
         display: "flex",
         flexDirection: "column",
         alignItems: "stretch",
-        width: cardWidth,
+        width: Math.max(cardWidth, MIN_COLUMN_WIDTH),
       }}
     >
       <div style={labelStyle}>
