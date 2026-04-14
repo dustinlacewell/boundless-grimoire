@@ -5,6 +5,7 @@ import { FeatureGrid } from "../components/FeatureGrid";
 import Screenshots from "../components/Screenshots.astro";
 import Install from "../components/Install.astro";
 import Footer from "../components/Footer.astro";
+import { EmbeddedApp } from "../components/EmbeddedApp";
 ---
 
 <Base>
@@ -13,4 +14,12 @@ import Footer from "../components/Footer.astro";
   <Screenshots />
   <Install />
   <Footer />
+
+  <!--
+    Embeds the deck-builder onto the homepage. Renders nothing visually
+    until the user clicks the trigger button (top-left) — it then covers
+    the marketing content with the live app, exactly like the extension
+    overlays untap.in. Click the trigger again (or Esc) to close.
+  -->
+  <EmbeddedApp client:only="react" />
 </Base>

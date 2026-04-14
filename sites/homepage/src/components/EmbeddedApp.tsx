@@ -18,8 +18,12 @@ import {
 import { createBrowserServices } from "../services";
 
 /**
- * Mounts the full deck-builder app inside the marketing site's /demo
- * route. Bound to localStorage + direct Scryfall fetch via
+ * Mounts the deck-builder app onto the marketing homepage. Same
+ * floating trigger + toggleable overlay UX as the extension uses on
+ * untap.in — clicking the corner trigger covers the marketing content
+ * with the deck-builder; clicking again hides it.
+ *
+ * Bound to localStorage + direct Scryfall fetch via
  * `createBrowserServices()`. No untap integration.
  *
  * `provideServices` is a process singleton, so we guard against double-
@@ -51,7 +55,7 @@ function bootOnce(): { services: Services; ready: Promise<void> } {
   return booted;
 }
 
-export function DemoApp() {
+export function EmbeddedApp() {
   const [b] = useState(() => bootOnce());
   const [hydrated, setHydrated] = useState(false);
 
@@ -65,29 +69,18 @@ export function DemoApp() {
     };
   }, [b]);
 
-  if (!hydrated) {
-    return (
-      <div
-        id="boundless-grimoire-root"
-        className="fixed inset-0 grid place-items-center bg-bg-0 text-text-muted"
-      >
-        Loading demo…
-      </div>
-    );
-  }
-
+  // The host id is the portal target the global modals (HelpModal,
+  // PrintPickerModal, etc.) look up when mounting. It must exist before
+  // they render; nothing else about it matters. App's TriggerButton is
+  // fixed-positioned (top-left) and the Overlay is fixed-inset-0 when
+  // toggled open — both float over the marketing content beneath.
   return (
-    // The host element id matches the extension's host so any CSS or
-    // portal-target lookups that key off `#boundless-grimoire-root`
-    // resolve the same way.
-    <div
-      id="boundless-grimoire-root"
-      className="fixed inset-0 isolate"
-      style={{ zIndex: 1 }}
-    >
-      <ServicesProvider services={b.services}>
-        <App />
-      </ServicesProvider>
+    <div id="boundless-grimoire-root" className="isolate">
+      {hydrated && (
+        <ServicesProvider services={b.services}>
+          <App />
+        </ServicesProvider>
+      )}
     </div>
   );
 }

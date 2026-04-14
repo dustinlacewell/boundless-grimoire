@@ -12,6 +12,12 @@
  */
 
 // --- Mounted root ---------------------------------------------------------
+//
+// `App` is the whole experience: a fixed-positioned trigger button in the
+// top-left, a toggleable full-screen overlay with the deck-builder, and
+// the global modals that portal into `#boundless-grimoire-root`. Both
+// hosts (extension and homepage island) mount this same component — the
+// overlay always sits over whatever the host page is showing underneath.
 
 export { App } from "./content/App";
 
