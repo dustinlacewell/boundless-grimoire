@@ -5,7 +5,7 @@ import { useFilterStore } from "../filters/store";
 import type { ScryfallCard } from "../scryfall/types";
 import { selectedDeck, useDeckStore } from "../storage/deckStore";
 import { DEFAULT_SORT_DIR, DEFAULT_SORT_FIELD } from "../storage/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { CardGrid } from "./CardGrid";
 import { selectFavoritesById, useFavoritesStore } from "./favoritesStore";
 import { InfiniteScrollSentinel } from "./InfiniteScrollSentinel";

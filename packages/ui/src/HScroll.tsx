@@ -3,7 +3,9 @@ import { useWheelToHorizontal } from "./useWheelToHorizontal";
 
 interface Props {
   children: ReactNode;
+  /** Gap between children in px. Defaults to 12. */
   gap?: number;
+  /** Inline padding. Number for px, string for full CSS. */
   padding?: number | string;
   style?: CSSProperties;
   /**
@@ -26,17 +28,8 @@ export function HScroll({ children, gap = 12, padding = 0, style, wheelToHorizon
   return (
     <div
       ref={ref}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "stretch",
-        gap,
-        padding,
-        overflowX: "auto",
-        overflowY: "hidden",
-        scrollbarWidth: "thin",
-        ...style,
-      }}
+      className="flex flex-row items-stretch overflow-x-auto overflow-y-hidden [scrollbar-width:thin]"
+      style={{ gap, padding, ...style }}
     >
       {children}
     </div>

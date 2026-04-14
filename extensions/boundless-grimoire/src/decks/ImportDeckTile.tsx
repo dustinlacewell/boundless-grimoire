@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { colors } from "@boundless-grimoire/ui";
+import { Surface } from "@boundless-grimoire/ui";
 import { parseDecklist } from "./parseDecklist";
 import { importDecklist } from "../storage/deckStore";
 

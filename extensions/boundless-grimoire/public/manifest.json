@@ -9,12 +9,12 @@
     "https://svgs.scryfall.io/*"
   ],
   "background": {
-    "service_worker": "src/background/index.ts",
+    "service_worker": "background.js",
     "type": "module"
   },
   "web_accessible_resources": [
     {
-      "resources": ["keyrune/*", "icon.png", "icon-open.png"],
+      "resources": ["keyrune/*", "assets/*", "chunks/*", "content.js", "untapBridge.js"],
       "matches": ["https://untap.in/*", "https://*.untap.in/*"]
     }
   ],
@@ -23,20 +23,15 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://untap.in/*",
-        "https://*.untap.in/*"
-      ],
-      "js": ["src/sync/untapBridge.ts"],
+      "matches": ["https://untap.in/*", "https://*.untap.in/*"],
+      "js": ["untapBridge-loader.js"],
       "run_at": "document_idle",
       "world": "MAIN"
     },
     {
-      "matches": [
-        "https://untap.in/*",
-        "https://*.untap.in/*"
-      ],
-      "js": ["src/content/index.tsx"],
+      "matches": ["https://untap.in/*", "https://*.untap.in/*"],
+      "js": ["content-loader.js"],
+      "css": ["content.css"],
       "run_at": "document_idle"
     }
   ]

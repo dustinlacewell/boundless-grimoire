@@ -9,7 +9,7 @@ import { useSettingsStore } from "../settings/settingsStore";
 import { decrementCard, incrementCard, moveCardToZone } from "../commands/cardActions";
 import { setDeckCover } from "../storage/deckStore";
 import type { CardSnapshot, Deck } from "../storage/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
 import { checkLegality, clearLegality, useLegalityStore } from "./legalityStore";

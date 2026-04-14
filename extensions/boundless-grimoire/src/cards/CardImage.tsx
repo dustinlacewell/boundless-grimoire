@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { CardSnapshot } from "../storage/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { imageUrl } from "./imageUrl";
 
 interface Props {

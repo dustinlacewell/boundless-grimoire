@@ -1,4 +1,4 @@
-import { ButtonGroup } from "../../ui/ButtonGroup";
+import { ButtonGroup } from "@boundless-grimoire/ui";
 import { SUPERTYPES } from "../constants";
 import { useFilterStore, toggleIn } from "../store";
 

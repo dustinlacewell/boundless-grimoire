@@ -14,7 +14,7 @@ import {
   resetCustomQueries,
   useCustomQueryStore,
 } from "../filters/customQueryStore";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import {
   setAnalyticsLayout,
   setDeckGroupBy,

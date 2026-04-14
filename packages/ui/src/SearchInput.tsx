@@ -1,11 +1,10 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
-import { colors } from "./colors";
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
 /** Plain dark text input. No icon, no behavior — just styling. */
 export const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchInput(
-  { style, size, ...rest },
+  { size, className = "", ...rest },
   ref,
 ) {
   return (
@@ -17,20 +16,7 @@ export const SearchInput = forwardRef<HTMLInputElement, Props>(function SearchIn
       // fall back to whatever the caller explicitly passed.
       size={size ?? 1}
       type="text"
-      style={{
-        width: "100%",
-        height: 30,
-        padding: "0 10px",
-        background: colors.bg1,
-        color: colors.text,
-        border: `1px solid ${colors.border}`,
-        borderRadius: 6,
-        fontFamily: "system-ui, sans-serif",
-        fontSize: 13,
-        outline: "none",
-        boxSizing: "border-box",
-        ...style,
-      }}
+      className={`w-full h-[30px] px-2.5 box-border bg-bg-1 text-text border border-border rounded-[6px] font-sans text-[13px] outline-none ${className}`.trim()}
     />
   );
 });

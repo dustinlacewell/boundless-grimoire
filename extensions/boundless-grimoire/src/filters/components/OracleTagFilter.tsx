@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { ButtonGroup } from "../../ui/ButtonGroup";
+import { ButtonGroup } from "@boundless-grimoire/ui";
 import { groupIntoSections, useCustomQueryStore } from "../customQueryStore";
 import { useFilterStore, toggleIn } from "../store";
-import { colors } from "../../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 
 const modeOptions = [
   { value: "or" as const, label: "OR" },

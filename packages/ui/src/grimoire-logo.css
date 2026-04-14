@@ -1,0 +1,124 @@
+/* Boundless Grimoire mark.
+ *
+ * `.bg-grimoire-mark` is a single layer — the swirling multicolor gradient
+ * clipped to one icon (closed-book by default, open-book when
+ * `[data-variant="open"]`). A luminosity overlay paints the greyscale art
+ * back on top so the icon's internal shading survives the colorization.
+ *
+ * `.bg-grimoire-logo` is a wrapper that stacks two marks (closed + open)
+ * and cross-fades them on hover ([data-hover-swap="true"]) or when forced
+ * via [data-open="true"]. Use it when you want the live transition; use
+ * the bare mark when you just want a static logo.
+ *
+ * Asset URLs are co-located. Bundlers (Vite, Rollup, esbuild, webpack)
+ * rewrite the relative url() refs into hashed asset paths automatically.
+ */
+
+@keyframes bg-grimoire-swirl-a {
+  0%   { background-position:   0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:   0% 50%; }
+}
+@keyframes bg-grimoire-swirl-b {
+  0%   { background-position: 100% 50%; }
+  50%  { background-position:   0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* --- Single mark --------------------------------------------------------- */
+
+.bg-grimoire-mark {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  isolation: isolate;
+  background:
+    linear-gradient(100deg,
+      #ff7e3a 0%, #ffd24c 20%, #4bc0ff 45%, #9b4bff 70%, #ff5a8a 90%, #ff7e3a 100%
+    ),
+    linear-gradient(260deg,
+      #4caf50 0%, #4bc0ff 30%, #9b4bff 60%, #ff5a5a 100%
+    );
+  background-blend-mode: screen;
+  background-size: 300% 100%, 300% 100%;
+  animation:
+    bg-grimoire-swirl-a 7s ease-in-out infinite,
+    bg-grimoire-swirl-b 11s ease-in-out infinite;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: var(--icon-size, contain);
+  -webkit-mask-size: var(--icon-size, contain);
+  mask-position: var(--icon-pos-x, center) var(--icon-pos-y, center);
+  -webkit-mask-position: var(--icon-pos-x, center) var(--icon-pos-y, center);
+}
+
+.bg-grimoire-mark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: var(--icon-size, contain);
+  background-position: var(--icon-pos-x, center) var(--icon-pos-y, center);
+  background-repeat: no-repeat;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
+}
+
+/* The icon URL is supplied by the React component as `--bg-grimoire-icon`
+ * (a CSS `url(...)` value). We can't hardcode `url("./icon.png")` here
+ * because Chrome content-script CSS resolves relative URLs against the
+ * host page, not the extension origin. The component resolves the URL
+ * via `new URL(..., import.meta.url)` instead. */
+.bg-grimoire-mark {
+  mask-image: var(--bg-grimoire-icon);
+  -webkit-mask-image: var(--bg-grimoire-icon);
+}
+.bg-grimoire-mark::after {
+  background-image: var(--bg-grimoire-icon);
+}
+
+/* Framed — tighter crop + offset, used by the extension's trigger button.
+ * Each variant frames slightly differently so the silhouette sits well. */
+.bg-grimoire-mark[data-framed="true"][data-variant="closed"] {
+  --icon-size: auto 220%;
+  --icon-pos-x: calc(50% - 5px);
+  --icon-pos-y: calc(50% + 20px);
+}
+.bg-grimoire-mark[data-framed="true"][data-variant="open"] {
+  --icon-size: auto 290%;
+  --icon-pos-x: calc(50% - 5px);
+  --icon-pos-y: calc(50% + 25px);
+}
+
+/* Fast — quick swirl, used while the trigger button is hovered. */
+.bg-grimoire-mark[data-fast="true"] {
+  animation-duration: 0.8s, 1.2s;
+}
+
+/* --- Composed cross-fade logo ------------------------------------------- */
+
+.bg-grimoire-logo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-grimoire-logo > .bg-grimoire-mark {
+  position: absolute;
+  inset: 0;
+  transition: opacity 350ms ease;
+}
+
+/* Default rest state: only the closed mark is visible. */
+.bg-grimoire-logo > .bg-grimoire-mark[data-variant="open"] {
+  opacity: 0;
+}
+
+/* Forced open (parent toggles data-open) or hover-swap. Cross-fade. */
+.bg-grimoire-logo[data-open="true"] > .bg-grimoire-mark[data-variant="closed"],
+.bg-grimoire-logo[data-hover-swap="true"]:hover > .bg-grimoire-mark[data-variant="closed"] {
+  opacity: 0;
+}
+.bg-grimoire-logo[data-open="true"] > .bg-grimoire-mark[data-variant="open"],
+.bg-grimoire-logo[data-hover-swap="true"]:hover > .bg-grimoire-mark[data-variant="open"] {
+  opacity: 1;
+}

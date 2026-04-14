@@ -16,48 +16,54 @@ export function ColorFilter() {
     patch({ colors: toggleIn(selected, c) });
 
   return (
-    <div style={{ display: "inline-flex", gap: 4, alignItems: "center" }}>
-      {COLORS.map((c) => {
-        const isOn = selected.includes(c.value);
-        return (
-          <button
-            key={c.value}
-            type="button"
-            onClick={() => toggleColor(c.value)}
-            title={c.name}
-            style={{
-              background: "transparent",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-              opacity: isOn ? 1 : 0.4,
-              filter: isOn ? "none" : "saturate(0.5)",
-              transform: isOn ? "scale(1.05)" : "scale(1)",
-              transition: "opacity 0.1s, transform 0.1s, filter 0.1s",
-            }}
-          >
-            <ColorIcon color={c.value} size={26} />
-          </button>
-        );
-      })}
-      <button
-        type="button"
-        onClick={() => patch({ colorless: !colorless })}
-        title="Colorless"
-        style={{
-          background: "transparent",
-          border: "none",
-          padding: 0,
-          marginLeft: 4,
-          cursor: "pointer",
-          opacity: colorless ? 1 : 0.4,
-          filter: colorless ? "none" : "saturate(0.5)",
-          transform: colorless ? "scale(1.05)" : "scale(1)",
-          transition: "opacity 0.1s, transform 0.1s, filter 0.1s",
-        }}
-      >
-        <ColorIcon color="C" size={26} />
-      </button>
+    <div className="inline-flex gap-1 items-center">
+      {COLORS.map((c) => (
+        <ColorToggle
+          key={c.value}
+          on={selected.includes(c.value)}
+          title={c.name}
+          onClick={() => toggleColor(c.value)}
+        >
+          <ColorIcon color={c.value} size={26} />
+        </ColorToggle>
+      ))}
+      <div className="ml-1">
+        <ColorToggle
+          on={colorless}
+          title="Colorless"
+          onClick={() => patch({ colorless: !colorless })}
+        >
+          <ColorIcon color="C" size={26} />
+        </ColorToggle>
+      </div>
     </div>
+  );
+}
+
+interface ColorToggleProps {
+  on: boolean;
+  title: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+/**
+ * One color icon button. Off-state is dimmed + desaturated so the
+ * selected colors stand out; hover restores full brightness regardless
+ * of state so the user gets clear feedback that the icon is interactive.
+ */
+function ColorToggle({ on, title, onClick, children }: ColorToggleProps) {
+  const stateClass = on
+    ? "opacity-100 saturate-100 scale-105"
+    : "opacity-40 saturate-50 scale-100";
+  return (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className={`bg-transparent border-0 p-0 cursor-pointer transition-[opacity,filter,transform] duration-100 hover:opacity-100 hover:saturate-100 ${stateClass}`}
+    >
+      {children}
+    </button>
   );
 }

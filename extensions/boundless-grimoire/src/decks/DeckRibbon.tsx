@@ -5,7 +5,7 @@ import {
   selectDeck,
   useDeckStore,
 } from "../storage/deckStore";
-import { HScroll } from "../ui/HScroll";
+import { HScroll } from "@boundless-grimoire/ui";
 import { DeckRibbonItem } from "./DeckRibbonItem";
 import { ImportDeckTile } from "./ImportDeckTile";
 import { NewDeckTile } from "./NewDeckTile";

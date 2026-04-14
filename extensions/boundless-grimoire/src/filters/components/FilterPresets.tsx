@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { Popover } from "../../ui/Popover";
-import { Button } from "../../ui/Button";
-import { colors } from "../../ui/colors";
+import { Popover } from "@boundless-grimoire/ui";
+import { Button } from "@boundless-grimoire/ui";
+import { colors } from "@boundless-grimoire/ui";
 import { useFilterStore } from "../store";
 import {
   usePresetStore,

@@ -1,0 +1,30 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Boundless Grimoire — MTG deck-builder for untap.in",
+  description = "A Chrome extension that overlays a full-screen Magic: the Gathering deck-builder on untap.in. Search, filter, analyze, and sync — without leaving the table.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="bg-bg-0 text-text">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL}favicon.png`} />
+  </head>
+  <body class="font-sans antialiased">
+    <slot />
+  </body>
+</html>

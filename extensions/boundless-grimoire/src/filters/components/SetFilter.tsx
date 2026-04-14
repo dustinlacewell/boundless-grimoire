@@ -1,7 +1,7 @@
 import { useMemo, useState, type MouseEvent } from "react";
-import { MultiSelect, type MultiSelectOption } from "../../ui/MultiSelect";
-import { Popover } from "../../ui/Popover";
-import { colors } from "../../ui/colors";
+import { MultiSelect, type MultiSelectOption } from "@boundless-grimoire/ui";
+import { Popover } from "@boundless-grimoire/ui";
+import { colors } from "@boundless-grimoire/ui";
 import { useCatalogs } from "../catalogs";
 import { useFilterStore, toggleIn } from "../store";
 

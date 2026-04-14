@@ -5,8 +5,8 @@ import { useCardHoverPreview } from "../../cards/useCardHoverPreview";
 import { getCardByName } from "../../scryfall/client";
 import { toSnapshot } from "../../scryfall/snapshot";
 import type { CardSnapshot } from "../../storage/types";
-import { colors } from "../../ui/colors";
-import { GrimoireLogo } from "../../ui/GrimoireLogo";
+import { colors } from "@boundless-grimoire/ui";
+import { GrimoireLogo } from "@boundless-grimoire/ui";
 
 type CacheEntry = { snapshot: CardSnapshot } | { error: true };
 const cardCache = new Map<string, Promise<CacheEntry>>();

@@ -1,4 +1,4 @@
-import { ButtonGroup } from "../../ui/ButtonGroup";
+import { ButtonGroup } from "@boundless-grimoire/ui";
 import { RARITIES } from "../constants";
 import { RarityIcon } from "../icons/RarityIcon";
 import { useFilterStore, toggleIn } from "../store";

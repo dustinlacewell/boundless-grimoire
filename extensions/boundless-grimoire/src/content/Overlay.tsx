@@ -13,9 +13,9 @@ import { HelpModal } from "../help/HelpModal";
 import { SettingsModal } from "../settings/SettingsModal";
 import { redo, undo } from "../commands/historyStore";
 import { useDeckStore, selectedDeck } from "../storage/deckStore";
-import { colors } from "../ui/colors";
-import { IconButton } from "../ui/IconButton";
-import { GearIcon, HelpIcon } from "../ui/icons/Icons";
+import { colors } from "@boundless-grimoire/ui";
+import { IconButton } from "@boundless-grimoire/ui";
+import { GearIcon, HelpIcon } from "@boundless-grimoire/ui";
 import { TRIGGER_H, TRIGGER_W } from "./TriggerButton";
 
 type Props = Record<string, never>;

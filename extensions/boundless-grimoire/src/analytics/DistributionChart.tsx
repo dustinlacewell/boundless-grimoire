@@ -1,4 +1,4 @@
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { ChartCard } from "./ChartCard";
 import type { Distribution } from "./stats";
 

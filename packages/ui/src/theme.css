@@ -1,0 +1,36 @@
+/* Design tokens for @boundless-grimoire/ui.
+ *
+ * Consumers import this file into their own Tailwind entry:
+ *
+ *   @import "@boundless-grimoire/ui/theme.css";
+ *
+ * The @theme block registers the design palette as Tailwind v4 tokens, so
+ * components in this package (and in consumer code) can use class names
+ * like `bg-bg-1`, `text-text-muted`, `border-border-strong`.
+ *
+ * The @source directive tells Tailwind to scan this package's own source
+ * so it picks up every utility class used inside the library — without
+ * each consumer having to configure that glob themselves.
+ */
+
+@source "./**/*.{ts,tsx}";
+
+@theme {
+  --color-bg-0: #0a0a0c;
+  --color-bg-1: #15151a;
+  --color-bg-2: #1f1f23;
+  --color-bg-3: #2a2a30;
+
+  --color-border: #2a2a30;
+  --color-border-strong: #3a3a44;
+
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-text-faint: rgba(255, 255, 255, 0.4);
+
+  --color-accent: #ff7e3a;
+  --color-danger: #ff5a5a;
+  --color-success: #4caf50;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

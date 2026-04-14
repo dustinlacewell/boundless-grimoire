@@ -1,7 +1,7 @@
 import { CategoryStack } from "../cards/CategoryStack";
 import type { DeckCategoryGroup } from "../cards/categorize";
 import type { CardSnapshot } from "../storage/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
   group: DeckCategoryGroup;

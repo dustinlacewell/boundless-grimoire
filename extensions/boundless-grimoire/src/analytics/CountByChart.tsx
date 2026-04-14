@@ -1,7 +1,7 @@
 import { type CSSProperties, useMemo, useState } from "react";
 import type { Deck } from "../storage/types";
-import { colors } from "../ui/colors";
-import { Dropdown, type DropdownOption } from "../ui/Dropdown";
+import { colors } from "@boundless-grimoire/ui";
+import { Dropdown, type DropdownOption } from "@boundless-grimoire/ui";
 import { ChartCard } from "./ChartCard";
 import { type CountByMode, computeCountBy } from "./stats";
 

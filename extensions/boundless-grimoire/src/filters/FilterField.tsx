@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
   label: string;

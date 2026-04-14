@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { MAX_CARD_WIDTH } from "../search/gridSizeStore";
 import { useSettingsStore } from "../settings/settingsStore";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { useCardPreviewStore, mousePos, hideCardPreview } from "./cardPreviewStore";
 import { imageUrl } from "./imageUrl";
 import { ManaCost } from "./ManaCost";

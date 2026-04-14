@@ -1,6 +1,6 @@
 import { useSettingsStore } from "../settings/settingsStore";
 import type { Deck } from "../storage/types";
-import { HScroll } from "../ui/HScroll";
+import { HScroll } from "@boundless-grimoire/ui";
 import { ColorManaChart } from "./ColorManaChart";
 import { CountByChart } from "./CountByChart";
 import { CurveByTypeChart } from "./CurveByTypeChart";

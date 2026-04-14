@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@boundless-grimoire/ui/theme.css";
+
+html, body {
+  background: var(--color-bg-0);
+  color: var(--color-text);
+}

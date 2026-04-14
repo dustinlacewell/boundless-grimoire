@@ -12,6 +12,7 @@ interface Props<T extends string> {
   isSelected: (value: T) => boolean;
   onToggle: (value: T) => void;
   size?: "sm" | "md";
+  /** Gap between buttons in px. Defaults to 4. */
   gap?: number;
 }
 
@@ -29,7 +30,7 @@ export function ButtonGroup<T extends string>({
   gap = 4,
 }: Props<T>) {
   return (
-    <div style={{ display: "inline-flex", flexWrap: "wrap", gap }}>
+    <div className="inline-flex flex-wrap" style={{ gap }}>
       {options.map((opt) => (
         <ToggleButton
           key={opt.value}

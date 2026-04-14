@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
   onClick: (e: MouseEvent) => void;

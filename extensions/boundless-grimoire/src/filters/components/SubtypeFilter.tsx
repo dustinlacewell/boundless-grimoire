@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { MultiSelect, type MultiSelectOption } from "../../ui/MultiSelect";
+import { MultiSelect, type MultiSelectOption } from "@boundless-grimoire/ui";
 import { useCatalogs } from "../catalogs";
 import { useFilterStore } from "../store";
 import { TYPE_BLOCK_WIDTH } from "./TypeFilter";

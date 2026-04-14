@@ -1,7 +1,7 @@
 import type { MouseEvent } from "react";
 import { toSnapshot } from "../scryfall/snapshot";
 import type { ScryfallCard } from "../scryfall/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { CardImage } from "./CardImage";
 import { useCardHoverPreview } from "./useCardHoverPreview";
 

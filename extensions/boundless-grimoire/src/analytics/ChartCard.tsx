@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import { colors } from "../ui/colors";
-import { Surface } from "../ui/Surface";
+import { colors } from "@boundless-grimoire/ui";
+import { Surface } from "@boundless-grimoire/ui";
 
 interface Props {
   title: ReactNode;

@@ -1,6 +1,6 @@
 import { type CSSProperties, useMemo } from "react";
 import type { Deck } from "../storage/types";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { ChartCard } from "./ChartCard";
 import { computeColorDemandSupply, MANA_COLORS, type ManaColor } from "./stats";
 

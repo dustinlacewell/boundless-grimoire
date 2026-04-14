@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GrimoireLogo } from "../ui/GrimoireLogo";
+import { GrimoireLogo } from "@boundless-grimoire/ui";
 
 interface Props {
   open: boolean;

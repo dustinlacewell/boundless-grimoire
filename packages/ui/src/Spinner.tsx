@@ -34,7 +34,7 @@ export function Spinner({
       viewBox={`0 0 ${size} ${size}`}
       role="status"
       aria-label="Loading"
-      style={{ display: "block" }}
+      className="block"
     >
       <circle
         cx={c}

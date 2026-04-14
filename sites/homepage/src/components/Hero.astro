@@ -1,0 +1,44 @@
+---
+import { GrimoireMark } from "@boundless-grimoire/ui";
+
+const githubUrl = "https://github.com/dustinlacewell/boundless-grimoire";
+const releasesUrl = `${githubUrl}/releases/latest`;
+---
+
+<section class="relative overflow-hidden">
+  <div
+    class="pointer-events-none absolute inset-0 opacity-40"
+    style="background: radial-gradient(60% 50% at 50% 0%, rgba(155,75,255,0.35), transparent 70%);"
+  >
+  </div>
+
+  <div class="mx-auto max-w-5xl px-6 pt-24 pb-20 text-center relative">
+    <div class="mx-auto mb-8 drop-shadow-[0_10px_40px_rgba(155,75,255,0.4)]" style="width: 220px; height: 220px;">
+      <GrimoireMark size={220} />
+    </div>
+
+    <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-4">
+      Boundless Grimoire
+    </h1>
+    <p class="text-lg md:text-xl text-text-muted max-w-2xl mx-auto mb-10">
+      A full-screen Magic: the Gathering deck-builder that overlays untap.in.
+      Search every card on Scryfall, filter with the full query language,
+      and your decks stay in sync.
+    </p>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a
+        href={releasesUrl}
+        class="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-white hover:opacity-90 transition"
+      >
+        Download for Chrome
+      </a>
+      <a
+        href={githubUrl}
+        class="inline-flex items-center gap-2 rounded-md border border-border-strong bg-bg-2 px-5 py-3 text-sm font-semibold hover:bg-bg-1 transition"
+      >
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</section>

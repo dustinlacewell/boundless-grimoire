@@ -1,5 +1,5 @@
 import { TYPES } from "../constants";
-import { ToggleButton } from "../../ui/ToggleButton";
+import { ToggleButton } from "@boundless-grimoire/ui";
 import { useFilterStore, toggleIn } from "../store";
 
 /**

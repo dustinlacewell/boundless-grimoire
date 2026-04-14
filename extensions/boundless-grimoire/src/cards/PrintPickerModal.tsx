@@ -4,7 +4,7 @@ import { getPrintsByOracleId } from "../scryfall/client";
 import { toSnapshot } from "../scryfall/snapshot";
 import type { ScryfallCard } from "../scryfall/types";
 import { swapCardPrint } from "../storage/deckStore";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { closePrintPicker, usePrintPickerStore } from "./printPickerStore";
 import { adjustPrintWidth, usePrintSizeStore } from "./printSizeStore";
 import { PrintTile } from "./PrintTile";

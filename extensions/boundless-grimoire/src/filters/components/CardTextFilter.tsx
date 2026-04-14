@@ -1,5 +1,5 @@
 import { useFilterStore } from "../store";
-import { SearchInput } from "../../ui/SearchInput";
+import { SearchInput } from "@boundless-grimoire/ui";
 
 /** Oracle text search — maps to Scryfall `oracle:`. */
 export function CardTextFilter() {

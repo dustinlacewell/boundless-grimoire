@@ -18,7 +18,7 @@ import { TextFilter } from "./components/TextFilter";
 import { TypeFilter } from "./components/TypeFilter";
 import { useSettingsStore } from "../settings/settingsStore";
 import { selectedDeck, useDeckStore } from "../storage/deckStore";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 
 function CustomQuerySection() {
   return (

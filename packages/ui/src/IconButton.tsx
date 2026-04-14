@@ -1,13 +1,14 @@
-import type { MouseEvent, ReactNode } from "react";
-import { colors } from "./colors";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
   onClick: (e: MouseEvent<HTMLButtonElement>) => void;
   title?: string;
+  /** Diameter in px. Defaults to 26. */
   size?: number;
   /** Stop event propagation so parent click handlers don't fire. */
   stopPropagation?: boolean;
+  style?: CSSProperties;
 }
 
 /**
@@ -20,6 +21,7 @@ export function IconButton({
   title,
   size = 26,
   stopPropagation = true,
+  style,
 }: Props) {
   return (
     <button
@@ -29,20 +31,8 @@ export function IconButton({
         if (stopPropagation) e.stopPropagation();
         onClick(e);
       }}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: "rgba(15,15,18,0.8)",
-        color: colors.text,
-        border: `1px solid ${colors.borderStrong}`,
-        cursor: "pointer",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 0,
-        boxSizing: "border-box",
-      }}
+      className="inline-flex items-center justify-center rounded-full p-0 box-border cursor-pointer text-text border border-border-strong bg-[rgba(15,15,18,0.8)]"
+      style={{ width: size, height: size, ...style }}
     >
       {children}
     </button>

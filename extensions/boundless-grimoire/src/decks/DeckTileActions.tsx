@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { deleteDeck, duplicateDeck } from "../storage/deckStore";
 import type { Deck } from "../storage/types";
-import { colors } from "../ui/colors";
-import { IconButton } from "../ui/IconButton";
-import { Popover } from "../ui/Popover";
-import { ClipboardIcon, DuplicateIcon, TrashIcon } from "../ui/icons/Icons";
+import { colors } from "@boundless-grimoire/ui";
+import { IconButton } from "@boundless-grimoire/ui";
+import { Popover } from "@boundless-grimoire/ui";
+import { ClipboardIcon, DuplicateIcon, TrashIcon } from "@boundless-grimoire/ui";
 import { fullDeckToText } from "./deckText";
 
 interface Props {

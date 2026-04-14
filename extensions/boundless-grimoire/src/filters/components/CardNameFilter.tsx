@@ -1,5 +1,5 @@
 import { useFilterStore } from "../store";
-import { SearchInput } from "../../ui/SearchInput";
+import { SearchInput } from "@boundless-grimoire/ui";
 
 /** Card name search — maps to Scryfall `name:`. */
 export function CardNameFilter() {

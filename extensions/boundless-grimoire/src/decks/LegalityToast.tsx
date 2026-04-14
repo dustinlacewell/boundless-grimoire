@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLegalityStore } from "./legalityStore";
-import { colors } from "../ui/colors";
-import { Spinner } from "../ui/Spinner";
+import { colors } from "@boundless-grimoire/ui";
+import { Spinner } from "@boundless-grimoire/ui";
 
 const DONE_LINGER_MS = 5000;
 

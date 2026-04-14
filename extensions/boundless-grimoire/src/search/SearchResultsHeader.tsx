@@ -1,7 +1,7 @@
 import { SortFilter } from "../filters/components/SortFilter";
 import { useFilterStore } from "../filters/store";
-import { Button } from "../ui/Button";
-import { colors } from "../ui/colors";
+import { Button } from "@boundless-grimoire/ui";
+import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
   totalCards: number | null;

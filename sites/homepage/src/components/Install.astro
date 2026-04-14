@@ -1,0 +1,41 @@
+---
+const githubUrl = "https://github.com/dustinlacewell/boundless-grimoire";
+const releasesUrl = `${githubUrl}/releases/latest`;
+---
+
+<section class="mx-auto max-w-3xl px-6 py-20">
+  <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">Install</h2>
+
+  <ol class="space-y-4 text-text">
+    <li class="flex gap-4 rounded-lg border border-border bg-bg-1 p-5">
+      <span class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white font-bold text-sm flex items-center justify-center">1</span>
+      <div>
+        <p class="font-semibold mb-1">Download the latest release</p>
+        <p class="text-sm text-text-muted">
+          Grab the <code class="px-1.5 py-0.5 rounded bg-bg-2 border border-border text-xs">.zip</code> from
+          <a href={releasesUrl} class="text-accent hover:underline">GitHub Releases</a> and unzip it somewhere stable.
+        </p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 rounded-lg border border-border bg-bg-1 p-5">
+      <span class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white font-bold text-sm flex items-center justify-center">2</span>
+      <div>
+        <p class="font-semibold mb-1">Open Chrome's extensions page</p>
+        <p class="text-sm text-text-muted">
+          Navigate to <code class="px-1.5 py-0.5 rounded bg-bg-2 border border-border text-xs">chrome://extensions</code> and toggle <em>Developer mode</em> on (top-right).
+        </p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 rounded-lg border border-border bg-bg-1 p-5">
+      <span class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white font-bold text-sm flex items-center justify-center">3</span>
+      <div>
+        <p class="font-semibold mb-1">Load the unpacked extension</p>
+        <p class="text-sm text-text-muted">
+          Click <em>Load unpacked</em> and pick the unzipped folder. Open <a href="https://untap.in" class="text-accent hover:underline">untap.in</a> and click the corner trigger to launch the overlay.
+        </p>
+      </div>
+    </li>
+  </ol>
+</section>

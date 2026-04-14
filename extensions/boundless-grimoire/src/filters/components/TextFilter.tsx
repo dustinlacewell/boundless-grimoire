@@ -1,5 +1,5 @@
 import { useFilterStore } from "../store";
-import { SearchInput } from "../../ui/SearchInput";
+import { SearchInput } from "@boundless-grimoire/ui";
 
 /** Free-text search box bound to FilterState.text. */
 export function TextFilter() {

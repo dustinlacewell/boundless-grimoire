@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { colors } from "../../ui/colors";
-import { GearIcon } from "../../ui/icons/Icons";
-import { Popover } from "../../ui/Popover";
+import { colors } from "@boundless-grimoire/ui";
+import { GearIcon } from "@boundless-grimoire/ui";
+import { Popover } from "@boundless-grimoire/ui";
 import { COLOR_MODES } from "../constants";
 import { useFilterStore } from "../store";
 import type { ColorMode } from "../types";

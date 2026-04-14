@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useCustomFormatStore } from "../filters/customFormatStore";
 import { setDeckFormat } from "../storage/deckStore";
-import { Dropdown } from "../ui/Dropdown";
+import { Dropdown } from "@boundless-grimoire/ui";
 
 interface Props {
   deckId: string;

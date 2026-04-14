@@ -1,7 +1,7 @@
 import { useEffect, useState, type ComponentType } from "react";
 import { createPortal } from "react-dom";
 import { MDXProvider } from "@mdx-js/react";
-import { colors } from "../ui/colors";
+import { colors } from "@boundless-grimoire/ui";
 import { mdxComponents } from "./mdx/components";
 import Keybinds from "./content/keybinds.mdx";
 import About from "./content/about.mdx";

@@ -3,8 +3,8 @@ import { createPortal } from "react-dom";
 import { imageUrl } from "../cards/imageUrl";
 import { firstCardSnapshot, useDeckStore } from "../storage/deckStore";
 import type { Deck } from "../storage/types";
-import { colors } from "../ui/colors";
-import { Spinner } from "../ui/Spinner";
+import { colors } from "@boundless-grimoire/ui";
+import { Spinner } from "@boundless-grimoire/ui";
 import { useMetaGroupsStore } from "./metaGroupsStore";
 
 const DONE_LINGER_MS = 1500;
