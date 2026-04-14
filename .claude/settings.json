@@ -1,4 +1,5 @@
 {
+  "enabledMcpjsonServers": ["workspace"],
   "permissions": {
     "allow": [
       "Bash(pnpm exec:*)",
