@@ -21,6 +21,7 @@ import { create } from "zustand";
 import { useSettingsStore } from "../settings/settingsStore";
 import { useDeckStore } from "../storage/deckStore";
 import type { Command } from "./types";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface DeckHistory {
   undo: Command[];
@@ -113,3 +114,5 @@ useDeckStore.subscribe((state, prev) => {
     if (!(id in state.library.decks)) clearHistory(id);
   }
 });
+
+preserveOnHmr(useHistoryStore, import.meta.hot);

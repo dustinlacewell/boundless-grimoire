@@ -11,6 +11,7 @@
 import { create } from "zustand";
 import { searchCards, ScryfallError } from "../services/scryfall";
 import type { DeckCard } from "../storage/types";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface LegalityState {
   /** deck id → set of illegal Scryfall card IDs */
@@ -136,3 +137,5 @@ export function clearLegality(deckId: string): void {
     return { illegalByDeck: rest, checking: checkRest, checkedKeyByDeck: keyRest };
   });
 }
+
+preserveOnHmr(useLegalityStore, import.meta.hot);

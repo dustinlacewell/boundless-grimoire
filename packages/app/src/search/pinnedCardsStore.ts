@@ -12,6 +12,7 @@
 import { create } from "zustand";
 import type { ScryfallCard } from "../scryfall/types";
 import { attachPersistence } from "../storage/persistedSlice";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:pinned-cards";
 
@@ -64,3 +65,5 @@ export function togglePinned(card: ScryfallCard): void {
     return { ...s, byId: next };
   });
 }
+
+preserveOnHmr(usePinnedCardsStore, import.meta.hot);

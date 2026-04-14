@@ -14,6 +14,7 @@
  */
 import { create } from "zustand";
 import { storage } from "../services/storage";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 export interface CustomFormat {
   name: string;
@@ -103,3 +104,5 @@ function defaultFormats(): CustomFormat[] {
     { name: "Vintage", fragment: "f:vintage" },
   ];
 }
+
+preserveOnHmr(useCustomFormatStore, import.meta.hot);

@@ -37,13 +37,17 @@ export interface Services {
 let _services: Services | null = null;
 
 /**
- * Bind the services for this process. Called exactly once during boot,
- * before any store hydration or React rendering. Calling it twice is a
- * programmer error.
+ * Bind the services for this process. Called once during boot, before
+ * any store hydration or React rendering.
+ *
+ * Calling more than once is allowed but uncommon in production — it
+ * happens during dev HMR when a host re-mounts and re-runs its boot
+ * sequence. The second call replaces the binding (a warning fires in
+ * dev so genuine wiring bugs still surface).
  */
 export function provideServices(services: Services): void {
-  if (_services) {
-    throw new Error("provideServices called twice — services are bound for the lifetime of the process");
+  if (_services && _services !== services && import.meta.env?.DEV) {
+    console.warn("[services] provideServices replacing the existing binding");
   }
   _services = services;
 }

@@ -4,6 +4,7 @@
  */
 import { create } from "zustand";
 import { attachPersistence } from "../storage/persistedSlice";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:grid-card-width";
 
@@ -43,3 +44,5 @@ export function setCardWidth(width: number): void {
     s.cardWidth === clamped ? s : { ...s, cardWidth: clamped },
   );
 }
+
+preserveOnHmr(useGridSizeStore, import.meta.hot);

@@ -18,6 +18,7 @@
 import { create } from "zustand";
 import { storage } from "../services/storage";
 import { META_TAGS } from "./oracleTags";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 export interface CustomQuery {
   name: string;
@@ -163,3 +164,5 @@ function defaultQueries(): CustomQuery[] {
     ...KEYWORD_DEFAULTS,
   ];
 }
+
+preserveOnHmr(useCustomQueryStore, import.meta.hot);

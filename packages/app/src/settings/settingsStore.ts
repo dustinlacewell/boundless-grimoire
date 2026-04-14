@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { attachPersistence } from "../storage/persistedSlice";
+import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:settings";
 
@@ -85,3 +86,5 @@ export function setUndoHistoryLimit(limit: number | null): void {
     settings: { ...s.settings, undoHistoryLimit: limit },
   }));
 }
+
+preserveOnHmr(useSettingsStore, import.meta.hot);
