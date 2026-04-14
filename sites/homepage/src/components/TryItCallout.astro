@@ -1,0 +1,71 @@
+---
+/**
+ * Hand-drawn-style "Try it now!" callout pinned to the top-left of the
+ * viewport, with a curved arrow pointing at the trigger button.
+ *
+ * The trigger button (98×52, fixed at top:0/left:0) opens the deck-
+ * builder overlay. The overlay's z-index is `2147483647` (max), so when
+ * the user clicks the trigger and the overlay covers everything, this
+ * callout is naturally hidden behind it. Resolves the callout-flicker
+ * problem without us having to track open/closed state.
+ */
+---
+
+<div class="bg-try-it-callout pointer-events-none fixed top-0 left-0 z-[1000] text-text">
+  <svg
+    width="220"
+    height="120"
+    viewBox="0 0 220 120"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <!--
+      Curved path from the text label up & left, ending with an arrowhead
+      pointing at roughly (60, 50) — the bottom-right corner of the
+      trigger button (which sits at 0,0 → 98,52).
+    -->
+    <defs>
+      <marker
+        id="bg-try-arrow-head"
+        viewBox="0 0 10 10"
+        refX="8"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
+        <path d="M0,0 L10,5 L0,10 Z" fill="currentColor" />
+      </marker>
+    </defs>
+    <path
+      d="M 160 95 C 140 95, 100 90, 80 70 C 75 65, 68 58, 65 53"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      marker-end="url(#bg-try-arrow-head)"
+      style="color: var(--color-accent);"
+    />
+  </svg>
+
+  <!--
+    Label sits below the trigger button so the arrow has room to curve.
+    `pointer-events-auto` only on the label so people can read/select it
+    if they want, but the SVG overlay above the trigger button stays
+    click-through (the trigger itself must remain clickable).
+  -->
+  <div
+    class="pointer-events-auto absolute font-semibold text-[15px]"
+    style="top: 96px; left: 110px; color: var(--color-accent); transform: rotate(-4deg); text-shadow: 0 1px 0 rgba(0,0,0,0.5);"
+  >
+    Try it now!
+  </div>
+</div>
+
+<style>
+  /* Hide on narrow viewports — the trigger is still discoverable, the
+     hint just gets in the way at small sizes. */
+  @media (max-width: 640px) {
+    .bg-try-it-callout { display: none; }
+  }
+</style>

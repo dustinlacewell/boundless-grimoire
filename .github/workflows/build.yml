@@ -3,6 +3,9 @@ name: Build & Package
 on:
   push:
     branches: [master]
+    # Tag pushes are what trigger the Discord announce. The rolling
+    # "latest" release still gets published on every master merge.
+    tags: ["v*"]
   pull_request:
     branches: [master]
 
@@ -54,39 +57,29 @@ jobs:
           prerelease: true
           make_latest: false
 
-      # Announce the new build in Discord. Runs only on merges to master,
-      # and only when the webhook secret is configured (so forks/PRs don't
-      # fail). The webhook fires an embed with the commit SHA, message,
-      # and a direct download link for the zip.
-      # Announce the new build in Discord. Runs only on merges to master.
-      # The script itself no-ops when the webhook secret is missing, so
-      # forks without the secret don't fail the workflow.
-      - name: Announce in Discord
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      # Announce a new tagged release in Discord. Fires only on `v*` tag
+      # pushes — every-merge announces were too noisy. The script no-ops
+      # when the webhook secret is missing, so forks without the secret
+      # don't fail the workflow.
+      - name: Announce tagged release in Discord
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          AUTHOR: ${{ github.event.head_commit.author.name }}
-          SHA: ${{ github.sha }}
+          TAG: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
         run: |
           if [ -z "$DISCORD_WEBHOOK_URL" ]; then
             echo "DISCORD_WEBHOOK_URL not set; skipping announcement."
             exit 0
           fi
-          SHORT_SHA="${SHA:0:7}"
           DOWNLOAD_URL="https://github.com/${REPO}/releases/download/latest/boundless-grimoire.zip"
+          RELEASE_URL="https://github.com/${REPO}/releases/tag/${TAG}"
           ROLE_ID="1490636376645963909"
-          # Truncate the commit message's first line to ~200 chars.
-          FIRST_LINE=$(printf '%s' "$COMMIT_MSG" | head -n 1 | cut -c1-200)
-          DESC=$(printf '**%s**\n[`%s`](%s)' "$FIRST_LINE" "$SHORT_SHA" "$COMMIT_URL")
           PAYLOAD=$(jq -n \
-            --arg content "<@&${ROLE_ID}> new Boundless Grimoire build is out." \
-            --arg title "Download boundless-grimoire.zip" \
-            --arg desc "$DESC" \
-            --arg url "$DOWNLOAD_URL" \
-            --arg footer "by ${AUTHOR}" \
+            --arg content "<@&${ROLE_ID}> Boundless Grimoire ${TAG} is out!" \
+            --arg title "Boundless Grimoire ${TAG}" \
+            --arg desc "Tagged release. [Download zip](${DOWNLOAD_URL}) · [Release notes](${RELEASE_URL})" \
+            --arg url "$RELEASE_URL" \
             --arg roleId "$ROLE_ID" \
             '{
               username: "Boundless Grimoire",
@@ -96,8 +89,7 @@ jobs:
                 title: $title,
                 description: $desc,
                 url: $url,
-                color: 16743226,
-                footer: { text: $footer }
+                color: 16743226
               }]
             }')
           curl -sS -H "Content-Type: application/json" \
