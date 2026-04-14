@@ -93,7 +93,20 @@ export function Overlay(_props: Props) {
           {selected ? (
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <EditableDeckTitle deckId={selected.id} name={selected.name} />
-              <DeckFormatPicker deckId={selected.id} formatIndex={selected.formatIndex} />
+              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    fontSize: 10,
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                    color: colors.textMuted,
+                    fontWeight: 700,
+                  }}
+                >
+                  Format
+                </span>
+                <DeckFormatPicker deckId={selected.id} formatIndex={selected.formatIndex} />
+              </div>
             </div>
           ) : (
             <div style={{ fontSize: 12, color: colors.textMuted, fontStyle: "italic" }}>

@@ -1,10 +1,12 @@
+import { useState } from "react";
+
 interface Props {
   open: boolean;
   onToggle: () => void;
 }
 
-export const TRIGGER_W = 110;
-export const TRIGGER_H = 44;
+export const TRIGGER_W = 98;
+export const TRIGGER_H = 52;
 
 const baseStyle: React.CSSProperties = {
   position: "fixed",
@@ -31,23 +33,39 @@ const baseStyle: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   boxSizing: "border-box",
+  overflow: "hidden",
 };
 
 export function TriggerButton({ open, onToggle }: Props) {
+  const [hover, setHover] = useState(false);
+  const whiteEdges = open || hover;
   return (
     <button
       type="button"
       style={{
         ...baseStyle,
         background: open ? "#15151a" : "#1f1f23",
+        // semi-transparent white edges when open OR hovered — subtle
+        // "active" signal that doesn't overpower the icon.
+        borderRightColor: whiteEdges ? "rgba(255,255,255,0.45)" : "#2a2a30",
+        borderBottomColor: whiteEdges ? "rgba(255,255,255,0.45)" : "#2a2a30",
         // when closed, soft drop shadow so it sits on the page;
         // when open, no shadow because it merges with the header
         boxShadow: open ? "none" : "0 2px 8px rgba(0,0,0,0.4)",
       }}
       onClick={onToggle}
-      title="Boundless Grimoire"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      title={open ? "Close Boundless Grimoire" : "Open Boundless Grimoire"}
     >
-      {open ? "Close" : "Decks"}
+      <div
+        className="bg-trigger-icon"
+        role="img"
+        aria-label="Boundless Grimoire"
+        // Inline animation-duration override — CSS defaults to the slow
+        // idle swirl; hover kicks it into a rapid churn.
+        style={hover ? { animationDuration: "0.8s, 1.2s" } : undefined}
+      />
     </button>
   );
 }

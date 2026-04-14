@@ -86,7 +86,7 @@ export function DeckRibbon() {
   const onDragEnd = () => setDrag(NULL_DRAG);
 
   return (
-    <HScroll padding="4px 0">
+    <HScroll padding="4px 0" wheelToHorizontal>
       {decks.map((deck) => (
         <DeckRibbonItem
           key={deck.id}
