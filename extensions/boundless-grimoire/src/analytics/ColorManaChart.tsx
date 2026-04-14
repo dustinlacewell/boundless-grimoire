@@ -46,8 +46,16 @@ const pairStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
   gap: BAR_GAP,
-  height: CHART_HEIGHT - 24,
+  height: CHART_HEIGHT - 36,
   width: GROUP_WIDTH,
+};
+
+const valueLabelStyle: React.CSSProperties = {
+  width: GROUP_WIDTH,
+  textAlign: "center",
+  fontSize: 9,
+  minHeight: 12,
+  whiteSpace: "nowrap",
 };
 
 const labelWrapperStyle: React.CSSProperties = {
@@ -89,7 +97,7 @@ export function ColorManaChart({ deck, style }: Props) {
     1,
   );
 
-  const maxBarHeight = CHART_HEIGHT - 24;
+  const maxBarHeight = CHART_HEIGHT - 36;
 
   return (
     <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
@@ -102,6 +110,11 @@ export function ColorManaChart({ deck, style }: Props) {
           const sHeight = (s / maxValue) * maxBarHeight;
           return (
             <div key={color} style={groupStyle}>
+              <div style={valueLabelStyle}>
+                {d > 0 && <span style={{ color: DEMAND_COLOR }}>{Math.round(d)}</span>}
+                {d > 0 && s > 0 && " "}
+                {s > 0 && <span style={{ color: SUPPLY_COLOR }}>{s}</span>}
+              </div>
               <div style={pairStyle}>
                 <div
                   title={`${color} demand: ${d.toFixed(1)}`}
