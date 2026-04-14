@@ -7,8 +7,9 @@ import { useCustomQueryStore } from "../filters/customQueryStore";
 import { useGridSizeStore } from "../search/gridSizeStore";
 import { useSettingsStore } from "../settings/settingsStore";
 import { decrementCard, incrementCard, moveCardToZone } from "../commands/cardActions";
-import { setDeckCover } from "../storage/deckStore";
-import type { CardSnapshot, Deck } from "../storage/types";
+import { pushToast, ToastFrame } from "../notifications";
+import { setDeckCommander, setDeckCover } from "../storage/deckStore";
+import type { CardSnapshot, Deck, DeckCard } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
 import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
@@ -57,6 +58,11 @@ const sideboardLabelStyle: React.CSSProperties = {
   borderTop: `1px solid ${colors.textMuted}40`,
   marginTop: 8,
 };
+
+/** True for cards eligible to be a commander (Legendary in the type line). */
+function isLegendary(snapshot: CardSnapshot): boolean {
+  return (snapshot.type_line ?? "").toLowerCase().includes("legendary");
+}
 
 export function DeckView({ deck }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
@@ -137,7 +143,7 @@ export function DeckView({ deck }: Props) {
   const mainGroups = groupDeck(deck.cards, deckGroupBy, groupCtx);
   const sideGroups = groupDeck(deck.sideboard, deckGroupBy, groupCtx);
 
-  if (mainGroups.length === 0 && sideGroups.length === 0) {
+  if (mainGroups.length === 0 && sideGroups.length === 0 && !deck.commander) {
     return <div style={emptyStyle}>This deck is empty. Add a card to get started.</div>;
   }
 
@@ -146,15 +152,66 @@ export function DeckView({ deck }: Props) {
   const onPickPrint = (snapshot: CardSnapshot) => openPrintPicker(deck.id, snapshot);
   const onAltClickMain = (snapshot: CardSnapshot) => moveCardToZone(deck.id, snapshot.id, "main");
   const onSetCover = (snapshot: CardSnapshot) => setDeckCover(deck.id, snapshot.id);
+  // Toggle: alt+shift+click on the current commander releases it; on
+  // any other card, promotes it (which itself releases the previous
+  // commander back to the mainboard via setDeckCommander's own logic).
+  // Promotion is gated on the card being legendary — the rules-correct
+  // surface for what can be a commander. Release is always allowed; the
+  // current commander is already legendary by virtue of having been set.
+  const onSetCommander = (snapshot: CardSnapshot) => {
+    if (deck.commander?.id === snapshot.id) {
+      setDeckCommander(deck.id, null);
+      return;
+    }
+    if (!isLegendary(snapshot)) {
+      // Dedup by key so mashing alt+shift+click on a non-legendary card
+      // surfaces one toast, not a stack of identical ones.
+      pushToast({
+        key: "commander-not-legendary",
+        durationMs: 4000,
+        render: ({ dismiss }) => (
+          <ToastFrame variant="warn" onDismiss={dismiss}>
+            Only legendary creatures can be commanders.
+          </ToastFrame>
+        ),
+      });
+      return;
+    }
+    setDeckCommander(deck.id, snapshot);
+  };
 
   const onSideIncrement = (snapshot: CardSnapshot) => incrementCard(deck.id, snapshot, "sideboard");
   const onSideDecrement = (cardId: string) => decrementCard(deck.id, cardId, "sideboard");
   const onAltClickSide = (snapshot: CardSnapshot) => moveCardToZone(deck.id, snapshot.id, "sideboard");
 
+  // Commander column has singleton semantics — +1 / -1 are no-ops. The
+  // only way to remove a commander is alt+shift+click on it (the same
+  // gesture that promotes), wired via onSetCommander.
+  const commanderGroup = deck.commander
+    ? {
+        name: "Commander",
+        cards: [{ snapshot: deck.commander, count: 1, addedAt: 0 } satisfies DeckCard],
+      }
+    : null;
+  const noop = () => {};
+
   return (
     <div>
-      {mainGroups.length > 0 && (
+      {(commanderGroup || mainGroups.length > 0) && (
         <div ref={mainRef} style={wrapperStyle}>
+          {commanderGroup && (
+            <DeckCategoryColumn
+              key="__commander__"
+              group={commanderGroup}
+              cardWidth={cardWidth}
+              onIncrement={noop}
+              onDecrement={noop}
+              onPickPrint={onPickPrint}
+              onSetCover={onSetCover}
+              onSetCommander={onSetCommander}
+              illegalCards={illegalSet}
+            />
+          )}
           {mainGroups.map((group) => (
             <DeckCategoryColumn
               key={group.name}
@@ -165,6 +222,7 @@ export function DeckView({ deck }: Props) {
               onPickPrint={onPickPrint}
               onAltClick={onAltClickMain}
               onSetCover={onSetCover}
+              onSetCommander={onSetCommander}
               illegalCards={illegalSet}
             />
           ))}
@@ -186,6 +244,7 @@ export function DeckView({ deck }: Props) {
                 onPickPrint={onPickPrint}
                 onAltClick={onAltClickSide}
                 onSetCover={onSetCover}
+                onSetCommander={onSetCommander}
                 illegalCards={illegalSet}
               />
             ))}

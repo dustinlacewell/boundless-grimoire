@@ -79,6 +79,9 @@ const migrations: Record<number, Migration> = {
     return { ...lib, version: 3, decks };
   },
 
+  // v3 → v4: Commander field added on Deck. Optional, no backfill needed —
+  // existing decks have no commander; the migration only bumps the version.
+  3: (lib) => ({ ...lib, version: 4 }),
 };
 
 export function migrateLibrary(lib: DeckLibrary): DeckLibrary {

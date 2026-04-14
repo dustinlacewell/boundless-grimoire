@@ -13,6 +13,7 @@ interface Props {
   onPickPrint?: (snapshot: CardSnapshot) => void;
   onAltClick?: (snapshot: CardSnapshot) => void;
   onSetCover?: (snapshot: CardSnapshot) => void;
+  onSetCommander?: (snapshot: CardSnapshot) => void;
   illegalCards?: Set<string>;
 }
 
@@ -59,6 +60,7 @@ export function CategoryStack({
   onPickPrint,
   onAltClick,
   onSetCover,
+  onSetCommander,
   illegalCards,
 }: Props) {
   // Default offset scales with card size so the fan looks the same at
@@ -103,6 +105,7 @@ export function CategoryStack({
               onPickPrint={onPickPrint}
               onAltClick={onAltClick}
               onSetCover={onSetCover}
+              onSetCommander={onSetCommander}
               illegal={illegalCards?.has(entry.snapshot.id)}
             />
           </div>

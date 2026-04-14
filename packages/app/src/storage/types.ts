@@ -51,6 +51,13 @@ export interface Deck {
   cards: Record<string, DeckCard>;
   /** Sideboard card map keyed by Scryfall card id. */
   sideboard: Record<string, DeckCard>;
+  /**
+   * The deck's commander, if any. Stored as a single snapshot (no
+   * count — commanders are singleton by definition). Rendered as the
+   * first column in the deck view when set. Setting a new commander
+   * returns the previous one to the mainboard.
+   */
+  commander?: CardSnapshot;
   /** Sort field used by the search grid while this deck is active. */
   sortField: SortField;
   /** Sort direction used by the search grid while this deck is active. */
@@ -90,7 +97,7 @@ export interface DeckLibrary {
 }
 
 /** Bump when DeckLibrary's on-disk shape changes. See migrateLibrary. */
-export const LIBRARY_VERSION = 3;
+export const LIBRARY_VERSION = 4;
 
 export const EMPTY_LIBRARY: DeckLibrary = {
   version: LIBRARY_VERSION,

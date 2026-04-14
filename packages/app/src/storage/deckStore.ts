@@ -11,6 +11,7 @@ import type { FilterState, SortDir, SortField } from "../filters/types";
 import { storage } from "../services/storage";
 import { getServices } from "../services";
 import { migrateLibrary } from "./migrations";
+import { preserveOnHmr } from "./preserveOnHmr";
 import {
   DEFAULT_FILTER_STATE,
   DEFAULT_SORT_DIR,
@@ -263,6 +264,81 @@ export function renameDeck(deckId: string, name: string): void {
   });
 }
 
+/**
+ * Set (or clear) a deck's commander.
+ *
+ * - Passing a snapshot promotes that card: the snapshot is stored as the
+ *   deck's commander and a copy of it is removed from `cards` /
+ *   `sideboard` (one count). Any previous commander is returned to the
+ *   mainboard at count 1.
+ * - Passing `null` clears the commander and returns the previous one
+ *   (if any) to the mainboard.
+ *
+ * The commander is rendered as a fixed first column in the deck view.
+ * It's a singleton — count is implicitly 1 — so we don't store a count
+ * with it.
+ */
+export function setDeckCommander(deckId: string, snapshot: CardSnapshot | null): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    if (snapshot && deck.commander?.id === snapshot.id) return lib;
+
+    let cards = deck.cards;
+    let sideboard = deck.sideboard;
+
+    // Return the previous commander (if any) to the mainboard.
+    if (deck.commander) {
+      const prev = deck.commander;
+      const existing = cards[prev.id];
+      cards = {
+        ...cards,
+        [prev.id]: existing
+          ? { ...existing, count: existing.count + 1 }
+          : { snapshot: prev, count: 1, addedAt: Date.now() },
+      };
+    }
+
+    // Promote the new commander out of mainboard / sideboard.
+    if (snapshot) {
+      const fromMain = cards[snapshot.id];
+      if (fromMain) {
+        if (fromMain.count <= 1) {
+          const { [snapshot.id]: _gone, ...rest } = cards;
+          cards = rest;
+        } else {
+          cards = { ...cards, [snapshot.id]: { ...fromMain, count: fromMain.count - 1 } };
+        }
+      } else {
+        const fromSide = sideboard[snapshot.id];
+        if (fromSide) {
+          if (fromSide.count <= 1) {
+            const { [snapshot.id]: _gone, ...rest } = sideboard;
+            sideboard = rest;
+          } else {
+            sideboard = { ...sideboard, [snapshot.id]: { ...fromSide, count: fromSide.count - 1 } };
+          }
+        }
+      }
+    }
+
+    // Promoting a card to commander also sets it as the deck's hero
+    // (cover art) — the visual identity follows the gameplay role.
+    // Clearing the commander leaves the existing cover alone so the
+    // user doesn't lose their selection if they swap commanders.
+    const coverCardId = snapshot ? snapshot.id : deck.coverCardId;
+
+    const next: Deck = {
+      ...deck,
+      commander: snapshot ?? undefined,
+      coverCardId,
+      cards,
+      sideboard,
+    };
+    return { ...lib, decks: { ...lib.decks, [deckId]: touch(next) } };
+  });
+}
+
 export function setDeckFormat(deckId: string, formatIndex: number | null): void {
   mutate((lib) => {
     const deck = lib.decks[deckId];
@@ -430,4 +506,24 @@ export function firstCardSnapshot(deck: Deck): CardSnapshot | null {
   return earliest?.snapshot ?? null;
 }
 
+/**
+ * Resolve the deck's cover-art snapshot. Looks up `coverCardId` across
+ * mainboard, sideboard, AND the commander slot — promoting a card to
+ * commander moves its snapshot into `deck.commander`, so a cover that
+ * points at the commander must check there too. Falls back to the
+ * commander itself, then the first card by add time.
+ */
+export function coverSnapshotOf(deck: Deck): CardSnapshot | null {
+  if (deck.coverCardId) {
+    const explicit =
+      deck.cards[deck.coverCardId]?.snapshot ??
+      deck.sideboard[deck.coverCardId]?.snapshot ??
+      (deck.commander?.id === deck.coverCardId ? deck.commander : undefined);
+    if (explicit) return explicit;
+  }
+  return deck.commander ?? firstCardSnapshot(deck);
+}
+
 type DeckCardEntry = Deck["cards"][string];
+
+preserveOnHmr(useDeckStore, import.meta.hot);

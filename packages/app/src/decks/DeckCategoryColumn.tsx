@@ -11,6 +11,7 @@ interface Props {
   onPickPrint?: (snapshot: CardSnapshot) => void;
   onAltClick?: (snapshot: CardSnapshot) => void;
   onSetCover?: (snapshot: CardSnapshot) => void;
+  onSetCommander?: (snapshot: CardSnapshot) => void;
   illegalCards?: Set<string>;
 }
 
@@ -44,6 +45,7 @@ export function DeckCategoryColumn({
   onPickPrint,
   onAltClick,
   onSetCover,
+  onSetCommander,
   illegalCards,
 }: Props) {
   const total = group.cards.reduce((sum, c) => sum + c.count, 0);
@@ -68,6 +70,7 @@ export function DeckCategoryColumn({
         onPickPrint={onPickPrint}
         onAltClick={onAltClick}
         onSetCover={onSetCover}
+        onSetCommander={onSetCommander}
         illegalCards={illegalCards}
       />
     </div>

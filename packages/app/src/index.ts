@@ -64,7 +64,13 @@ export { storage } from "./services/storage";
 
 // --- Store hydrators (called once at boot) -------------------------------
 
-export { hydrateDeckStore, importDecklist, useDeckStore } from "./storage/deckStore";
+export {
+  hydrateDeckStore,
+  importDecklist,
+  setDeckCommander,
+  setDeckFormat,
+  useDeckStore,
+} from "./storage/deckStore";
 export { hydrateMetaGroupsStore } from "./decks/metaGroupsStore";
 export { hydrateFavoritesStore } from "./search/favoritesStore";
 export { hydrateGridSizeStore } from "./search/gridSizeStore";
@@ -91,6 +97,10 @@ export {
 
 // Decklist text serialization (used by the manual export flow + untap push).
 export { deckToText, sideboardToText } from "./decks/deckText";
+
+// Decklist parsing — accepts the common "4 Lightning Bolt" / "4x Card Name"
+// formats used by Archidekt, Moxfield, MTGO, etc.
+export { parseDecklist, type DecklistEntry } from "./decks/parseDecklist";
 
 export type {
   ScryfallCard,

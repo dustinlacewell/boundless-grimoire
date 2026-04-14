@@ -39,6 +39,12 @@ interface Props {
   onAltClick?: (snapshot: CardSnapshot) => void;
   /** Ctrl+right-click sets this card as the deck cover art. */
   onSetCover?: (snapshot: CardSnapshot) => void;
+  /**
+   * Alt+Shift+click toggles this card as the deck's commander. Calling
+   * with the current commander clears the designation; calling with any
+   * other card promotes it. Caller decides the exact semantics.
+   */
+  onSetCommander?: (snapshot: CardSnapshot) => void;
   /** Show the pin indicator badge centered on the card art. */
   pinned?: boolean;
   /** Show the favorite indicator badge centered on the card art. */
@@ -96,6 +102,7 @@ export function CardWithCount({
   onShiftContextMenu,
   onAltClick,
   onSetCover,
+  onSetCommander,
   pinned = false,
   favorited = false,
   illegal = false,
@@ -104,6 +111,13 @@ export function CardWithCount({
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
+    // Alt+Shift checked first so the more specific gesture (commander
+    // toggle) doesn't get shadowed by Alt-alone (sideboard move) or
+    // Shift-alone (pin).
+    if (e.altKey && e.shiftKey && onSetCommander) {
+      onSetCommander(snapshot);
+      return;
+    }
     if (e.altKey && onAltClick) {
       onAltClick(snapshot);
       return;

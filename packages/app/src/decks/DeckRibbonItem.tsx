@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type DragEvent } from "react";
 import { imageUrl } from "../cards/imageUrl";
 import { useCustomFormatStore } from "../filters/customFormatStore";
-import { deckCardCount, firstCardSnapshot } from "../storage/deckStore";
+import { coverSnapshotOf, deckCardCount } from "../storage/deckStore";
 import type { Deck } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
 import { Spinner } from "@boundless-grimoire/ui";
@@ -54,10 +54,7 @@ export function DeckRibbonItem({
   isDragging,
 }: Props) {
   const [hovered, setHovered] = useState(false);
-  const cover = deck.coverCardId
-    ? (deck.cards[deck.coverCardId]?.snapshot ?? deck.sideboard[deck.coverCardId]?.snapshot)
-    : null;
-  const hero = cover ?? firstCardSnapshot(deck);
+  const hero = coverSnapshotOf(deck);
   const bg = hero ? imageUrl(hero, "art_crop") ?? imageUrl(hero, "normal") : null;
   const count = deckCardCount(deck);
 
