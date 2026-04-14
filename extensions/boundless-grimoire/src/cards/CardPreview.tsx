@@ -190,14 +190,23 @@ export function CardPreview() {
       }
       apply();
     };
+    // Dismiss on any keyup where Ctrl is no longer held. Using ctrlKey
+    // rather than `key === "Control"` catches the release reliably even
+    // across platform/layout quirks, and capture phase runs before any
+    // page listener that might stop propagation.
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "Control") hideCardPreview();
+      if (!e.ctrlKey) hideCardPreview();
     };
+    // If focus leaves the window while Ctrl is held, we never see a
+    // keyup — make sure the preview doesn't get stuck.
+    const onBlur = () => hideCardPreview();
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("keyup", onKeyUp, true);
+    window.addEventListener("blur", onBlur);
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("keyup", onKeyUp, true);
+      window.removeEventListener("blur", onBlur);
     };
   }, [snapshot, panelW, panelH]);
 
