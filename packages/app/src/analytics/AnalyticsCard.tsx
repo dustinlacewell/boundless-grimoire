@@ -23,9 +23,11 @@ const bodyStyle: React.CSSProperties = {
   justifyContent: "center",
 };
 
-export function ChartCard({ title, children, style }: Props) {
+// overflow: hidden is intentional — it defines the content boundary for the analytics widget.
+// Do not remove it. If content clips, make the card larger instead.
+export function AnalyticsCard({ title, children, style }: Props) {
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", ...style }}>
+    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", overflow: "hidden", ...style }}>
       <div style={titleStyle}>{title}</div>
       <div style={bodyStyle}>{children}</div>
     </Surface>

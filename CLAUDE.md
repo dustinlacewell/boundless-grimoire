@@ -1,6 +1,6 @@
 # Boundless Grimoire — Architecture
 
-Keep this file up to date as the codebase evolves.
+Keep this file up to date as the codebase evolves. Update it as part of every change/commit — not after the fact.
 
 ## What it is
 
@@ -76,7 +76,7 @@ ui/                    tailwind.css, injectKeyrune.ts
 
 ### `packages/ui/src/`
 
-Primitive components: Button, Surface, Pill, Dropdown, HScroll, IconButton, MultiSelect, Popover, SearchInput, Spinner, ToggleButton, ButtonGroup + GrimoireLogo, GrimoireMark, icons, colors, theme.css.
+Primitive components: Button, Surface, Pill, Dropdown, HScroll, IconButton, MultiSelect, Popover, SearchInput, Spinner, ToggleButton, ButtonGroup + GrimoireLogo, GrimoireMark, icons, colors, theme.css. Shared chart bar primitives: `Bar`, `TwinBar`, `StackedBar` (with `BAR_WIDTH`, `BAR_GAP`, `CHART_HEIGHT` constants).
 
 ## Services seam
 
@@ -177,7 +177,7 @@ In the homepage demo: direct `fetch` to `api.scryfall.com` (CORS-permissive endp
 - `computeRarityBreakdown` — common/uncommon/rare/mythic counts
 - `computeCountBy(mode)` — group by type category or subtype
 
-All charts use `ChartCard` as their outer shell (Surface + pinned title + centered body). Distribution-based charts (`ManaCurveChart`, `PowerCurveChart`, `ToughnessCurveChart`) delegate to `DistributionChart` for the bar/label/average body. Custom charts (`RarityChart`, `CurveByTypeChart`, `ColorManaChart`, `CountByChart`) render their own bodies inside `ChartCard`. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip or CSS grid in `Overlay`.
+Each chart returns `null` when it has no meaningful data (e.g. all-land deck hides the mana curve; no subtypes hides the subtype option in CountByChart). All charts use `AnalyticsCard` as their outer shell — it enforces `overflow: hidden` as a design boundary; if content clips, make the card larger rather than removing the clip. Distribution-based charts (`ManaCurveChart`, `PowerCurveChart`, `ToughnessCurveChart`) delegate to `DistributionChart`. Custom charts (`RarityChart`, `CurveByTypeChart`, `ColorManaChart`, `CountByChart`) render their own bodies inside `AnalyticsCard`. Shared bar primitives (`Bar`, `TwinBar`, `StackedBar`) live in `packages/ui`. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip or CSS grid in `Overlay`.
 
 ## untap.in sync
 

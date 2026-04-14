@@ -1,5 +1,6 @@
 import { colors } from "@boundless-grimoire/ui";
-import { ChartCard } from "./ChartCard";
+import { AnalyticsCard } from "./AnalyticsCard";
+import { Bar, BAR_WIDTH, BAR_GAP, CHART_HEIGHT } from "@boundless-grimoire/ui";
 import type { Distribution } from "./stats";
 
 interface Props {
@@ -11,35 +12,20 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-const CHART_HEIGHT = 100;
-const BAR_WIDTH = 24;
-const GAP = 4;
+const MAX_BAR_HEIGHT = CHART_HEIGHT - 16;
 
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
   justifyContent: "center",
-  gap: GAP,
+  gap: BAR_GAP,
   height: CHART_HEIGHT,
-};
-
-const barWrapperStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  gap: 4,
-};
-
-const countStyle: React.CSSProperties = {
-  fontSize: 9,
-  color: colors.textFaint,
-  minHeight: 12,
 };
 
 const labelRowStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
-  gap: GAP,
+  gap: BAR_GAP,
   marginTop: 4,
 };
 
@@ -63,26 +49,16 @@ export function DistributionChart({ title, distribution, hideAverage, style }: P
   const maxCount = Math.max(...buckets, 1);
 
   return (
-    <ChartCard title={title} style={{ minWidth: 240, ...style }}>
+    <AnalyticsCard title={title} style={{ minWidth: 240, ...style }}>
       <div style={chartAreaStyle}>
-        {buckets.map((count, i) => {
-          const height = (count / maxCount) * (CHART_HEIGHT - 16);
-          return (
-            <div key={labels[i]} style={barWrapperStyle}>
-              <div style={countStyle}>{count > 0 ? count : ""}</div>
-              <div
-                style={{
-                  width: BAR_WIDTH,
-                  height: Math.max(height, count > 0 ? 2 : 0),
-                  background: colors.accent,
-                  borderRadius: 3,
-                  opacity: count > 0 ? 1 : 0.15,
-                  transition: "height 0.2s ease",
-                }}
-              />
-            </div>
-          );
-        })}
+        {buckets.map((count, i) => (
+          <Bar
+            key={labels[i]}
+            count={count}
+            height={(count / maxCount) * MAX_BAR_HEIGHT}
+            color={colors.accent}
+          />
+        ))}
       </div>
       <div style={labelRowStyle}>
         {labels.map((label) => (
@@ -92,6 +68,6 @@ export function DistributionChart({ title, distribution, hideAverage, style }: P
       {!hideAverage && total > 0 && (
         <div style={averageStyle}>Avg: {average.toFixed(2)}</div>
       )}
-    </ChartCard>
+    </AnalyticsCard>
   );
 }

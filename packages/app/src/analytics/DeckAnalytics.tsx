@@ -16,7 +16,7 @@ interface Props {
 
 // All chart bubbles render at the same height so they line up cleanly in
 // grids and strips. Bump this if content starts clipping in a chart.
-const CHART_HEIGHT = 220;
+const CHART_HEIGHT = 240;
 const CHART_MIN_WIDTH = 280;
 
 // Scroll mode: charts keep their natural widths, only height is uniform.
