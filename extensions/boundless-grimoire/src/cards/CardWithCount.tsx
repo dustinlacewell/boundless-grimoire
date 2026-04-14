@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import type { CardSnapshot } from "../storage/types";
 import { CardImage } from "./CardImage";
 import { IllegalBadge } from "./IllegalBadge";
@@ -145,6 +145,17 @@ export function CardWithCount({
     setHovered(false);
     hideCardPreview();
   };
+
+  // While the mouse is over this card, listen for Ctrl being pressed so
+  // the preview can open without requiring another mouse movement first.
+  useEffect(() => {
+    if (!hovered) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Control") showCardPreview(snapshot);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [hovered, snapshot]);
 
   return (
     <div
