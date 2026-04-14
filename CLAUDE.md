@@ -1,5 +1,7 @@
 # Boundless Grimoire — Architecture
 
+Keep this file up to date as the codebase evolves.
+
 ## What it is
 
 A Chrome extension (Manifest V3) that overlays a full-screen MTG deck-builder on any page. Built with React 18, Zustand, TanStack Query, Zod, and the `scryfall-api` package. Bundled by Vite + `@crxjs/vite-plugin`.
@@ -22,9 +24,11 @@ src/
   analytics/     Pure stat functions (stats.ts) + chart components
   background/    Service worker: fetchScryfall, queue, buckets, inflight
   cards/         Card rendering: CardImage, CardWithCount, CategoryStack, badges; categorize.ts (type-line bucketing for deck columns); print picker (modal + store for selecting alternate prints); card preview store
+  commands/      Undo/redo command pattern: Command interface (apply/invert), card-level commands, historyStore, library transforms
   content/       App shell, Overlay, TriggerButton
   decks/         Deck-level UI: DeckView, DeckRibbon, format picker, legality; parseDecklist + deckText for clipboard import/export
   filters/       Filter bar + per-field components; buildQuery (FilterState → Scryfall query); customFormatStore, customQueryStore, presetStore
+  help/          HelpModal component + MDX content pages (keybinds, about)
   scryfall/      Scryfall types, RPC layer, card snapshot helper, wire types
   search/        Search results grid, infinite scroll, favorites/pins stores
   settings/      Settings modal + settingsStore
@@ -84,6 +88,7 @@ Abort: sending a `scryfall:abort` message with the request id cancels the in-fli
 - `computeManaCurve` — MV distribution (excluding lands), returns `Distribution`
 - `computePowerCurve` / `computeToughnessCurve` — creature stat distributions
 - `computeCurveByType` — stacked creature vs non-creature mana curve
+- `computeColorDemandSupply` — colored pip demand (non-land spells) vs mana source supply, returns `ColorDemandSupply`
 - `computeRarityBreakdown` — common/uncommon/rare/mythic counts
 - `computeCountBy(mode)` — group by type category or subtype
 
