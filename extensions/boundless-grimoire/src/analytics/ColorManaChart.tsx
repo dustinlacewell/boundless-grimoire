@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { Surface } from "../ui/Surface";
@@ -6,6 +6,7 @@ import { computeColorDemandSupply, MANA_COLORS, type ManaColor } from "./stats";
 
 interface Props {
   deck: Deck;
+  style?: CSSProperties;
 }
 
 const CHART_HEIGHT = 100;
@@ -79,7 +80,7 @@ function symbolUrl(color: ManaColor): string {
   return `https://svgs.scryfall.io/card-symbols/${color}.svg`;
 }
 
-export function ColorManaChart({ deck }: Props) {
+export function ColorManaChart({ deck, style }: Props) {
   const { demand, supply } = useMemo(() => computeColorDemandSupply(deck.cards), [deck.cards]);
   const activeColors = MANA_COLORS.filter((c) => demand[c] > 0 || supply[c] > 0);
   if (activeColors.length === 0) return null;
@@ -91,7 +92,7 @@ export function ColorManaChart({ deck }: Props) {
   const maxBarHeight = CHART_HEIGHT - 24;
 
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
       <div style={titleStyle}>Cost vs Production</div>
       <div style={chartAreaStyle}>
         {activeColors.map((color) => {

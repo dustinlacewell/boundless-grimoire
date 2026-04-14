@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { Surface } from "../ui/Surface";
@@ -6,6 +6,7 @@ import { computeCurveByType } from "./stats";
 
 interface Props {
   deck: Deck;
+  style?: CSSProperties;
 }
 
 const CHART_HEIGHT = 100;
@@ -26,6 +27,7 @@ const titleStyle: React.CSSProperties = {
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
+  justifyContent: "center",
   gap: GAP,
   height: CHART_HEIGHT,
 };
@@ -67,7 +69,7 @@ const legendDotStyle = (color: string): React.CSSProperties => ({
   verticalAlign: "middle",
 });
 
-export function CurveByTypeChart({ deck }: Props) {
+export function CurveByTypeChart({ deck, style }: Props) {
   const curve = useMemo(() => computeCurveByType(deck.cards), [deck.cards]);
   const maxStack = Math.max(
     ...curve.creatures.map((c, i) => c + curve.nonCreatures[i]),
@@ -75,7 +77,7 @@ export function CurveByTypeChart({ deck }: Props) {
   );
 
   return (
-    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
       <div style={titleStyle}>Curve by Type</div>
       <div style={chartAreaStyle}>
         {curve.labels.map((label, i) => {

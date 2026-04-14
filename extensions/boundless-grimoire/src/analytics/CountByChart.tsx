@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { Dropdown, type DropdownOption } from "../ui/Dropdown";
@@ -7,6 +7,7 @@ import { computeCountBy, type CountByMode } from "./stats";
 
 interface Props {
   deck: Deck;
+  style?: CSSProperties;
 }
 
 const MODE_OPTIONS: DropdownOption<CountByMode>[] = [
@@ -37,6 +38,7 @@ const titleStyle: React.CSSProperties = {
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
+  justifyContent: "center",
   gap: GAP,
   height: CHART_HEIGHT,
 };
@@ -58,6 +60,7 @@ const countStyle: React.CSSProperties = {
 const labelAreaStyle: React.CSSProperties = {
   position: "relative",
   display: "flex",
+  justifyContent: "center",
   gap: GAP,
   height: LABEL_HEIGHT,
   marginTop: 4,
@@ -80,13 +83,13 @@ const angledLabelStyle: React.CSSProperties = {
   transform: "rotate(45deg)",
 };
 
-export function CountByChart({ deck }: Props) {
+export function CountByChart({ deck, style }: Props) {
   const [mode, setMode] = useState<CountByMode>("type");
   const entries = useMemo(() => computeCountBy(deck.cards, mode), [deck.cards, mode]);
   const maxCount = entries.length > 0 ? entries[0].count : 1;
 
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
       <div style={titleRowStyle}>
         <div style={titleStyle}>Count by</div>
         <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} width={110} />

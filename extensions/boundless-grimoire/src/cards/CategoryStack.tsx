@@ -42,12 +42,17 @@ export function CategoryStack({
   const cardH = cardHeightFor(cardWidth);
   const stackH = cardH + Math.max(0, cards.length - 1) * offset;
   const reveal = cardH - offset;
+  // Reserve enough height for the worst-case hover shift (hovering the top
+  // card slides every card below it down by `reveal`). This keeps the deck
+  // area from growing/scrolling when a card is hovered. With 0–1 cards no
+  // sliding is possible, so we don't reserve the extra space.
+  const reservedH = cards.length > 1 ? stackH + reveal : stackH;
 
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   return (
     <div
-      style={{ position: "relative", width: cardWidth, height: stackH }}
+      style={{ position: "relative", width: cardWidth, height: reservedH }}
       onMouseLeave={() => setHoverIdx(null)}
     >
       {cards.map((entry, i) => {

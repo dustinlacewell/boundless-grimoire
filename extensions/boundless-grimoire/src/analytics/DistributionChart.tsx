@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { colors } from "../ui/colors";
 import { Surface } from "../ui/Surface";
 import type { Distribution } from "./stats";
@@ -7,6 +8,8 @@ interface Props {
   distribution: Distribution;
   /** Hide the average line. */
   hideAverage?: boolean;
+  /** Additional style merged into the Surface (e.g. width: "100%" for wrap layout). */
+  style?: CSSProperties;
 }
 
 const CHART_HEIGHT = 100;
@@ -24,6 +27,7 @@ const titleStyle: React.CSSProperties = {
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
+  justifyContent: "center",
   gap: GAP,
   height: CHART_HEIGHT,
 };
@@ -54,12 +58,12 @@ const averageStyle: React.CSSProperties = {
   textAlign: "center",
 };
 
-export function DistributionChart({ title, distribution, hideAverage }: Props) {
+export function DistributionChart({ title, distribution, hideAverage, style }: Props) {
   const { buckets, labels, average, total } = distribution;
   const maxCount = Math.max(...buckets, 1);
 
   return (
-    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <Surface elevation={2} padding={12} style={{ minWidth: 240, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
       <div style={titleStyle}>{title}</div>
       <div style={chartAreaStyle}>
         {buckets.map((count, i) => {
