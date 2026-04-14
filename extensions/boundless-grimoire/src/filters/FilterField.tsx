@@ -5,14 +5,19 @@ interface Props {
   label: string;
   children: ReactNode;
   style?: React.CSSProperties;
+  /** Optional right-aligned element next to the label (e.g. mode toggle). */
+  action?: ReactNode;
 }
 
 /** Vertical label + control wrapper used by every filter row entry. */
-export function FilterField({ label, children, style }: Props) {
+export function FilterField({ label, children, style, action }: Props) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 4, ...style }}>
       <div
         style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
           fontSize: 10,
           letterSpacing: 1.2,
           textTransform: "uppercase",
@@ -20,7 +25,8 @@ export function FilterField({ label, children, style }: Props) {
           fontWeight: 700,
         }}
       >
-        {label}
+        <span>{label}</span>
+        {action && <span style={{ marginLeft: "auto" }}>{action}</span>}
       </div>
       {children}
     </div>

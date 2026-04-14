@@ -37,6 +37,7 @@ const titleStyle: React.CSSProperties = {
 const chartAreaStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
+  justifyContent: "center",
   gap: GAP,
   height: CHART_HEIGHT,
 };

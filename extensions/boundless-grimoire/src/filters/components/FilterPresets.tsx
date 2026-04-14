@@ -217,7 +217,7 @@ export function FilterPresets() {
   };
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
       {saving ? (
         <SaveInput onSave={handleSave} onCancel={() => setSaving(false)} />
       ) : (

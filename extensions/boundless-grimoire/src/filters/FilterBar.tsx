@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useCustomFormatStore } from "./customFormatStore";
-import { useCustomQueryStore } from "./customQueryStore";
 import { useFilterStore } from "./store";
 import { FilterField } from "./FilterField";
 import { buildScryfallQuery } from "./buildQuery";
 import { CardNameFilter } from "./components/CardNameFilter";
 import { CardTextFilter } from "./components/CardTextFilter";
 import { ColorFilter } from "./components/ColorFilter";
-import { CustomQueryModeToggle } from "./components/OracleTagFilter";
+import { ColorModeDot } from "./components/ColorModeDot";
+import { CustomQueryModeDot } from "./components/CustomQueryModeDot";
 import { FilterPresets } from "./components/FilterPresets";
 import { OracleTagFilter } from "./components/OracleTagFilter";
 import { RarityFilter } from "./components/RarityFilter";
@@ -21,29 +21,10 @@ import { selectedDeck, useDeckStore } from "../storage/deckStore";
 import { colors } from "../ui/colors";
 
 function CustomQuerySection() {
-  const hasHeaders = useCustomQueryStore(
-    (s) => s.queries.some((q) => !q.fragment),
-  );
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {!hasHeaders && (
-          <div style={{
-            fontSize: 10,
-            letterSpacing: 1.2,
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.6)",
-            fontWeight: 700,
-            flex: 1,
-          }}>
-            Custom
-          </div>
-        )}
-        {hasHeaders && <div style={{ flex: 1 }} />}
-        <CustomQueryModeToggle />
-      </div>
+    <FilterField label="Custom Filters" action={<CustomQueryModeDot />}>
       <OracleTagFilter />
-    </div>
+    </FilterField>
   );
 }
 
@@ -134,47 +115,52 @@ export function FilterBar() {
       <FilterPresets />
 
       <div style={rowStyle}>
-        <FilterField label="Card Name" style={{ flex: 1 }}>
+        <FilterField label="Set" style={{ flex: 1, minWidth: 0 }}>
+          <SetFilter />
+        </FilterField>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, alignItems: "flex-end" }}>
+        <FilterField label="Card Name" style={{ minWidth: 0 }}>
           <CardNameFilter />
         </FilterField>
-        <FilterField label="Card Text" style={{ flex: 1 }}>
+        <FilterField label="Card Text" style={{ minWidth: 0 }}>
           <CardTextFilter />
         </FilterField>
       </div>
 
       <TextFilter />
 
-      <div style={rowStyle}>
-        <FilterField label="Set" style={{ flex: 1, minWidth: 0 }}>
-          <SetFilter />
-        </FilterField>
+      <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
+        <div style={{ flex: "0 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+          <FilterField label="Rarity">
+            <RarityFilter />
+          </FilterField>
+          <FilterField label="Color" action={<ColorModeDot />}>
+            <ColorFilter />
+          </FilterField>
+
+          <div style={rowStyle}>
+            <FilterField label="Type">
+              <TypeFilter />
+            </FilterField>
+          </div>
+
+          <div style={rowStyle}>
+            <FilterField label="Supertype">
+              <SupertypeFilter />
+            </FilterField>
+            <FilterField label="Subtype">
+              <SubtypeFilter />
+            </FilterField>
+          </div>
+        </div>
+
+        <div style={{ flex: "1 1 240px", minWidth: 0 }}>
+          <CustomQuerySection />
+        </div>
       </div>
 
-      <div style={rowStyle}>
-        <FilterField label="Rarity">
-          <RarityFilter />
-        </FilterField>
-        <FilterField label="Color">
-          <ColorFilter />
-        </FilterField>
-      </div>
-
-      <div style={rowStyle}>
-        <FilterField label="Type">
-          <TypeFilter />
-        </FilterField>
-      </div>
-
-      <div style={rowStyle}>
-        <FilterField label="Supertype">
-          <SupertypeFilter />
-        </FilterField>
-        <FilterField label="Subtype">
-          <SubtypeFilter />
-        </FilterField>
-      </div>
-
-      <CustomQuerySection />
       {devMode && <CompiledQueryDisplay />}
     </div>
   );
