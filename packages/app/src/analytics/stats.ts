@@ -233,8 +233,8 @@ export function computeCurveByType(cards: CardMap): StackedManaCurve {
 // Count-by grouping
 // ---------------------------------------------------------------------------
 
-/** Count cards grouped by the chosen mode, sorted descending by count. */
-export function computeCountBy(cards: CardMap, mode: CountByMode): CountByEntry[] {
+/** Count cards grouped by the chosen mode, sorted descending by count. Returns null if no meaningful data. */
+export function computeCountBy(cards: CardMap, mode: CountByMode): CountByEntry[] | null {
   const counts = new Map<string, number>();
 
   for (const { snapshot, count } of Object.values(cards)) {
@@ -243,16 +243,13 @@ export function computeCountBy(cards: CardMap, mode: CountByMode): CountByEntry[
       counts.set(label, (counts.get(label) ?? 0) + count);
     } else {
       const subs = parseSubtypes(snapshot.type_line);
-      if (subs.length === 0) {
-        counts.set("(none)", (counts.get("(none)") ?? 0) + count);
-      } else {
-        for (const sub of subs) {
-          counts.set(sub, (counts.get(sub) ?? 0) + count);
-        }
+      for (const sub of subs) {
+        counts.set(sub, (counts.get(sub) ?? 0) + count);
       }
     }
   }
 
+  if (counts.size === 0) return null;
   return [...counts.entries()]
     .map(([label, count]) => ({ label, count }))
     .sort((a, b) => b.count - a.count);

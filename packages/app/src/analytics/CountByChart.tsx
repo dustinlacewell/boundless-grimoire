@@ -1,5 +1,5 @@
 import { type CSSProperties, useMemo, useState } from "react";
-import type { Deck } from "../storage/types";
+import type { Deck, DeckCard } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
 import { Dropdown, type DropdownOption } from "@boundless-grimoire/ui";
 import { ChartCard } from "./ChartCard";
@@ -82,15 +82,27 @@ const angledLabelStyle: React.CSSProperties = {
   transform: "rotate(45deg)",
 };
 
+function allModeEntries(cards: Record<string, DeckCard>) {
+  return Object.fromEntries(
+    MODE_OPTIONS.map(({ value }) => [value, computeCountBy(cards, value)]),
+  ) as Record<CountByMode, ReturnType<typeof computeCountBy>>;
+}
+
 export function CountByChart({ deck, style }: Props) {
   const [mode, setMode] = useState<CountByMode>("type");
-  const entries = useMemo(() => computeCountBy(deck.cards, mode), [deck.cards, mode]);
+  const allEntries = useMemo(() => allModeEntries(deck.cards), [deck.cards]);
+  const availableModes = MODE_OPTIONS.filter(({ value }) => allEntries[value] !== null);
+
+  if (availableModes.length === 0) return null;
+
+  const activeMode = availableModes.some((o) => o.value === mode) ? mode : availableModes[0].value;
+  const entries = allEntries[activeMode] ?? [];
   const maxCount = entries.length > 0 ? entries[0].count : 1;
 
   const title = (
     <div style={titleRowStyle}>
       <div style={titleStyle}>Count by</div>
-      <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} compact />
+      <Dropdown options={availableModes} value={activeMode} onChange={(v) => setMode(v)} compact />
     </div>
   );
 

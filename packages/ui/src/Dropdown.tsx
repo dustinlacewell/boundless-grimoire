@@ -6,14 +6,8 @@ export interface DropdownOption<T extends string> {
   label: ReactNode;
 }
 
-interface Props<T extends string> {
-  options: DropdownOption<T>[];
-  value: T | null;
-  onChange: (value: T | null) => void;
+type BaseProps = {
   placeholder?: string;
-  /** Allow clearing back to null. */
-  clearable?: boolean;
-  width?: number | string;
   /**
    * When true, the trigger sizes to content and keeps the caret right
    * next to the label (no justify-between whitespace). Use this for
@@ -21,7 +15,22 @@ interface Props<T extends string> {
    * controls — fixed-width form dropdowns should leave this off.
    */
   compact?: boolean;
-}
+  width?: number | string;
+};
+
+type Props<T extends string> =
+  | (BaseProps & {
+      options: DropdownOption<T>[];
+      value: T;
+      onChange: (value: T) => void;
+      clearable?: false;
+    })
+  | (BaseProps & {
+      options: DropdownOption<T>[];
+      value: T | null;
+      onChange: (value: T | null) => void;
+      clearable: true;
+    });
 
 const triggerClass = (open: boolean, compact: boolean) =>
   [
@@ -44,20 +53,14 @@ const optionClass = (selected: boolean) =>
  * Single-select dropdown. Uses Popover for the open/close mechanics.
  * For multi-select with search, use MultiSelect.
  */
-export function Dropdown<T extends string>({
-  options,
-  value,
-  onChange,
-  placeholder = "Select…",
-  clearable = false,
-  width,
-  compact = false,
-}: Props<T>) {
+export function Dropdown<T extends string>(props: Props<T>) {
   const [open, setOpen] = useState(false);
-  const current = options.find((o) => o.value === value) ?? null;
+  const current = props.options.find((o) => o.value === props.value) ?? null;
+  const placeholder = props.placeholder ?? "Select…";
+  const compact = props.compact ?? false;
   // Compact trigger is content-sized; fixed-width form dropdowns default
   // to 180 to match common short-field sizing.
-  const effectiveWidth = width ?? (compact ? "auto" : 180);
+  const effectiveWidth = props.width ?? (compact ? "auto" : 180);
 
   return (
     <div style={{ width: effectiveWidth, display: compact ? "inline-block" : undefined }}>
@@ -82,23 +85,23 @@ export function Dropdown<T extends string>({
         }
       >
         <div className="overflow-y-auto">
-          {clearable && (
+          {props.clearable && (
             <div
-              className={optionClass(value === null)}
+              className={optionClass(props.value === null)}
               onClick={() => {
-                onChange(null);
+                props.onChange(null);
                 setOpen(false);
               }}
             >
               <em className="opacity-60">{placeholder}</em>
             </div>
           )}
-          {options.map((opt) => (
+          {props.options.map((opt) => (
             <div
               key={opt.value}
-              className={optionClass(opt.value === value)}
+              className={optionClass(opt.value === props.value)}
               onClick={() => {
-                onChange(opt.value);
+                props.onChange(opt.value);
                 setOpen(false);
               }}
             >
