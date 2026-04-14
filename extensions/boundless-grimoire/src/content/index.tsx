@@ -1,20 +1,28 @@
 import { createRoot, type Root } from "react-dom/client";
-import { hydrateMetaGroupsStore } from "../decks/metaGroupsStore";
-import { hydrateFavoritesStore } from "../search/favoritesStore";
-import { hydrateGridSizeStore } from "../search/gridSizeStore";
-import { hydratePinnedCardsStore } from "../search/pinnedCardsStore";
-import { hydrateDeckStore } from "../storage/deckStore";
-import { hydrateCustomFormatStore } from "../filters/customFormatStore";
-import { hydrateCustomQueryStore } from "../filters/customQueryStore";
-import { hydratePresetStore } from "../filters/presetStore";
-import { hydratePrintSizeStore } from "../cards/printSizeStore";
-import { hydrateSettingsStore } from "../settings/settingsStore";
-import { injectStyles } from "../ui/injectStyles";
-import { App } from "./App";
+import "../ui/tailwind.css";
+import { injectKeyrune } from "../ui/injectKeyrune";
+import { provideServices, ServicesProvider } from "@boundless-grimoire/app";
+import { createExtensionServices } from "../services/extension";
+import { hydrateMetaGroupsStore } from "@boundless-grimoire/app";
+import { hydrateFavoritesStore } from "@boundless-grimoire/app";
+import { hydrateGridSizeStore } from "@boundless-grimoire/app";
+import { hydratePinnedCardsStore } from "@boundless-grimoire/app";
+import { hydrateDeckStore } from "@boundless-grimoire/app";
+import { hydrateCustomFormatStore } from "@boundless-grimoire/app";
+import { hydrateCustomQueryStore } from "@boundless-grimoire/app";
+import { hydratePresetStore } from "@boundless-grimoire/app";
+import { hydratePrintSizeStore } from "@boundless-grimoire/app";
+import { hydrateSettingsStore } from "@boundless-grimoire/app";
+import { App } from "@boundless-grimoire/app";
 
 const HOST_ID = "boundless-grimoire-root";
 
-injectStyles();
+// Wire services BEFORE any store hydration — stores read from the
+// services seam during their own hydration.
+const services = createExtensionServices();
+provideServices(services);
+
+injectKeyrune();
 
 // Hydrate every persisted store at boot, in parallel. Each `hydrate*` call
 // is fired exactly once and its promise is reused below — calling them
@@ -47,7 +55,7 @@ const allHydrated = Promise.allSettled([
 // missing, re-enrich any thin cards, then push every local deck to untap
 // (extension is authority). Runs in parallel with React mount below.
 void deckHydrated.then(() => {
-  void import("../sync/untapSync").then(({ bootSync }) => bootSync());
+  void services.untap?.boot();
 });
 
 let root: Root | null = null;
@@ -65,7 +73,11 @@ function ensureMounted() {
   host.style.cssText = "position:relative;z-index:2147483640;isolation:isolate;";
   document.body.appendChild(host);
   root = createRoot(host);
-  root.render(<App />);
+  root.render(
+    <ServicesProvider services={services}>
+      <App />
+    </ServicesProvider>,
+  );
 }
 
 function unmount() {

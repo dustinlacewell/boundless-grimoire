@@ -10,8 +10,8 @@
  * failed enrichment on a prior session, or predate newer fields, get another
  * chance automatically.
  */
-import { useDeckStore } from "../storage/deckStore";
-import type { CardSnapshot, DeckCard } from "../storage/types";
+import { useDeckStore } from "@boundless-grimoire/app";
+import type { CardSnapshot, DeckCard } from "@boundless-grimoire/app";
 import { enrichDeckCards } from "./enrichDeck";
 import { suppressFromNextPush } from "./pushSchedule";
 

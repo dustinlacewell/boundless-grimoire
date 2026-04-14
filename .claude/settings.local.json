@@ -8,7 +8,12 @@
       "Bash(pnpm build:*)",
       "Bash(xargs grep:*)",
       "mcp__workspace__typecheck",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(pnpm install:*)",
+      "Bash(gh api:*)",
+      "Bash(git mv:*)",
+      "Bash(git rm:*)",
+      "Bash(grep -E \"^export\" /d/code/ts/boundless-grimoire/extensions/boundless-grimoire/src/sync/*.ts)"
     ]
   }
 }

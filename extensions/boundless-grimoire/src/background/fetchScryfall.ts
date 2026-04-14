@@ -16,7 +16,7 @@
  *      the envelope so the worker's message listener can sendResponse
  *      without try/catch.
  */
-import { bucketFor } from "./buckets";
+import { bucketFor } from "@boundless-grimoire/app";
 import { release, track } from "./inflight";
 import type { ScryfallEnvelope, ScryfallReqMessage } from "../scryfall/wire";
 

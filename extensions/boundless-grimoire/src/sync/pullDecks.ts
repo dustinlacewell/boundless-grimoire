@@ -29,7 +29,7 @@
  *   bridge. The user never waits on untap's WS handshake just to see their
  *   existing decks.
  */
-import { useDeckStore } from "../storage/deckStore";
+import { useDeckStore } from "@boundless-grimoire/app";
 import {
   DEFAULT_FILTER_STATE,
   DEFAULT_SORT_DIR,
@@ -37,7 +37,7 @@ import {
   type Deck,
   type DeckCard,
   type DeckLibrary,
-} from "../storage/types";
+} from "@boundless-grimoire/app";
 import { enrichDeckInPlace } from "./reEnrich";
 import { suppressFromNextPush } from "./pushSchedule";
 

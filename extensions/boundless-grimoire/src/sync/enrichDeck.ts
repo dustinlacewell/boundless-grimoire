@@ -17,10 +17,10 @@
  * the function resolves with the original map unchanged. The deck stays
  * usable; the user just sees thin tiles until the next retry.
  */
-import { getCardsByIds } from "../scryfall/client";
-import { toSnapshot } from "../scryfall/snapshot";
-import type { ScryfallCard } from "../scryfall/types";
-import type { CardSnapshot, DeckCard } from "../storage/types";
+import { getCardsByIds } from "@boundless-grimoire/app";
+import { toSnapshot } from "@boundless-grimoire/app";
+import type { ScryfallCard } from "@boundless-grimoire/app";
+import type { CardSnapshot, DeckCard } from "@boundless-grimoire/app";
 
 export async function enrichDeckCards(
   thin: Record<string, DeckCard>,

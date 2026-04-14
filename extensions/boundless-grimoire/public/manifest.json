@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Boundless Grimoire",
+  "version": "0.1.0",
+  "description": "Local-first deckbuilder overlay for untap.in. Uses Scryfall for card data; decks live in chrome.storage.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://api.scryfall.com/*",
+    "https://svgs.scryfall.io/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["keyrune/*", "assets/*", "chunks/*", "content.js", "untapBridge.js"],
+      "matches": ["https://untap.in/*", "https://*.untap.in/*"]
+    }
+  ],
+  "action": {
+    "default_title": "Boundless Grimoire"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://untap.in/*", "https://*.untap.in/*"],
+      "js": ["untapBridge-loader.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://untap.in/*", "https://*.untap.in/*"],
+      "js": ["content-loader.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

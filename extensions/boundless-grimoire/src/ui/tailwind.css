@@ -1,0 +1,57 @@
+/* Tailwind entry for the extension's content script.
+ *
+ * Untap.in already uses Tailwind for its own UI. To avoid trashing their
+ * layout when we inject our overlay, we need preflight scoped to
+ * `#boundless-grimoire-root` only. The `tailwindcss-scoped-preflight`
+ * plugin handles that via Tailwind v4's `@plugin` directive.
+ *
+ * The granular `@import`s (no `@import "tailwindcss"`) deliberately skip
+ * the global preflight — the scoped-preflight plugin re-adds it wrapped
+ * in our root selector.
+ *
+ * Utility class names live in a global namespace, but duplicate rules
+ * are idempotent (`.flex { display: flex }` applies the same regardless
+ * of origin), so class-name collisions aren't a functional problem.
+ */
+
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+@import "@boundless-grimoire/ui/theme.css";
+
+@plugin "tailwindcss-scoped-preflight" {
+  isolationStrategy: inside;
+  selector: #boundless-grimoire-root;
+}
+
+/* Dark, thin scrollbars scoped to our root so untap.in's scrollbars are
+ * left alone. Colors inlined because this file is pure CSS. */
+#boundless-grimoire-root *::-webkit-scrollbar,
+#boundless-grimoire-root::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+#boundless-grimoire-root *::-webkit-scrollbar-track,
+#boundless-grimoire-root::-webkit-scrollbar-track {
+  background: transparent;
+}
+#boundless-grimoire-root *::-webkit-scrollbar-thumb,
+#boundless-grimoire-root::-webkit-scrollbar-thumb {
+  background: #2a2a30;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+#boundless-grimoire-root *::-webkit-scrollbar-thumb:hover,
+#boundless-grimoire-root::-webkit-scrollbar-thumb:hover {
+  background: #3a3a44;
+  background-clip: padding-box;
+}
+#boundless-grimoire-root *::-webkit-scrollbar-corner,
+#boundless-grimoire-root::-webkit-scrollbar-corner {
+  background: transparent;
+}
+#boundless-grimoire-root,
+#boundless-grimoire-root * {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a30 transparent;
+}

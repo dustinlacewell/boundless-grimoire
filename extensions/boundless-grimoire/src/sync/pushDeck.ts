@@ -15,8 +15,8 @@
  * persisting it back into the local record. Returns null on any failure;
  * errors are logged but not thrown so the debounced caller stays simple.
  */
-import { deckToText, sideboardToText } from "../decks/deckText";
-import type { Deck } from "../storage/types";
+import { deckToText, sideboardToText } from "@boundless-grimoire/app";
+import type { Deck } from "@boundless-grimoire/app";
 import { isUntapAvailable, untapSend } from "./untapApi";
 
 interface UntapDeck {
