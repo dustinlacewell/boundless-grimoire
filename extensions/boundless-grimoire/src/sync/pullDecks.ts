@@ -133,7 +133,15 @@ function selectUnlinked(allDecks: UntapDeck[], lib: DeckLibrary): UntapDeck[] {
   const linked = new Set(
     Object.values(lib.decks).map((d) => d.untapDeckUid).filter(Boolean),
   );
-  return allDecks.filter((d) => !d.deleted && !linked.has(d.deck_uid));
+  return allDecks.filter((d) => {
+    if (d.deleted) return false;
+    if (linked.has(d.deck_uid)) return false;
+    // Untap auto-creates an empty "Untitled" deck as a session workspace on
+    // page load. Skip empty decks so they don't keep reappearing locally
+    // every time we pull — nothing to import, and the user didn't ask for it.
+    if (d.cards.length === 0) return false;
+    return true;
+  });
 }
 
 /**
