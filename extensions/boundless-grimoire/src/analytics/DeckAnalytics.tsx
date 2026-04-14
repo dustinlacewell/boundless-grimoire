@@ -21,7 +21,7 @@ export function DeckAnalytics({ deck }: Props) {
   if (!hasCards) return null;
 
   return (
-    <HScroll gap={12}>
+    <HScroll gap={12} wheelToHorizontal>
       <ManaCurveChart deck={deck} />
       <ColorManaChart deck={deck} />
       <CurveByTypeChart deck={deck} />
