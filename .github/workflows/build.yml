@@ -80,11 +80,13 @@ jobs:
           ROLE_ID="1490636376645963909"
           # Truncate the commit message's first line to ~200 chars.
           FIRST_LINE=$(printf '%s' "$COMMIT_MSG" | head -n 1 | cut -c1-200)
+          DESC=$(printf '**%s**\n\n[`%s`](%s)' "$FIRST_LINE" "$SHORT_SHA" "$COMMIT_URL")
           PAYLOAD=$(jq -n \
             --arg content "<@&${ROLE_ID}> new Boundless Grimoire build is out." \
             --arg title "Download boundless-grimoire.zip" \
-            --arg desc "**${FIRST_LINE}**\n\nby ${AUTHOR} · [\`${SHORT_SHA}\`](${COMMIT_URL})" \
+            --arg desc "$DESC" \
             --arg url "$DOWNLOAD_URL" \
+            --arg footer "by ${AUTHOR}" \
             --arg roleId "$ROLE_ID" \
             '{
               username: "Boundless Grimoire",
@@ -94,7 +96,8 @@ jobs:
                 title: $title,
                 description: $desc,
                 url: $url,
-                color: 16743226
+                color: 16743226,
+                footer: { text: $footer }
               }]
             }')
           curl -sS -H "Content-Type: application/json" \
