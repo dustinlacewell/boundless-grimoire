@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { MAX_CARD_WIDTH } from "../search/gridSizeStore";
 import { colors } from "../ui/colors";
 import { useCardPreviewStore, mousePos, hideCardPreview } from "./cardPreviewStore";
 import { imageUrl } from "./imageUrl";
@@ -8,10 +9,12 @@ import { OracleText } from "./OracleText";
 import { RarityIcon } from "../filters/icons/RarityIcon";
 import { cardHeightFor, CARD_ASPECT } from "./CardImage";
 
-const PANEL_W = 540;
-const IMAGE_W = 240;
+// Card preview renders the image at the deck's max-zoom width so a hover
+// peek is as big as the largest tile the user can possibly see elsewhere.
+const IMAGE_W = MAX_CARD_WIDTH;
 const IMAGE_H = Math.round(IMAGE_W / CARD_ASPECT);
-const SIDE_W = PANEL_W - IMAGE_W;
+const SIDE_W = 300;
+const PANEL_W = IMAGE_W + SIDE_W;
 const PANEL_H = IMAGE_H;
 const OFFSET = 18;
 

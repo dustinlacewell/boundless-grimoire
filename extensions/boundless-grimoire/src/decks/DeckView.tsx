@@ -1,16 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { categorizeDeck } from "../cards/categorize";
 import { openPrintPicker } from "../cards/printPickerStore";
 import { useCustomFormatStore } from "../filters/customFormatStore";
+import { useGridSizeStore } from "../search/gridSizeStore";
 import { decrementCard, incrementCard, moveCardToZone, setDeckCover } from "../storage/deckStore";
 import type { CardSnapshot, Deck } from "../storage/types";
 import { colors } from "../ui/colors";
+import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
 import { checkLegality, clearLegality, useLegalityStore } from "./legalityStore";
 
 interface Props {
   deck: Deck;
-  cardWidth?: number;
 }
 
 const wrapperStyle: React.CSSProperties = {
@@ -40,10 +41,16 @@ const sideboardLabelStyle: React.CSSProperties = {
   marginTop: 8,
 };
 
-export function DeckView({ deck, cardWidth = 180 }: Props) {
+export function DeckView({ deck }: Props) {
+  const cardWidth = useGridSizeStore((s) => s.cardWidth);
   const formats = useCustomFormatStore((s) => s.formats);
   const formatFragment = deck.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
   const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);
+
+  const mainRef = useRef<HTMLDivElement>(null);
+  const sideRef = useRef<HTMLDivElement>(null);
+  useCtrlWheelCardResize(mainRef);
+  useCtrlWheelCardResize(sideRef);
 
   // Run legality check when format or cards change.
   useEffect(() => {
@@ -74,7 +81,7 @@ export function DeckView({ deck, cardWidth = 180 }: Props) {
   return (
     <div>
       {mainGroups.length > 0 && (
-        <div style={wrapperStyle}>
+        <div ref={mainRef} style={wrapperStyle}>
           {mainGroups.map((group) => (
             <DeckCategoryColumn
               key={group.name}
@@ -95,7 +102,7 @@ export function DeckView({ deck, cardWidth = 180 }: Props) {
           <div style={sideboardLabelStyle}>
             Sideboard · {Object.values(deck.sideboard).reduce((s, c) => s + c.count, 0)}
           </div>
-          <div style={wrapperStyle}>
+          <div ref={sideRef} style={wrapperStyle}>
             {sideGroups.map((group) => (
               <DeckCategoryColumn
                 key={`sb-${group.name}`}
