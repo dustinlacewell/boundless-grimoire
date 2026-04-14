@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from "react";
+import { type CSSProperties, useMemo } from "react";
 import type { Deck } from "../storage/types";
 import { colors } from "../ui/colors";
 import { Surface } from "../ui/Surface";
@@ -10,9 +10,9 @@ interface Props {
 }
 
 const CHART_HEIGHT = 100;
-const BAR_WIDTH = 12;
 const BAR_GAP = 2;
 const GROUP_GAP = 10;
+const MAX_BAR_WIDTH = 24;
 
 const DEMAND_COLOR = colors.accent;
 const SUPPLY_COLOR = "#5b8dd9";
@@ -38,28 +38,33 @@ const groupStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   gap: 4,
+  flex: 1,
+  maxWidth: MAX_BAR_WIDTH,
 };
-
-const GROUP_WIDTH = BAR_WIDTH * 2 + BAR_GAP;
 
 const pairStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "flex-end",
   gap: BAR_GAP,
   height: CHART_HEIGHT - 36,
-  width: GROUP_WIDTH,
+  width: "100%",
 };
 
 const valueLabelStyle: React.CSSProperties = {
-  width: GROUP_WIDTH,
-  textAlign: "center",
+  display: "flex",
+  gap: BAR_GAP,
+  width: "100%",
   fontSize: 9,
   minHeight: 12,
-  whiteSpace: "nowrap",
+};
+
+const valueSlotStyle: React.CSSProperties = {
+  flex: 1,
+  textAlign: "center",
 };
 
 const labelWrapperStyle: React.CSSProperties = {
-  width: GROUP_WIDTH,
+  width: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -100,7 +105,7 @@ export function ColorManaChart({ deck, style }: Props) {
   const maxBarHeight = CHART_HEIGHT - 36;
 
   return (
-    <Surface elevation={2} padding={12} style={{ flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
+    <Surface elevation={2} padding={12} style={{ minWidth: 200, flexShrink: 0, display: "flex", flexDirection: "column", justifyContent: "center", ...style }}>
       <div style={titleStyle}>Cost vs Production</div>
       <div style={chartAreaStyle}>
         {activeColors.map((color) => {
@@ -111,15 +116,14 @@ export function ColorManaChart({ deck, style }: Props) {
           return (
             <div key={color} style={groupStyle}>
               <div style={valueLabelStyle}>
-                {d > 0 && <span style={{ color: DEMAND_COLOR }}>{Math.round(d)}</span>}
-                {d > 0 && s > 0 && " "}
-                {s > 0 && <span style={{ color: SUPPLY_COLOR }}>{s}</span>}
+                <span style={{ ...valueSlotStyle, color: DEMAND_COLOR }}>{d > 0 ? Math.round(d) : ""}</span>
+                <span style={{ ...valueSlotStyle, color: SUPPLY_COLOR }}>{s > 0 ? s : ""}</span>
               </div>
               <div style={pairStyle}>
                 <div
                   title={`${color} demand: ${d.toFixed(1)}`}
                   style={{
-                    width: BAR_WIDTH,
+                    flex: 1,
                     height: Math.max(dHeight, 2),
                     background: DEMAND_COLOR,
                     borderRadius: 2,
@@ -130,7 +134,7 @@ export function ColorManaChart({ deck, style }: Props) {
                 <div
                   title={`${color} supply: ${s}`}
                   style={{
-                    width: BAR_WIDTH,
+                    flex: 1,
                     height: Math.max(sHeight, 2),
                     background: SUPPLY_COLOR,
                     borderRadius: 2,
