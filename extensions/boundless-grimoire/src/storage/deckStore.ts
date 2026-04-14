@@ -9,6 +9,7 @@
 import { create } from "zustand";
 import type { FilterState, SortDir, SortField } from "../filters/types";
 import { getItem, setItem } from "./chromeStorage";
+import { getServices } from "../services";
 import { migrateLibrary } from "./migrations";
 import {
   DEFAULT_FILTER_STATE,
@@ -76,32 +77,33 @@ useDeckStore.subscribe((state, prev) => {
 });
 
 function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
-  // Lazy import to avoid circular dep at module load time.
-  // Await the bridge so early edits/deletes aren't silently dropped.
-  void import("../sync/untapSync").then(
-    async ({ schedulePush, deleteUntapDeck, cancelPendingPush }) => {
-      const { waitForBridge } = await import("../sync/untapApi");
-      const bridgeUp = await waitForBridge();
-      if (!bridgeUp) return;
+  const untap = getServices().untap;
+  if (!untap) return;
 
-      // Pushes for added or modified decks.
-      for (const [id, deck] of Object.entries(next.decks)) {
-        const prevDeck = prev.decks[id];
-        if (!prevDeck || prevDeck.cards !== deck.cards || prevDeck.sideboard !== deck.sideboard || prevDeck.name !== deck.name) {
-          schedulePush(deck);
-        }
-      }
+  // Lazy import to avoid pulling extension-specific bridge code into envs
+  // (the demo) that don't have it. Await the bridge so early edits/deletes
+  // aren't silently dropped.
+  void import("../sync/untapApi").then(async ({ waitForBridge }) => {
+    const bridgeUp = await waitForBridge();
+    if (!bridgeUp) return;
 
-      // Deletions for any deck that disappeared from the library.
-      for (const [id, prevDeck] of Object.entries(prev.decks)) {
-        if (id in next.decks) continue;
-        cancelPendingPush(id);
-        if (prevDeck.untapDeckUid) {
-          void deleteUntapDeck(prevDeck.untapDeckUid);
-        }
+    // Pushes for added or modified decks.
+    for (const [id, deck] of Object.entries(next.decks)) {
+      const prevDeck = prev.decks[id];
+      if (!prevDeck || prevDeck.cards !== deck.cards || prevDeck.sideboard !== deck.sideboard || prevDeck.name !== deck.name) {
+        untap.schedulePush(deck);
       }
-    },
-  );
+    }
+
+    // Deletions for any deck that disappeared from the library.
+    for (const [id, prevDeck] of Object.entries(prev.decks)) {
+      if (id in next.decks) continue;
+      untap.cancelPush(id);
+      if (prevDeck.untapDeckUid) {
+        void untap.deleteRemote(prevDeck.untapDeckUid);
+      }
+    }
+  });
 }
 
 // ---------- Internal helpers ----------

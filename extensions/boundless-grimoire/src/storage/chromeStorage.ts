@@ -1,20 +1,16 @@
 /**
- * Promise-based wrapper around chrome.storage.local.
+ * Back-compat shim. The real storage abstraction now lives in
+ * `services/storage`. Existing call sites continue to work because we
+ * re-export the same `getItem` / `setItem` / `removeItem` shape they
+ * always saw — they just go through the services seam now.
  *
- * The Chrome storage API is callback-based but supports promises in MV3
- * Chrome 95+. We assume MV3 here. The wrapper only exists to keep call
- * sites typed and to give us a single seam for the (eventual) migration
- * to IndexedDB if storage budgets ever bite us.
+ * New code should import directly from `services/storage`:
+ *
+ *   import { storage } from "../services/storage";
+ *   await storage.set(key, value);
  */
-export async function getItem<T>(key: string): Promise<T | undefined> {
-  const result = await chrome.storage.local.get(key);
-  return result[key] as T | undefined;
-}
+import { storage } from "../services/storage";
 
-export async function setItem<T>(key: string, value: T): Promise<void> {
-  await chrome.storage.local.set({ [key]: value });
-}
-
-export async function removeItem(key: string): Promise<void> {
-  await chrome.storage.local.remove(key);
-}
+export const getItem = <T>(key: string) => storage.get<T>(key);
+export const setItem = <T>(key: string, value: T) => storage.set<T>(key, value);
+export const removeItem = (key: string) => storage.remove(key);
