@@ -21,6 +21,7 @@ import {
   setDeckLayout,
   setDevMode,
   setPreviewMode,
+  setUndoHistoryLimit,
   useSettingsStore,
   type AnalyticsLayout,
   type DeckGroupBy,
@@ -158,6 +159,7 @@ export function SettingsModal({ onClose }: Props) {
   const deckLayout = useSettingsStore((s) => s.settings.deckLayout);
   const deckGroupBy = useSettingsStore((s) => s.settings.deckGroupBy);
   const previewMode = useSettingsStore((s) => s.settings.previewMode);
+  const undoHistoryLimit = useSettingsStore((s) => s.settings.undoHistoryLimit);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
   const [formatText, setFormatText] = useState(() => formatsToText(formats));
   const [tab, setTab] = useState<Tab>("general");
@@ -229,6 +231,45 @@ export function SettingsModal({ onClose }: Props) {
               </label>
               <div style={hintStyle}>
                 Shows the compiled Scryfall query below the filter bar.
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Undo History</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 12 }}>
+                    <input
+                      type="checkbox"
+                      checked={undoHistoryLimit == null}
+                      onChange={(e) => setUndoHistoryLimit(e.target.checked ? null : 100)}
+                      style={{ accentColor: colors.accent, width: 14, height: 14 }}
+                    />
+                    Unbounded
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={undoHistoryLimit ?? ""}
+                    disabled={undoHistoryLimit == null}
+                    onChange={(e) => {
+                      const n = Number.parseInt(e.target.value, 10);
+                      setUndoHistoryLimit(Number.isFinite(n) && n > 0 ? n : 1);
+                    }}
+                    style={{
+                      width: 80,
+                      padding: "4px 8px",
+                      fontSize: 12,
+                      background: colors.bg2,
+                      color: colors.text,
+                      border: `1px solid ${colors.borderStrong}`,
+                      borderRadius: 6,
+                      opacity: undoHistoryLimit == null ? 0.5 : 1,
+                    }}
+                  />
+                  <span style={{ fontSize: 12, color: colors.textMuted }}>steps per deck</span>
+                </div>
+                <div style={hintStyle}>
+                  Maximum Ctrl+Z steps retained per deck. History is kept in memory only (cleared on reload).
+                </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>

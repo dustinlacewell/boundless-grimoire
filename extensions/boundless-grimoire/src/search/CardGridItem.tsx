@@ -2,12 +2,8 @@ import { memo, useCallback, useMemo } from "react";
 import { CardWithCount } from "../cards/CardWithCount";
 import { toSnapshot } from "../scryfall/snapshot";
 import type { ScryfallCard } from "../scryfall/types";
-import {
-  decrementCard,
-  ensureActiveDeck,
-  incrementCard,
-  useDeckStore,
-} from "../storage/deckStore";
+import { decrementCard, incrementCard } from "../commands/cardActions";
+import { ensureActiveDeck, useDeckStore } from "../storage/deckStore";
 import { toggleFavorite, useFavoritesStore } from "./favoritesStore";
 import { togglePinned, usePinnedCardsStore } from "./pinnedCardsStore";
 

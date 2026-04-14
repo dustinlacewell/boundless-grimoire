@@ -319,31 +319,6 @@ function zoneField(zone: DeckZone): "cards" | "sideboard" {
   return zone === "sideboard" ? "sideboard" : "cards";
 }
 
-/** Add 1 copy of a card. Captures a snapshot if not already present. */
-export function incrementCard(deckId: string, snapshot: CardSnapshot, zone: DeckZone = "main"): void {
-  const field = zoneField(zone);
-  mutate((lib) => {
-    const deck = lib.decks[deckId];
-    if (!deck) return lib;
-    const existing = deck[field][snapshot.id];
-    // Defend against malformed counts loaded from storage (NaN, negative,
-    // string-coerced) by clamping to a sane non-negative integer before
-    // adding. Without this a single bad write would silently underflow
-    // every subsequent increment.
-    const baseline = sanitizeCount(existing?.count);
-    const next: Deck = touch({
-      ...deck,
-      [field]: {
-        ...deck[field],
-        [snapshot.id]: existing
-          ? { ...existing, count: baseline + 1 }
-          : { snapshot, count: 1, addedAt: Date.now() },
-      },
-    });
-    return { ...lib, decks: { ...lib.decks, [deckId]: next } };
-  });
-}
-
 function sanitizeCount(n: number | undefined): number {
   if (typeof n !== "number" || !Number.isFinite(n) || n < 0) return 0;
   return Math.floor(n);
@@ -382,50 +357,6 @@ export function swapCardPrint(
   });
 }
 
-/** Remove 1 copy of a card. Removes the entry entirely at 0. */
-export function decrementCard(deckId: string, cardId: string, zone: DeckZone = "main"): void {
-  const field = zoneField(zone);
-  mutate((lib) => {
-    const deck = lib.decks[deckId];
-    if (!deck) return lib;
-    const existing = deck[field][cardId];
-    if (!existing) return lib;
-    const map = { ...deck[field] };
-    const baseline = sanitizeCount(existing.count);
-    if (baseline <= 1) {
-      delete map[cardId];
-    } else {
-      map[cardId] = { ...existing, count: baseline - 1 };
-    }
-    return { ...lib, decks: { ...lib.decks, [deckId]: touch({ ...deck, [field]: map }) } };
-  });
-}
-
-/**
- * Move a card from one zone to the other. Removes from the source and
- * adds to the destination, preserving count and snapshot.
- */
-export function moveCardToZone(deckId: string, cardId: string, from: DeckZone): void {
-  const srcField = zoneField(from);
-  const dstField = zoneField(from === "main" ? "sideboard" : "main");
-  mutate((lib) => {
-    const deck = lib.decks[deckId];
-    if (!deck) return lib;
-    const entry = deck[srcField][cardId];
-    if (!entry) return lib;
-    const src = { ...deck[srcField] };
-    delete src[cardId];
-    const dst = { ...deck[dstField] };
-    const existing = dst[cardId];
-    dst[cardId] = existing
-      ? { ...existing, count: existing.count + entry.count }
-      : entry;
-    return {
-      ...lib,
-      decks: { ...lib.decks, [deckId]: touch({ ...deck, [srcField]: src, [dstField]: dst }) },
-    };
-  });
-}
 
 /**
  * Import a parsed decklist: create a new deck, resolve card names via

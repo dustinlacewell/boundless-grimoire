@@ -11,6 +11,7 @@ import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
 import { HelpModal } from "../help/HelpModal";
 import { SettingsModal } from "../settings/SettingsModal";
+import { redo, undo } from "../commands/historyStore";
 import { useDeckStore, selectedDeck } from "../storage/deckStore";
 import { colors } from "../ui/colors";
 import { IconButton } from "../ui/IconButton";
@@ -114,6 +115,22 @@ export function Overlay(_props: Props) {
     };
 
     const onKey = (e: KeyboardEvent) => {
+      // Undo / redo for the selected deck. Don't hijack while typing —
+      // native text undo in inputs / textareas must still work.
+      if ((e.ctrlKey || e.metaKey) && !e.altKey) {
+        if (isTypingTarget(e.target)) return;
+        const key = e.key.toLowerCase();
+        const isUndo = key === "z" && !e.shiftKey;
+        const isRedo = key === "y" || (key === "z" && e.shiftKey);
+        if (isUndo || isRedo) {
+          const deckId = useDeckStore.getState().library.selectedId;
+          if (!deckId) return;
+          e.preventDefault();
+          if (isUndo) undo(deckId);
+          else redo(deckId);
+          return;
+        }
+      }
       if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
       if (isTypingTarget(e.target)) return;
       const key = e.key.toLowerCase();

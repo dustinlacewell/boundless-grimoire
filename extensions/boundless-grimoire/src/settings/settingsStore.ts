@@ -14,6 +14,8 @@ export interface Settings {
   deckLayout: DeckLayout;
   deckGroupBy: DeckGroupBy;
   previewMode: PreviewMode;
+  /** Maximum undo entries per deck. `null` means unbounded. */
+  undoHistoryLimit: number | null;
 }
 
 interface SettingsStoreState {
@@ -27,6 +29,7 @@ const DEFAULT_SETTINGS: Settings = {
   deckLayout: "scroll",
   deckGroupBy: "category",
   previewMode: "both",
+  undoHistoryLimit: 100,
 };
 
 export const useSettingsStore = create<SettingsStoreState>(() => ({
@@ -74,5 +77,11 @@ export function setDeckGroupBy(mode: DeckGroupBy): void {
 export function setPreviewMode(mode: PreviewMode): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, previewMode: mode },
+  }));
+}
+
+export function setUndoHistoryLimit(limit: number | null): void {
+  useSettingsStore.setState((s) => ({
+    settings: { ...s.settings, undoHistoryLimit: limit },
   }));
 }
