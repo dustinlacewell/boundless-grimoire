@@ -14,16 +14,22 @@ const releasesUrl = `${githubUrl}/releases/latest`;
 
   <div class="mx-auto max-w-5xl px-6 pt-24 pb-20 text-center relative">
     <div class="mx-auto mb-8 drop-shadow-[0_10px_40px_rgba(155,75,255,0.4)]" style="width: 220px; height: 220px;">
-      <GrimoireMark size={220} />
+      <!--
+        client:only because GrimoireMark resolves its icon URLs via
+        `new URL(..., import.meta.url)`. Astro's SSR runs that in Node,
+        producing a bogus file:// URL — the icons only resolve correctly
+        when the component renders in the browser at runtime.
+      -->
+      <GrimoireMark size={220} client:only="react" />
     </div>
 
     <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-4">
       Boundless Grimoire
     </h1>
-    <p class="text-lg md:text-xl text-text-muted max-w-2xl mx-auto mb-10">
-      A full-screen Magic: the Gathering deck-builder that overlays untap.in.
-      Search every card on Scryfall, filter with the full query language,
-      and your decks stay in sync.
+    <p class="text-lg md:text-xl text-text-muted max-w-3xl mx-auto mb-10">
+      A comfy and customizable Magic: the Gathering deck-builder that syncs <a href="https://untap.in">with untap.in</a>.
+      Search cards on Scryfall, filter with the full query language,
+      and your decks stay in sync!
     </p>
 
     <div class="flex flex-wrap items-center justify-center gap-3">
