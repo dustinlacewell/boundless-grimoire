@@ -1,6 +1,6 @@
 {
   "name": "@boundless-grimoire/ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Design system for Boundless Grimoire — primitives, brand mark, and tokens shared between the extension and the homepage.",
   "private": true,
   "type": "module",

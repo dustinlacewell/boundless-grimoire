@@ -11,6 +11,10 @@
  * the package.
  */
 
+// --- Versioning -----------------------------------------------------------
+
+export { APP_VERSION } from "./version";
+
 // --- Mounted root ---------------------------------------------------------
 //
 // `App` is the whole experience: a fixed-positioned trigger button in the

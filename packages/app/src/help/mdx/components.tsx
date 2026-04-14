@@ -7,6 +7,7 @@ import { toSnapshot } from "../../scryfall/snapshot";
 import type { CardSnapshot } from "../../storage/types";
 import { colors } from "@boundless-grimoire/ui";
 import { GrimoireLogo } from "@boundless-grimoire/ui";
+import { APP_VERSION } from "../../version";
 
 type CacheEntry = { snapshot: CardSnapshot } | { error: true };
 const cardCache = new Map<string, Promise<CacheEntry>>();
@@ -91,6 +92,25 @@ function Kbd({ children }: { children: ReactNode }) {
   );
 }
 
+/** Inline version badge. Reads from the single APP_VERSION constant. */
+function Version() {
+  return (
+    <span
+      style={{
+        fontFamily: "monospace",
+        fontSize: 12,
+        padding: "2px 8px",
+        borderRadius: 4,
+        background: colors.bg2,
+        border: `1px solid ${colors.border}`,
+        color: colors.textMuted,
+      }}
+    >
+      v{APP_VERSION}
+    </span>
+  );
+}
+
 /** Two-column row: fixed-width key cell, description cell. Used in keybinds tables. */
 function Row({ keys, children }: { keys: string; children: ReactNode }) {
   return (
@@ -150,5 +170,6 @@ export const mdxComponents: MDXComponents = {
   Card,
   Kbd,
   Row,
+  Version,
   GrimoireLogo,
 };
