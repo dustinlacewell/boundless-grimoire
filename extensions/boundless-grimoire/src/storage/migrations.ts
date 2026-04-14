@@ -78,6 +78,7 @@ const migrations: Record<number, Migration> = {
     }
     return { ...lib, version: 3, decks };
   },
+
 };
 
 export function migrateLibrary(lib: DeckLibrary): DeckLibrary {

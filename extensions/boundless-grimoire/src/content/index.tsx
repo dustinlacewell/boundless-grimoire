@@ -1,4 +1,5 @@
 import { createRoot, type Root } from "react-dom/client";
+import { hydrateMetaGroupsStore } from "../decks/metaGroupsStore";
 import { hydrateFavoritesStore } from "../search/favoritesStore";
 import { hydrateGridSizeStore } from "../search/gridSizeStore";
 import { hydratePinnedCardsStore } from "../search/pinnedCardsStore";
@@ -33,6 +34,7 @@ const allHydrated = Promise.allSettled([
   hydrateCustomQueryStore(),
   hydrateCustomFormatStore(),
   hydrateSettingsStore(),
+  hydrateMetaGroupsStore(),
 ]).then((results) => {
   for (const r of results) {
     if (r.status === "rejected") {

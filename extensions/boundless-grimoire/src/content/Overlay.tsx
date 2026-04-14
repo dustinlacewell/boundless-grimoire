@@ -6,6 +6,7 @@ import { DeckView } from "../decks/DeckView";
 import { EditableDeckTitle } from "../decks/EditableDeckTitle";
 import { LegalityBadge } from "../decks/LegalityBadge";
 import { LegalityToast } from "../decks/LegalityToast";
+import { MetaGroupingToast } from "../decks/MetaGroupingToast";
 import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
 import { HelpModal } from "../help/HelpModal";
@@ -155,6 +156,7 @@ export function Overlay(_props: Props) {
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
       {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
       <LegalityToast />
+      <MetaGroupingToast />
       <div ref={bodyRef} style={bodyStyle}>
         <section>
           <div style={sectionLabelStyle}>Decks</div>

@@ -75,15 +75,20 @@ export async function enrichDeckCards(
   // Pass 2: retry missed cards with { name } only (no set constraint).
   // Scryfall's /cards/collection does fuzzy name matching when set is
   // omitted, which recovers mismatched set codes and name differences.
+  // We also query each variant (full "A // B" AND the front half alone)
+  // because untap and Scryfall sometimes disagree on canonical naming
+  // for flip / double-faced / split cards.
   if (missed.length > 0) {
     const retryIds: Array<{ name: string }> = [];
     const retrySeen = new Set<string>();
     for (const c of missed) {
       if (!c.snapshot.name) continue;
-      const nk = nameKey(c.snapshot.name);
-      if (retrySeen.has(nk)) continue;
-      retrySeen.add(nk);
-      retryIds.push({ name: c.snapshot.name });
+      for (const variant of nameVariants(c.snapshot.name)) {
+        const nk = nameKey(variant);
+        if (retrySeen.has(nk)) continue;
+        retrySeen.add(nk);
+        retryIds.push({ name: variant });
+      }
     }
 
     let retryResolved;
@@ -94,15 +99,23 @@ export async function enrichDeckCards(
       retryResolved = [];
     }
 
+    // Index Scryfall results by every name variant so a match query of
+    // either "A" or "A // B" both find the same card.
     const retryByName = new Map<string, CardSnapshot>();
     for (const sc of retryResolved) {
       const snap = toSnapshot(sc);
-      const nk = nameKey(sc.name);
-      if (!retryByName.has(nk)) retryByName.set(nk, snap);
+      for (const variant of nameVariants(sc.name)) {
+        const nk = nameKey(variant);
+        if (!retryByName.has(nk)) retryByName.set(nk, snap);
+      }
     }
 
     for (const card of missed) {
-      const enriched = retryByName.get(nameKey(card.snapshot.name));
+      let enriched: CardSnapshot | undefined;
+      for (const variant of nameVariants(card.snapshot.name)) {
+        enriched = retryByName.get(nameKey(variant));
+        if (enriched) break;
+      }
       if (enriched) {
         next[enriched.id] = { ...card, snapshot: enriched };
       } else {
@@ -119,3 +132,19 @@ const nameSetKey = (name: string, set: string): string =>
   `${name.toLowerCase()}|${set}`;
 
 const nameKey = (name: string): string => name.toLowerCase();
+
+/**
+ * Return every reasonable lookup name for a card. Double-faced /
+ * flip / split cards are sometimes stored with the full "A // B" form
+ * and sometimes with just the front half, depending on the source — so
+ * we try both and index both for matching.
+ */
+function nameVariants(name: string): string[] {
+  const variants: string[] = [name];
+  const splitIdx = name.indexOf(" // ");
+  if (splitIdx > 0) {
+    const front = name.slice(0, splitIdx).trim();
+    if (front && front !== name) variants.push(front);
+  }
+  return variants;
+}

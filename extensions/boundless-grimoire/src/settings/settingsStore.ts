@@ -5,12 +5,14 @@ const STORAGE_KEY = "boundless-grimoire:settings";
 
 export type AnalyticsLayout = "scroll" | "wrap";
 export type DeckLayout = "scroll" | "wrap";
+export type DeckGroupBy = "category" | "cmc" | "meta";
 export type PreviewMode = "image" | "text" | "both";
 
 export interface Settings {
   devMode: boolean;
   analyticsLayout: AnalyticsLayout;
   deckLayout: DeckLayout;
+  deckGroupBy: DeckGroupBy;
   previewMode: PreviewMode;
 }
 
@@ -23,6 +25,7 @@ const DEFAULT_SETTINGS: Settings = {
   devMode: false,
   analyticsLayout: "scroll",
   deckLayout: "scroll",
+  deckGroupBy: "category",
   previewMode: "both",
 };
 
@@ -59,6 +62,12 @@ export function setAnalyticsLayout(layout: AnalyticsLayout): void {
 export function setDeckLayout(layout: DeckLayout): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, deckLayout: layout },
+  }));
+}
+
+export function setDeckGroupBy(mode: DeckGroupBy): void {
+  useSettingsStore.setState((s) => ({
+    settings: { ...s.settings, deckGroupBy: mode },
   }));
 }
 
