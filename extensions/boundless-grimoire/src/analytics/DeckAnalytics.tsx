@@ -1,5 +1,6 @@
 import type { Deck } from "../storage/types";
 import { HScroll } from "../ui/HScroll";
+import { ColorManaChart } from "./ColorManaChart";
 import { CountByChart } from "./CountByChart";
 import { CurveByTypeChart } from "./CurveByTypeChart";
 import { ManaCurveChart } from "./ManaCurveChart";
@@ -22,6 +23,7 @@ export function DeckAnalytics({ deck }: Props) {
   return (
     <HScroll gap={12}>
       <ManaCurveChart deck={deck} />
+      <ColorManaChart deck={deck} />
       <CurveByTypeChart deck={deck} />
       <PowerCurveChart deck={deck} />
       <ToughnessCurveChart deck={deck} />

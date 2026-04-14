@@ -46,6 +46,8 @@ export interface ScryfallCard {
   cmc?: number;
   colors?: ScryfallColor[];
   color_identity?: ScryfallColor[];
+  /** Colors of mana this card can produce (lands, mana-producers). Includes "C" for colorless. */
+  produced_mana?: Array<ScryfallColor | "C">;
   power?: string;
   toughness?: string;
   loyalty?: string;

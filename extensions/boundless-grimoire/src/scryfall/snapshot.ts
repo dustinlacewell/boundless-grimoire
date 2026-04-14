@@ -22,6 +22,7 @@ export function toSnapshot(card: ScryfallCard): CardSnapshot {
     rarity: card.rarity,
     colors: card.colors,
     color_identity: card.color_identity,
+    produced_mana: card.produced_mana,
     image_uris: card.image_uris,
     card_faces: card.card_faces,
     set: card.set,

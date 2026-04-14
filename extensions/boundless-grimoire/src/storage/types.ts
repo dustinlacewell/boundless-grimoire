@@ -27,6 +27,7 @@ export interface CardSnapshot {
   rarity?: ScryfallCard["rarity"];
   colors?: ScryfallCard["colors"];
   color_identity?: ScryfallCard["color_identity"];
+  produced_mana?: ScryfallCard["produced_mana"];
   image_uris?: ScryfallCard["image_uris"];
   card_faces?: ScryfallCard["card_faces"];
   set?: string;

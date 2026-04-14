@@ -94,6 +94,60 @@ function computeStatCurve(
 }
 
 // ---------------------------------------------------------------------------
+// Mana cost vs production by color
+// ---------------------------------------------------------------------------
+
+export const MANA_COLORS = ["W", "U", "B", "R", "G", "C"] as const;
+export type ManaColor = (typeof MANA_COLORS)[number];
+
+export interface ColorDemandSupply {
+  /** Pips demanded across all non-land cards. Hybrid pips count fractionally. */
+  demand: Record<ManaColor, number>;
+  /** Sources of each color across mana producers. A dual land adds 1 to each color it produces. */
+  supply: Record<ManaColor, number>;
+}
+
+function emptyColorCounts(): Record<ManaColor, number> {
+  return { W: 0, U: 0, B: 0, R: 0, G: 0, C: 0 };
+}
+
+/** Parse one mana symbol and add its weighted contribution. "W/U" → 0.5 W, 0.5 U. */
+function addSymbol(counts: Record<ManaColor, number>, raw: string): void {
+  const sym = raw.replace(/\//g, "").toUpperCase();
+  const letters = sym.split("").filter((ch): ch is ManaColor =>
+    (MANA_COLORS as readonly string[]).includes(ch),
+  );
+  if (letters.length === 0) return;
+  const weight = 1 / letters.length;
+  for (const c of letters) counts[c] += weight;
+}
+
+/** Compute colored pip demand (non-land spells) and supply (mana producers). */
+export function computeColorDemandSupply(cards: CardMap): ColorDemandSupply {
+  const demand = emptyColorCounts();
+  const supply = emptyColorCounts();
+
+  for (const { snapshot, count } of Object.values(cards)) {
+    if (!isLand(snapshot.type_line) && snapshot.mana_cost) {
+      const tokens = snapshot.mana_cost.match(/\{[^}]+\}/g) ?? [];
+      const per = emptyColorCounts();
+      for (const tok of tokens) addSymbol(per, tok.slice(1, -1));
+      for (const c of MANA_COLORS) demand[c] += per[c] * count;
+    }
+
+    if (snapshot.produced_mana) {
+      for (const c of snapshot.produced_mana) {
+        if ((MANA_COLORS as readonly string[]).includes(c)) {
+          supply[c as ManaColor] += count;
+        }
+      }
+    }
+  }
+
+  return { demand, supply };
+}
+
+// ---------------------------------------------------------------------------
 // Count-by grouping
 // ---------------------------------------------------------------------------
 
