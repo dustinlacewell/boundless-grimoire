@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GrimoireLogo } from "../ui/GrimoireLogo";
 
 interface Props {
   open: boolean;
@@ -58,14 +59,7 @@ export function TriggerButton({ open, onToggle }: Props) {
       onMouseLeave={() => setHover(false)}
       title={open ? "Close Boundless Grimoire" : "Open Boundless Grimoire"}
     >
-      <div
-        className={`bg-trigger-icon${open ? " bg-trigger-icon--open" : ""}`}
-        role="img"
-        aria-label="Boundless Grimoire"
-        // Inline animation-duration override — CSS defaults to the slow
-        // idle swirl; hover kicks it into a rapid churn.
-        style={hover ? { animationDuration: "0.8s, 1.2s" } : undefined}
-      />
+      <GrimoireLogo open={open} hoverSwap fast={hover} framed />
     </button>
   );
 }

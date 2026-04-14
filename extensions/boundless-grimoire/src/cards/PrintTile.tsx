@@ -3,11 +3,7 @@ import { toSnapshot } from "../scryfall/snapshot";
 import type { ScryfallCard } from "../scryfall/types";
 import { colors } from "../ui/colors";
 import { CardImage } from "./CardImage";
-import {
-  hideCardPreview,
-  mousePos,
-  showPrintPreview,
-} from "./cardPreviewStore";
+import { useCardHoverPreview } from "./useCardHoverPreview";
 
 interface Props {
   card: ScryfallCard;
@@ -45,17 +41,11 @@ const setBadgeStyle: React.CSSProperties = {
  */
 export function PrintTile({ card, width, selected, onSelect }: Props) {
   const snapshot = toSnapshot(card);
+  const { handlers: hoverHandlers } = useCardHoverPreview(snapshot, "print");
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
     onSelect(card);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    mousePos.x = e.clientX;
-    mousePos.y = e.clientY;
-    if (e.ctrlKey) showPrintPreview(snapshot);
-    else hideCardPreview();
   };
 
   return (
@@ -68,8 +58,7 @@ export function PrintTile({ card, width, selected, onSelect }: Props) {
         width,
       }}
       onClick={handleClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={hideCardPreview}
+      {...hoverHandlers}
       title={`${card.set_name} (${card.set.toUpperCase()}) #${card.collector_number}`}
     >
       <div

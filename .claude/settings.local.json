@@ -7,7 +7,8 @@
       "Bash(pnpm typecheck:*)",
       "Bash(pnpm build:*)",
       "Bash(xargs grep:*)",
-      "mcp__workspace__typecheck"
+      "mcp__workspace__typecheck",
+      "Bash(pnpm add:*)"
     ]
   }
 }

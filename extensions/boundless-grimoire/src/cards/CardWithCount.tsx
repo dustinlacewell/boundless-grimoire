@@ -1,12 +1,8 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import type { CardSnapshot } from "../storage/types";
 import { CardImage } from "./CardImage";
 import { IllegalBadge } from "./IllegalBadge";
-import {
-  hideCardPreview,
-  mousePos,
-  showCardPreview,
-} from "./cardPreviewStore";
+import { useCardHoverPreview } from "./useCardHoverPreview";
 import { DogEar } from "./DogEar";
 import { FavoriteBadge } from "./FavoriteBadge";
 import { PinBadge } from "./PinBadge";
@@ -104,7 +100,7 @@ export function CardWithCount({
   favorited = false,
   illegal = false,
 }: Props) {
-  const [hovered, setHovered] = useState(false);
+  const { hovered, handlers: hoverHandlers } = useCardHoverPreview(snapshot);
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -133,38 +129,12 @@ export function CardWithCount({
     onDecrement(snapshot.id);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    mousePos.x = e.clientX;
-    mousePos.y = e.clientY;
-    if (e.ctrlKey) showCardPreview(snapshot);
-    else hideCardPreview();
-  };
-
-  const handleMouseEnter = () => setHovered(true);
-  const handleMouseLeave = () => {
-    setHovered(false);
-    hideCardPreview();
-  };
-
-  // While the mouse is over this card, listen for Ctrl being pressed so
-  // the preview can open without requiring another mouse movement first.
-  useEffect(() => {
-    if (!hovered) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Control") showCardPreview(snapshot);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [hovered, snapshot]);
-
   return (
     <div
       style={{ position: "relative", cursor: "pointer", display: "inline-block" }}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
-      onMouseEnter={handleMouseEnter}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      {...hoverHandlers}
       title={buildTitle(snapshot.name, {
         canPin: !!onShiftClick,
         canFavorite: !!onShiftContextMenu,

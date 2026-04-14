@@ -1,10 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import mdx from "@mdx-js/rollup";
 import { crx } from "@crxjs/vite-plugin";
 import manifest from "./manifest.json" with { type: "json" };
 
 export default defineConfig({
-  plugins: [react(), crx({ manifest })],
+  // MDX must run before @vitejs/plugin-react so react() sees plain TSX.
+  plugins: [
+    { enforce: "pre", ...mdx({ providerImportSource: "@mdx-js/react", jsxRuntime: "automatic" }) },
+    react({ include: /\.(mdx|js|jsx|ts|tsx)$/ }),
+    crx({ manifest }),
+  ],
   build: {
     outDir: "dist",
     emptyOutDir: true,

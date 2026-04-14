@@ -59,15 +59,14 @@ ${ROOT_SELECTOR} * {
 }
 `;
 
-// Trigger-button icon effect:
-//   - Outer layer: animated multicolor gradient, clipped to the icon's
-//     alpha silhouette via mask-image. Two layered gradients rotate at
-//     different speeds so the color field swirls.
-//   - Inner layer: the greyscale icon drawn with `mix-blend-mode:
-//     luminosity`. Luminosity takes hue+saturation from the layer below
-//     (gradient) and brightness from this one (greyscale). Net effect:
-//     the icon's internal shading is preserved AND colorized by the
-//     swirling gradient.
+// Grimoire logo effect (used by TriggerButton and the About tab):
+//   - Two stacked layers — one with the closed-book icon, one with the
+//     open-book icon. Each layer clips the swirling gradient via its own
+//     mask-image and paints a luminosity overlay through the greyscale
+//     art so internal shading survives the colorization.
+//   - Cross-fade between layers on hover (hover-swap) or when forced via
+//     data-open="true". Because mask-image itself can't transition, we
+//     animate opacity on the whole layers instead.
 const TRIGGER_ICON_CSS = (iconUrl: string, iconOpenUrl: string) => `
 @keyframes bg-trigger-swirl-a {
   0%   { background-position:   0% 50%; }
@@ -79,23 +78,15 @@ const TRIGGER_ICON_CSS = (iconUrl: string, iconOpenUrl: string) => `
   50%  { background-position:   0% 50%; }
   100% { background-position: 100% 50%; }
 }
-.bg-trigger-icon {
-  /* Single source of truth — tweak these to reposition/zoom the icon.
-     Both the gradient mask and the luminosity overlay read them.
-       --icon-size   : mask-size / background-size value (e.g. "auto 260%")
-       --icon-shift-x: pixels from horizontal center (negative = left)
-       --icon-shift-y: pixels from vertical center (negative = up)
-  */
-  --icon-size: auto 220%;
-  --icon-shift-x: -5px;
-  --icon-shift-y: 20px;
-  --icon-pos-x: calc(50% + var(--icon-shift-x));
-  --icon-pos-y: calc(50% + var(--icon-shift-y));
-
+.bg-grimoire-logo {
   position: relative;
   width: 100%;
   height: 100%;
   isolation: isolate;
+}
+.bg-grimoire-logo__layer {
+  position: absolute;
+  inset: 0;
   background:
     linear-gradient(100deg,
       #ff7e3a 0%, #ffd24c 20%, #4bc0ff 45%, #9b4bff 70%, #ff5a8a 90%, #ff7e3a 100%
@@ -108,38 +99,69 @@ const TRIGGER_ICON_CSS = (iconUrl: string, iconOpenUrl: string) => `
   animation:
     bg-trigger-swirl-a 7s ease-in-out infinite,
     bg-trigger-swirl-b 11s ease-in-out infinite;
-  mask-image: url(${iconUrl});
-  -webkit-mask-image: url(${iconUrl});
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
   mask-size: var(--icon-size);
   -webkit-mask-size: var(--icon-size);
   mask-position: var(--icon-pos-x) var(--icon-pos-y);
   -webkit-mask-position: var(--icon-pos-x) var(--icon-pos-y);
+  transition: opacity 350ms ease;
 }
-.bg-trigger-icon::after {
+.bg-grimoire-logo__layer::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url(${iconUrl});
   background-size: var(--icon-size);
   background-position: var(--icon-pos-x) var(--icon-pos-y);
   background-repeat: no-repeat;
   mix-blend-mode: luminosity;
   pointer-events: none;
 }
-/* Open state: swap in the open-icon for both mask + luminosity overlay,
-   and override the size/shift vars so the open icon can have its own
-   positioning without affecting the closed state. */
-.bg-trigger-icon--open {
-  --icon-size: auto 290%;
-  --icon-shift-x: -5px;
-  --icon-shift-y: 25px;
+.bg-grimoire-logo__layer {
+  /* Defaults: show the whole icon, no zoom, no shift. The trigger button
+     overrides these via [data-framed="true"] to get its tight crop. */
+  --icon-size: contain;
+  --icon-pos-x: center;
+  --icon-pos-y: center;
+}
+.bg-grimoire-logo__layer--closed {
+  mask-image: url(${iconUrl});
+  -webkit-mask-image: url(${iconUrl});
+}
+.bg-grimoire-logo__layer--closed::after {
+  background-image: url(${iconUrl});
+}
+.bg-grimoire-logo__layer--open {
   mask-image: url(${iconOpenUrl});
   -webkit-mask-image: url(${iconOpenUrl});
+  opacity: 0;
 }
-.bg-trigger-icon--open::after {
+.bg-grimoire-logo__layer--open::after {
   background-image: url(${iconOpenUrl});
+}
+/* Framed mode: zoom/shift per layer to fill a small button nicely. */
+.bg-grimoire-logo[data-framed="true"] .bg-grimoire-logo__layer--closed {
+  --icon-size: auto 220%;
+  --icon-pos-x: calc(50% - 5px);
+  --icon-pos-y: calc(50% + 20px);
+}
+.bg-grimoire-logo[data-framed="true"] .bg-grimoire-logo__layer--open {
+  --icon-size: auto 290%;
+  --icon-pos-x: calc(50% - 5px);
+  --icon-pos-y: calc(50% + 25px);
+}
+/* Forced open (parent toggles data-open) or hover-swap. Cross-fade layers. */
+.bg-grimoire-logo[data-open="true"] .bg-grimoire-logo__layer--closed,
+.bg-grimoire-logo[data-hover-swap="true"]:hover .bg-grimoire-logo__layer--closed {
+  opacity: 0;
+}
+.bg-grimoire-logo[data-open="true"] .bg-grimoire-logo__layer--open,
+.bg-grimoire-logo[data-hover-swap="true"]:hover .bg-grimoire-logo__layer--open {
+  opacity: 1;
+}
+/* Fast mode — the idle swirl churns quickly. Applied to both layers. */
+.bg-grimoire-logo[data-fast="true"] .bg-grimoire-logo__layer {
+  animation-duration: 0.8s, 1.2s;
 }
 `;
 
