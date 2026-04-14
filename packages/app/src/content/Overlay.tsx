@@ -7,6 +7,7 @@ import { EditableDeckTitle } from "../decks/EditableDeckTitle";
 import { LegalityBadge } from "../decks/LegalityBadge";
 import { LegalityToast } from "../decks/LegalityToast";
 import { MetaGroupingToast } from "../decks/MetaGroupingToast";
+import { ToastStack } from "../notifications";
 import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
 import { HelpModal } from "../help/HelpModal";
@@ -172,8 +173,14 @@ export function Overlay(_props: Props) {
       </div>
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
       {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+      {/*
+        Two controllers (push/dismiss into the toast store) plus the
+        single ToastStack that actually renders. Anywhere else in the
+        app can call pushToast directly without needing its own renderer.
+      */}
       <LegalityToast />
       <MetaGroupingToast />
+      <ToastStack />
       <div ref={bodyRef} style={bodyStyle}>
         <section>
           <div style={sectionLabelStyle}>Decks</div>
