@@ -17,12 +17,29 @@ interface LegalityState {
   illegalByDeck: Record<string, Set<string>>;
   /** deck id → true while checking */
   checking: Record<string, boolean>;
+  /**
+   * deck id → the (format + card-set) hash we last checked for. Used to
+   * short-circuit repeat checks when nothing has changed since the last
+   * run — e.g. on every page load of a stable deck.
+   */
+  checkedKeyByDeck: Record<string, string>;
 }
 
 export const useLegalityStore = create<LegalityState>(() => ({
   illegalByDeck: {},
   checking: {},
+  checkedKeyByDeck: {},
 }));
+
+/** Stable signature: if this matches a prior run for the same deck, skip. */
+function legalityKey(
+  formatFragment: string,
+  cards: Record<string, DeckCard>,
+  sideboard: Record<string, DeckCard>,
+): string {
+  const ids = [...Object.keys(cards), ...Object.keys(sideboard)].sort().join(",");
+  return `${formatFragment}|${ids}`;
+}
 
 /** Max oracle IDs per query to stay under Scryfall URL limits. */
 const BATCH_SIZE = 15;
@@ -37,6 +54,13 @@ export async function checkLegality(
   cards: Record<string, DeckCard>,
   sideboard: Record<string, DeckCard>,
 ): Promise<void> {
+  // Cache short-circuit: same format + same card set as last time → skip.
+  const key = legalityKey(formatFragment, cards, sideboard);
+  const { checkedKeyByDeck, checking } = useLegalityStore.getState();
+  if (checkedKeyByDeck[deckId] === key) return;
+  // Also avoid duplicate concurrent checks for the same deck.
+  if (checking[deckId]) return;
+
   // Collect unique oracle IDs → card IDs mapping
   const oracleToCards = new Map<string, string[]>();
   for (const [cardId, entry] of Object.entries({ ...cards, ...sideboard })) {
@@ -51,6 +75,7 @@ export async function checkLegality(
     useLegalityStore.setState((s) => ({
       illegalByDeck: { ...s.illegalByDeck, [deckId]: new Set() },
       checking: { ...s.checking, [deckId]: false },
+      checkedKeyByDeck: { ...s.checkedKeyByDeck, [deckId]: key },
     }));
     return;
   }
@@ -98,6 +123,7 @@ export async function checkLegality(
   useLegalityStore.setState((s) => ({
     illegalByDeck: { ...s.illegalByDeck, [deckId]: illegal },
     checking: { ...s.checking, [deckId]: false },
+    checkedKeyByDeck: { ...s.checkedKeyByDeck, [deckId]: key },
   }));
 }
 
@@ -106,6 +132,7 @@ export function clearLegality(deckId: string): void {
   useLegalityStore.setState((s) => {
     const { [deckId]: _, ...rest } = s.illegalByDeck;
     const { [deckId]: __, ...checkRest } = s.checking;
-    return { illegalByDeck: rest, checking: checkRest };
+    const { [deckId]: ___, ...keyRest } = s.checkedKeyByDeck;
+    return { illegalByDeck: rest, checking: checkRest, checkedKeyByDeck: keyRest };
   });
 }

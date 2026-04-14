@@ -4,6 +4,7 @@ import { DeckFormatPicker } from "../decks/DeckFormatPicker";
 import { DeckRibbon } from "../decks/DeckRibbon";
 import { DeckView } from "../decks/DeckView";
 import { EditableDeckTitle } from "../decks/EditableDeckTitle";
+import { LegalityBadge } from "../decks/LegalityBadge";
 import { LegalityToast } from "../decks/LegalityToast";
 import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
@@ -105,6 +106,7 @@ export function Overlay(_props: Props) {
                 >
                   Format
                 </span>
+                <LegalityBadge deckId={selected.id} hasFormat={selected.formatIndex != null} />
                 <DeckFormatPicker deckId={selected.id} formatIndex={selected.formatIndex} />
               </div>
             </div>
