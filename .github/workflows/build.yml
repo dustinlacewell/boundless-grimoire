@@ -2,9 +2,12 @@ name: Build & Package
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -35,3 +38,18 @@ jobs:
         with:
           name: boundless-grimoire
           path: boundless-grimoire.zip
+
+      # Only publish a downloadable release on actual merges to master,
+      # not on PR runs. A rolling "latest" tag is overwritten each push
+      # so anyone can grab the newest build from the Releases page.
+      - name: Publish rolling "latest" release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          body: |
+            Automatically built from `master` @ ${{ github.sha }}.
+          files: boundless-grimoire.zip
+          prerelease: true
+          make_latest: false
