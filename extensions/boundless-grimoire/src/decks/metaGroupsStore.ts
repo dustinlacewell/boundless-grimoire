@@ -1,27 +1,23 @@
 /**
  * Meta-groups orchestrator.
  *
- * Turns the user's custom queries (from `customQueryStore`) into a
- * first-match-wins `oracle_id → queryId` mapping for the Meta deck
- * layout. The heavy lifting is in `./meta/`:
+ * Owns only what needs to survive a render:
  *
- *   - matchCache.ts  — the per-fragment {positives, negatives} store.
- *   - classify.ts    — pure function turning (cache, queries, oracle_ids)
- *                      into assignments + blocking-fragment lists.
- *   - fetchMatches.ts — Scryfall batch query helper.
+ *   - `cache`      : per-fragment {positives, negatives} — expensive
+ *                    Scryfall data, persisted to chrome.storage.local.
+ *   - `version`    : bump-counter consumers watch as a useMemo dep.
+ *   - `loadingByDeck`: drives the grouping toast.
  *
- * Everything in this file is side-effect glue: it reads live state,
- * decides which gaps need filling, kicks off parallel fetches, and
- * bumps a version counter so React memos can depend on "cache state."
+ * The `oracle_id → queryId` grouping itself is NOT cached here.
+ * `DeckView` derives it synchronously each render by calling `classify`
+ * over the current custom queries and this store's cache. That way a
+ * reorder of the custom query list is just a new array ref feeding into
+ * the render; there is no identity-keyed intermediate to go stale.
  *
- * Invalidation strategy:
- *   - Caching by fragment text means renaming/reordering queries is
- *     free (no network, no recompute).
- *   - Editing a fragment makes a new cache entry; the old one becomes
- *     unreferenced and gets pruned on the next ensureMetaGroups call.
- *   - Adding a card: only newly-seen oracle_ids are fetched.
- *   - Removing a card: nothing — stale entries are harmless and the
- *     card may come back.
+ * `ensureMetaGroups` exists only to fill gaps in the cache for a given
+ * deck: run classify, fetch the fragments it's blocked on, bump version,
+ * repeat. When all blockers clear, the async task exits. React picks up
+ * the new cache contents through the version bump.
  */
 import { create } from "zustand";
 import { useCustomQueryStore, type CustomQuery } from "../filters/customQueryStore";
@@ -43,13 +39,7 @@ export type { MetaQuery } from "./meta/classify";
 
 interface State {
   cache: MatchCache;
-  /**
-   * Monotonically increments on every cache mutation so React
-   * consumers can use it as a useMemo dep without having to diff
-   * the Map itself.
-   */
   version: number;
-  /** Decks currently being (re)populated, so we don't double-fetch. */
   loadingByDeck: Record<string, boolean>;
 }
 
@@ -60,11 +50,6 @@ export const useMetaGroupsStore = create<State>(() => ({
 }));
 
 // ---------- Persistence ----------
-//
-// The cache is MatchCache = Map<fragment, { positives: Set, negatives: Set }>,
-// which doesn't serialize directly. We convert to/from a plain object of
-// arrays for chrome.storage.local round-trips. Writes are debounced so a
-// burst of fetches during a single ensureMetaGroups run makes one write.
 
 const STORAGE_KEY = "boundless-grimoire:meta-match-cache";
 const PERSIST_DEBOUNCE_MS = 600;
@@ -112,25 +97,34 @@ export async function hydrateMetaGroupsStore(): Promise<void> {
   useMetaGroupsStore.setState((s) => ({ cache, version: s.version + 1 }));
 }
 
-/** Flatten the custom query list into priority-ordered meta queries. */
+// ---------- Helpers ----------
+
+/**
+ * Flatten the custom query list into priority-ordered meta queries.
+ * The `id` is a hash of (name + fragment) so it's stable across reorders
+ * and only changes when the user actually renames or edits a query.
+ */
 export function metaQueriesFromCustomQueries(queries: readonly CustomQuery[]): MetaQuery[] {
   return queries
-    .map((q, i): MetaQuery | null =>
-      q.fragment ? { id: String(i), name: q.name, fragment: q.fragment } : null,
-    )
-    .filter((q): q is MetaQuery => q !== null);
+    .filter((q): q is CustomQuery => !!q.fragment)
+    .map((q) => ({ id: stableId(q), name: q.name, fragment: q.fragment }));
 }
 
-function addOracleIds(
-  set: Set<string>,
-  cards: Record<string, DeckCard>,
-): void {
+function stableId(q: CustomQuery): string {
+  // djb2 — short, dependency-free, collision risk is negligible for the
+  // handful of custom queries a user maintains.
+  let h = 5381;
+  const s = `${q.name}\u0000${q.fragment}`;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+
+function addOracleIds(set: Set<string>, cards: Record<string, DeckCard>): void {
   for (const entry of Object.values(cards)) {
     if (entry.snapshot.oracle_id) set.add(entry.snapshot.oracle_id);
   }
 }
 
-/** Unique oracle ids across a single deck's main + sideboard card maps. */
 function collectOracleIds(
   cards: Record<string, DeckCard>,
   sideboard: Record<string, DeckCard>,
@@ -141,7 +135,6 @@ function collectOracleIds(
   return [...set];
 }
 
-/** Union of every oracle_id referenced by every deck in the library. */
 function collectLibraryOracleIds(library: DeckLibrary): Set<string> {
   const set = new Set<string>();
   for (const deck of Object.values(library.decks)) {
@@ -155,25 +148,41 @@ function bumpVersion(): void {
   useMetaGroupsStore.setState((s) => ({ version: s.version + 1 }));
 }
 
-/**
- * Pure selector — compute each oracle_id's meta-group assignment from
- * the current cache + queries. Stable given the same inputs so it
- * plays nicely with useMemo. Unresolved oracle_ids are omitted from
- * the result; the caller falls back to category grouping for them.
- */
-export function selectAssignments(
-  cache: MatchCache,
-  queries: readonly MetaQuery[],
-  oracleIds: readonly string[],
-): Record<string, string> {
-  return classify(cache, queries, oracleIds).assignments;
+// ---------- Fetch dedup ----------
+
+const inFlightFetches = new Map<string, Promise<void>>();
+
+function fetchKey(fragment: string, oracleIds: readonly string[]): string {
+  return `${fragment}|${[...oracleIds].sort().join(",")}`;
 }
 
+async function dedupedFetch(
+  cache: MatchCache,
+  fragment: string,
+  oracleIds: string[],
+): Promise<void> {
+  const key = fetchKey(fragment, oracleIds);
+  const existing = inFlightFetches.get(key);
+  if (existing) return existing;
+  const task = (async () => {
+    try {
+      const matches = await fetchMatches(fragment, oracleIds);
+      recordMatches(cache, fragment, oracleIds, matches);
+    } finally {
+      inFlightFetches.delete(key);
+    }
+  })();
+  inFlightFetches.set(key, task);
+  return task;
+}
+
+// ---------- Orchestrator ----------
+
 /**
- * Drive the cache to "complete enough" for this deck: fetch only the
- * (query, oracle_id) pairs that are genuinely unknown. Re-runs classify
- * after each fetch to exploit first-match-wins — when an earlier query
- * comes back positive for a card, later queries are skipped entirely.
+ * Fill any gaps in the match cache for the given deck. Runs classify,
+ * fetches fragments it's blocked on, bumps version, repeats. Exits once
+ * there are no more blockers — the caller (DeckView) re-derives the
+ * grouping synchronously from the cache each render.
  */
 export async function ensureMetaGroups(
   deckId: string,
@@ -181,53 +190,30 @@ export async function ensureMetaGroups(
   sideboard: Record<string, DeckCard>,
 ): Promise<void> {
   const queries = metaQueriesFromCustomQueries(useCustomQueryStore.getState().queries);
+  if (queries.length === 0) return;
   const oracleIds = collectOracleIds(cards, sideboard);
-  if (oracleIds.length === 0 || queries.length === 0) return;
 
-  const { cache, loadingByDeck } = useMetaGroupsStore.getState();
-  if (loadingByDeck[deckId]) return;
+  const { cache } = useMetaGroupsStore.getState();
 
-  // Eviction pass — run before every fetch so the cache tracks reality:
-  //   * Drop fragments no longer referenced by any custom query.
-  //   * Drop oracle_ids no longer referenced by any deck in the library.
-  // Individual Scryfall queries are cheap, so we'd rather re-ask than
-  // let the cache grow forever.
-  const sizeBefore = cache.size;
-  const countBefore = [...cache.values()].reduce(
-    (n, e) => n + e.positives.size + e.negatives.size,
-    0,
-  );
-  pruneToFragments(cache, queries.map((q) => q.fragment));
-  pruneToOracleIds(cache, collectLibraryOracleIds(useDeckStore.getState().library));
-  const sizeAfter = cache.size;
-  const countAfter = [...cache.values()].reduce(
-    (n, e) => n + e.positives.size + e.negatives.size,
-    0,
-  );
-  if (sizeBefore !== sizeAfter || countBefore !== countAfter) {
+  // Eviction pass — drop fragments no longer referenced by any custom
+  // query, and oracle_ids no longer referenced by any deck.
+  const { changed } = prune(cache, queries, useDeckStore.getState().library);
+  if (changed) {
     bumpVersion();
     schedulePersist();
   }
 
-  // Nothing to do if everything is already classified.
-  const initial = classify(cache, queries, oracleIds);
-  if (initial.blockedByFragment.size === 0) return;
+  let pass = classify(cache, queries, oracleIds);
+  if (pass.blockedByFragment.size === 0) return;
 
   useMetaGroupsStore.setState((s) => ({
     loadingByDeck: { ...s.loadingByDeck, [deckId]: true },
   }));
 
   try {
-    // Loop until the classifier reports no more blockers. Each pass
-    // fetches every blocking fragment in parallel — Scryfall rate
-    // limiting is handled in the background worker, so we just fan out.
-    let pass = classify(cache, queries, oracleIds);
     while (pass.blockedByFragment.size > 0) {
       const fetches = [...pass.blockedByFragment.entries()].map(
-        async ([fragment, oids]) => {
-          const matches = await fetchMatches(fragment, oids);
-          recordMatches(cache, fragment, oids, matches);
-        },
+        ([fragment, oids]) => dedupedFetch(cache, fragment, oids),
       );
       await Promise.all(fetches);
       bumpVersion();
@@ -239,4 +225,24 @@ export async function ensureMetaGroups(
       loadingByDeck: { ...s.loadingByDeck, [deckId]: false },
     }));
   }
+}
+
+function prune(
+  cache: MatchCache,
+  queries: readonly MetaQuery[],
+  library: DeckLibrary,
+): { changed: boolean } {
+  const sizeBefore = cache.size;
+  const countBefore = [...cache.values()].reduce(
+    (n, e) => n + e.positives.size + e.negatives.size,
+    0,
+  );
+  pruneToFragments(cache, queries.map((q) => q.fragment));
+  pruneToOracleIds(cache, collectLibraryOracleIds(library));
+  const sizeAfter = cache.size;
+  const countAfter = [...cache.values()].reduce(
+    (n, e) => n + e.positives.size + e.negatives.size,
+    0,
+  );
+  return { changed: sizeBefore !== sizeAfter || countBefore !== countAfter };
 }

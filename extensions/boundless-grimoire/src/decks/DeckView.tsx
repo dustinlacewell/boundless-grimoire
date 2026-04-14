@@ -12,10 +12,10 @@ import { colors } from "../ui/colors";
 import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
 import { checkLegality, clearLegality, useLegalityStore } from "./legalityStore";
+import { classify } from "./meta/classify";
 import {
   ensureMetaGroups,
   metaQueriesFromCustomQueries,
-  selectAssignments,
   useMetaGroupsStore,
 } from "./metaGroupsStore";
 
@@ -89,42 +89,48 @@ export function DeckView({ deck }: Props) {
 
   const deckGroupBy = useSettingsStore((s) => s.settings.deckGroupBy);
 
-  // Meta grouping derives from the user's custom queries. The store
-  // caches per-fragment match data; editing a fragment invalidates
-  // just that fragment, not the whole cache.
-  const cacheVersion = useMetaGroupsStore((s) => s.version);
-  const cache = useMetaGroupsStore((s) => s.cache);
+  // Meta grouping derivation.
+  //
+  // We deliberately do NOT cache the derived `oracle_id → queryId`
+  // mapping. The only thing worth caching across renders is the
+  // per-fragment Scryfall match data (which lives in metaGroupsStore);
+  // running `classify` over that cache is microseconds and side-effect
+  // free. Deriving synchronously here means reorders, renames, adds,
+  // and deletes of custom queries all flow through React's normal
+  // memo-dependency path with no extra invalidation plumbing.
   const customQueries = useCustomQueryStore((s) => s.queries);
-
-  useEffect(() => {
-    if (deckGroupBy !== "meta") return;
-    void ensureMetaGroups(deck.id, deck.cards, deck.sideboard);
-  }, [deckGroupBy, deck.id, deck.cards, deck.sideboard, customQueries]);
+  const matchCache = useMetaGroupsStore((s) => s.cache);
+  const cacheVersion = useMetaGroupsStore((s) => s.version);
 
   const metaQueries = useMemo(
     () => metaQueriesFromCustomQueries(customQueries),
     [customQueries],
   );
+
+  const oracleToMeta = useMemo(() => {
+    if (deckGroupBy !== "meta" || metaQueries.length === 0) return {};
+    const oracleIds: string[] = [];
+    for (const c of Object.values(deck.cards)) {
+      if (c.snapshot.oracle_id) oracleIds.push(c.snapshot.oracle_id);
+    }
+    for (const c of Object.values(deck.sideboard)) {
+      if (c.snapshot.oracle_id) oracleIds.push(c.snapshot.oracle_id);
+    }
+    return classify(matchCache, metaQueries, oracleIds).assignments;
+    // matchCache is mutated in place by ensureMetaGroups; cacheVersion
+    // is what actually triggers the re-derivation.
+  }, [deckGroupBy, metaQueries, deck.cards, deck.sideboard, cacheVersion, matchCache]);
+
+  useEffect(() => {
+    if (deckGroupBy !== "meta") return;
+    // Fire-and-forget: fills gaps in the shared match cache. Each fetch
+    // bumps cacheVersion, which re-runs the classify memo above.
+    void ensureMetaGroups(deck.id, deck.cards, deck.sideboard);
+  }, [deckGroupBy, deck.id, deck.cards, deck.sideboard, customQueries]);
+
   const metaTagLabels = useMemo(
     () => metaQueries.map((m) => ({ id: m.id, label: m.name })),
     [metaQueries],
-  );
-  const deckOracleIds = useMemo(() => {
-    const set = new Set<string>();
-    for (const entry of Object.values(deck.cards)) {
-      if (entry.snapshot.oracle_id) set.add(entry.snapshot.oracle_id);
-    }
-    for (const entry of Object.values(deck.sideboard)) {
-      if (entry.snapshot.oracle_id) set.add(entry.snapshot.oracle_id);
-    }
-    return [...set];
-  }, [deck.cards, deck.sideboard]);
-  const oracleToMeta = useMemo(
-    () => selectAssignments(cache, metaQueries, deckOracleIds),
-    // `cacheVersion` participates so re-renders pick up cache mutations
-    // (the Map identity itself doesn't change on write).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cache, cacheVersion, metaQueries, deckOracleIds],
   );
   const groupCtx = { oracleToMeta, metaTagLabels };
   const mainGroups = groupDeck(deck.cards, deckGroupBy, groupCtx);
