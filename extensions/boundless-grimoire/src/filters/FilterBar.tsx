@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useCustomFormatStore } from "./customFormatStore";
 import { useCustomQueryStore } from "./customQueryStore";
 import { useFilterStore } from "./store";
@@ -74,13 +74,27 @@ function CompiledQueryDisplay() {
     return formatFragment ? `(${formatFragment}) ${base}`.trim() : base;
   }, [filterState, formatFragment]);
 
+  const [copied, setCopied] = useState(false);
+
   if (!query) return null;
+
+  const handleCopy = () => {
+    void navigator.clipboard.writeText(query).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1200);
+      },
+      (err) => console.error("[filter] clipboard write failed", err),
+    );
+  };
 
   return (
     <div
+      onClick={handleCopy}
+      title="Click to copy"
       style={{
         background: colors.bg2,
-        border: `1px solid ${colors.border}`,
+        border: `1px solid ${copied ? colors.accent : colors.border}`,
         borderRadius: 6,
         padding: "8px 12px",
         fontSize: 12,
@@ -88,9 +102,26 @@ function CompiledQueryDisplay() {
         color: colors.textMuted,
         wordBreak: "break-all",
         lineHeight: 1.5,
+        cursor: "pointer",
+        position: "relative",
+        transition: "border-color 0.2s ease",
       }}
     >
       {query}
+      {copied && (
+        <span
+          style={{
+            position: "absolute",
+            top: 4,
+            right: 8,
+            fontSize: 10,
+            color: colors.accent,
+            fontWeight: 700,
+          }}
+        >
+          Copied
+        </span>
+      )}
     </div>
   );
 }
