@@ -59,7 +59,7 @@ export function TriggerButton({ open, onToggle }: Props) {
       title={open ? "Close Boundless Grimoire" : "Open Boundless Grimoire"}
     >
       <div
-        className="bg-trigger-icon"
+        className={`bg-trigger-icon${open ? " bg-trigger-icon--open" : ""}`}
         role="img"
         aria-label="Boundless Grimoire"
         // Inline animation-duration override — CSS defaults to the slow

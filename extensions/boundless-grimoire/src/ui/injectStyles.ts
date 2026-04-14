@@ -68,7 +68,7 @@ ${ROOT_SELECTOR} * {
 //     (gradient) and brightness from this one (greyscale). Net effect:
 //     the icon's internal shading is preserved AND colorized by the
 //     swirling gradient.
-const TRIGGER_ICON_CSS = (iconUrl: string) => `
+const TRIGGER_ICON_CSS = (iconUrl: string, iconOpenUrl: string) => `
 @keyframes bg-trigger-swirl-a {
   0%   { background-position:   0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -128,6 +128,19 @@ const TRIGGER_ICON_CSS = (iconUrl: string) => `
   mix-blend-mode: luminosity;
   pointer-events: none;
 }
+/* Open state: swap in the open-icon for both mask + luminosity overlay,
+   and override the size/shift vars so the open icon can have its own
+   positioning without affecting the closed state. */
+.bg-trigger-icon--open {
+  --icon-size: auto 290%;
+  --icon-shift-x: -5px;
+  --icon-shift-y: 25px;
+  mask-image: url(${iconOpenUrl});
+  -webkit-mask-image: url(${iconOpenUrl});
+}
+.bg-trigger-icon--open::after {
+  background-image: url(${iconOpenUrl});
+}
 `;
 
 export function injectStyles(): void {
@@ -148,7 +161,10 @@ export function injectStyles(): void {
   if (!document.getElementById(TRIGGER_ICON_STYLE_ID)) {
     const style = document.createElement("style");
     style.id = TRIGGER_ICON_STYLE_ID;
-    style.textContent = TRIGGER_ICON_CSS(chrome.runtime.getURL("icon.png"));
+    style.textContent = TRIGGER_ICON_CSS(
+      chrome.runtime.getURL("icon.png"),
+      chrome.runtime.getURL("icon-open.png"),
+    );
     document.head.appendChild(style);
   }
 }

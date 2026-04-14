@@ -14,7 +14,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["keyrune/*", "icon.png"],
+      "resources": ["keyrune/*", "icon.png", "icon-open.png"],
       "matches": ["https://untap.in/*", "https://*.untap.in/*"]
     }
   ],
