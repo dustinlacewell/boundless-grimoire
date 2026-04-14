@@ -1,20 +1,32 @@
 /**
  * Detect decks with thin (un-enriched) card snapshots and re-enrich them.
  *
- * A card is "thin" if it has no image_uris — that field is always present
- * on a Scryfall-enriched snapshot. Run this once at boot after the deck
- * store is hydrated so any cards that failed enrichment on a prior session
- * get another chance automatically.
+ * A card is "thin" if:
+ *   - it has no image_uris AND no card_faces (never successfully enriched), OR
+ *   - it's a land that's missing `produced_mana` (snapshot predates that field
+ *     being captured — needed by analytics for mana production).
+ *
+ * Run this once at boot after the deck store is hydrated so any cards that
+ * failed enrichment on a prior session, or predate newer fields, get another
+ * chance automatically.
  */
 import { useDeckStore } from "../storage/deckStore";
-import type { DeckCard } from "../storage/types";
+import type { CardSnapshot, DeckCard } from "../storage/types";
 import { enrichDeckCards } from "./enrichDeck";
 import { suppressFromNextPush } from "./pushSchedule";
 
+function isLand(snapshot: CardSnapshot): boolean {
+  return (snapshot.type_line ?? "").toLowerCase().includes("land");
+}
+
+function isThin(snapshot: CardSnapshot): boolean {
+  if (!snapshot.image_uris && !snapshot.card_faces) return true;
+  if (isLand(snapshot) && !snapshot.produced_mana) return true;
+  return false;
+}
+
 function hasThinCards(cards: Record<string, DeckCard>): boolean {
-  return Object.values(cards).some(
-    (c) => !c.snapshot.image_uris && !c.snapshot.card_faces,
-  );
+  return Object.values(cards).some((c) => isThin(c.snapshot));
 }
 
 /** Re-enrich a single deck's thin cards and commit the result to the store. */
