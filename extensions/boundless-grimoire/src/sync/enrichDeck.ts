@@ -19,6 +19,7 @@
  */
 import { getCardsByIds } from "../scryfall/client";
 import { toSnapshot } from "../scryfall/snapshot";
+import type { ScryfallCard } from "../scryfall/types";
 import type { CardSnapshot, DeckCard } from "../storage/types";
 
 export async function enrichDeckCards(
@@ -91,7 +92,7 @@ export async function enrichDeckCards(
       }
     }
 
-    let retryResolved;
+    let retryResolved: ScryfallCard[];
     try {
       retryResolved = retryIds.length > 0 ? await getCardsByIds(retryIds) : [];
     } catch (e) {

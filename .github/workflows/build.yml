@@ -77,24 +77,24 @@ jobs:
           fi
           SHORT_SHA="${SHA:0:7}"
           DOWNLOAD_URL="https://github.com/${REPO}/releases/download/latest/boundless-grimoire.zip"
-          RELEASE_URL="https://github.com/${REPO}/releases/tag/latest"
+          ROLE_ID="1490636376645963909"
           # Truncate the commit message's first line to ~200 chars.
           FIRST_LINE=$(printf '%s' "$COMMIT_MSG" | head -n 1 | cut -c1-200)
           PAYLOAD=$(jq -n \
-            --arg title "New Boundless Grimoire build" \
+            --arg content "<@&${ROLE_ID}> new Boundless Grimoire build is out." \
+            --arg title "Download boundless-grimoire.zip" \
             --arg desc "**${FIRST_LINE}**\n\nby ${AUTHOR} · [\`${SHORT_SHA}\`](${COMMIT_URL})" \
-            --arg url "$RELEASE_URL" \
-            --arg download "$DOWNLOAD_URL" \
+            --arg url "$DOWNLOAD_URL" \
+            --arg roleId "$ROLE_ID" \
             '{
               username: "Boundless Grimoire",
+              content: $content,
+              allowed_mentions: { roles: [$roleId] },
               embeds: [{
                 title: $title,
                 description: $desc,
                 url: $url,
-                color: 16743226,
-                fields: [
-                  { name: "Download", value: "[boundless-grimoire.zip](\($download))" }
-                ]
+                color: 16743226
               }]
             }')
           curl -sS -H "Content-Type: application/json" \

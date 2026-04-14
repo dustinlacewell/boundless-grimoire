@@ -37,14 +37,6 @@ const groupLabelStyle: React.CSSProperties = {
   textAlign: "center",
 };
 
-const groupLabelRowStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 6,
-  ...groupLabelStyle,
-};
-
 const rowCenterStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
