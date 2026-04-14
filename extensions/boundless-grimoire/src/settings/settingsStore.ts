@@ -4,11 +4,13 @@ import { attachPersistence } from "../storage/persistedSlice";
 const STORAGE_KEY = "boundless-grimoire:settings";
 
 export type AnalyticsLayout = "scroll" | "wrap";
+export type DeckLayout = "scroll" | "wrap";
 export type PreviewMode = "image" | "text" | "both";
 
 export interface Settings {
   devMode: boolean;
   analyticsLayout: AnalyticsLayout;
+  deckLayout: DeckLayout;
   previewMode: PreviewMode;
 }
 
@@ -20,6 +22,7 @@ interface SettingsStoreState {
 const DEFAULT_SETTINGS: Settings = {
   devMode: false,
   analyticsLayout: "scroll",
+  deckLayout: "scroll",
   previewMode: "both",
 };
 
@@ -50,6 +53,12 @@ export function setDevMode(enabled: boolean): void {
 export function setAnalyticsLayout(layout: AnalyticsLayout): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, analyticsLayout: layout },
+  }));
+}
+
+export function setDeckLayout(layout: DeckLayout): void {
+  useSettingsStore.setState((s) => ({
+    settings: { ...s.settings, deckLayout: layout },
   }));
 }
 

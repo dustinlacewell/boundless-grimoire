@@ -17,10 +17,12 @@ import {
 import { colors } from "../ui/colors";
 import {
   setAnalyticsLayout,
+  setDeckLayout,
   setDevMode,
   setPreviewMode,
   useSettingsStore,
   type AnalyticsLayout,
+  type DeckLayout,
   type PreviewMode,
 } from "./settingsStore";
 
@@ -151,6 +153,7 @@ export function SettingsModal({ onClose }: Props) {
   const formats = useCustomFormatStore((s) => s.formats);
   const devMode = useSettingsStore((s) => s.settings.devMode);
   const analyticsLayout = useSettingsStore((s) => s.settings.analyticsLayout);
+  const deckLayout = useSettingsStore((s) => s.settings.deckLayout);
   const previewMode = useSettingsStore((s) => s.settings.previewMode);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
   const [formatText, setFormatText] = useState(() => formatsToText(formats));
@@ -252,6 +255,36 @@ export function SettingsModal({ onClose }: Props) {
                 <div style={hintStyle}>
                   <strong>Scroll:</strong> horizontal strip, wheel scrolls sideways.{" "}
                   <strong>Wrap:</strong> charts wrap onto multiple rows like a grid.
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Deck Layout</span>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {(["scroll", "wrap"] as DeckLayout[]).map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setDeckLayout(opt)}
+                      style={{
+                        padding: "6px 14px",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        background: deckLayout === opt ? colors.accent : colors.bg2,
+                        color: deckLayout === opt ? "#0a0a0c" : colors.text,
+                        border: `1px solid ${deckLayout === opt ? colors.accent : colors.borderStrong}`,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+                <div style={hintStyle}>
+                  <strong>Scroll:</strong> category columns sit in one row, horizontal scroll.{" "}
+                  <strong>Wrap:</strong> columns wrap to multiple rows when they don't all fit.
                 </div>
               </div>
 

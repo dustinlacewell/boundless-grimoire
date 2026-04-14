@@ -3,6 +3,7 @@ import { categorizeDeck } from "../cards/categorize";
 import { openPrintPicker } from "../cards/printPickerStore";
 import { useCustomFormatStore } from "../filters/customFormatStore";
 import { useGridSizeStore } from "../search/gridSizeStore";
+import { useSettingsStore } from "../settings/settingsStore";
 import { decrementCard, incrementCard, moveCardToZone, setDeckCover } from "../storage/deckStore";
 import type { CardSnapshot, Deck } from "../storage/types";
 import { colors } from "../ui/colors";
@@ -14,13 +15,22 @@ interface Props {
   deck: Deck;
 }
 
-const wrapperStyle: React.CSSProperties = {
+const scrollWrapperStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "row",
   gap: 24,
   alignItems: "flex-start",
   overflowX: "auto",
   overflowY: "visible",
+  padding: "4px 4px 16px",
+};
+
+const wrapWrapperStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  gap: 24,
+  alignItems: "flex-start",
   padding: "4px 4px 16px",
 };
 
@@ -43,6 +53,8 @@ const sideboardLabelStyle: React.CSSProperties = {
 
 export function DeckView({ deck }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
+  const deckLayout = useSettingsStore((s) => s.settings.deckLayout);
+  const wrapperStyle = deckLayout === "wrap" ? wrapWrapperStyle : scrollWrapperStyle;
   const formats = useCustomFormatStore((s) => s.formats);
   const formatFragment = deck.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
   const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DeckAnalytics } from "../analytics/DeckAnalytics";
 import { DeckFormatPicker } from "../decks/DeckFormatPicker";
 import { DeckRibbon } from "../decks/DeckRibbon";
@@ -55,6 +55,12 @@ const bodyStyle: React.CSSProperties = {
   overflowX: "hidden",
   padding: 16,
   gap: 16,
+  // Disable browser scroll anchoring on the overlay body. When infinite
+  // scroll appends more results the browser was picking the sentinel or a
+  // near-bottom card as the anchor and adjusting scrollTop to keep it in
+  // view — which effectively kicked the user to the newly-added content
+  // instead of letting the new cards quietly fill in below.
+  overflowAnchor: "none",
 };
 
 // Level-1 section heading used by the top-level panes (Decks, Analytics,
@@ -71,10 +77,69 @@ const sectionLabelStyle: React.CSSProperties = {
   borderBottom: `2px solid ${colors.bg3}`,
 };
 
+/** True when focus is inside an input/textarea/contenteditable field. */
+function isTypingTarget(el: EventTarget | null): boolean {
+  if (!(el instanceof HTMLElement)) return false;
+  const tag = el.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+  if (el.isContentEditable) return true;
+  return false;
+}
+
 export function Overlay(_props: Props) {
   const selected = useDeckStore(selectedDeck);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLElement>(null);
+  const analyticsRef = useRef<HTMLElement>(null);
+  const filtersRef = useRef<HTMLElement>(null);
+  const resultsRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Toggle-navigation: first press of a jump key saves where you were
+    // and scrolls to the target. Pressing the same key again restores
+    // the saved scroll position. Pressing a different jump key overwrites
+    // the saved position with "where you are now" before jumping.
+    let lastKey: string | null = null;
+    let savedScrollTop = 0;
+
+    const targets: Record<string, React.RefObject<HTMLElement | null> | "top"> = {
+      d: deckRef,
+      a: analyticsRef,
+      f: filtersRef,
+      r: resultsRef,
+      t: "top",
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+      if (isTypingTarget(e.target)) return;
+      const key = e.key.toLowerCase();
+      if (!(key in targets)) return;
+      const body = bodyRef.current;
+      if (!body) return;
+      e.preventDefault();
+
+      if (lastKey === key) {
+        // Same key again — snap back to where the user was.
+        body.scrollTo({ top: savedScrollTop, behavior: "smooth" });
+        lastKey = null;
+        return;
+      }
+
+      const target = targets[key];
+      savedScrollTop = body.scrollTop;
+      lastKey = key;
+      if (target === "top") {
+        body.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (target.current) {
+        target.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div style={overlayStyle} role="dialog" aria-modal="true" aria-label="Boundless Grimoire">
@@ -90,13 +155,13 @@ export function Overlay(_props: Props) {
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
       {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
       <LegalityToast />
-      <div style={bodyStyle}>
+      <div ref={bodyRef} style={bodyStyle}>
         <section>
           <div style={sectionLabelStyle}>Decks</div>
           <DeckRibbon />
         </section>
 
-        <section style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <section ref={deckRef} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {selected ? (
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <EditableDeckTitle deckId={selected.id} name={selected.name} />
@@ -132,18 +197,18 @@ export function Overlay(_props: Props) {
         </section>
 
         {selected && (
-          <section>
+          <section ref={analyticsRef}>
             <div style={sectionLabelStyle}>Analytics</div>
             <DeckAnalytics deck={selected} />
           </section>
         )}
 
-        <section style={{ display: "flex", flexDirection: "column" }}>
+        <section ref={filtersRef} style={{ display: "flex", flexDirection: "column" }}>
           <div style={sectionLabelStyle}>Browse · Filters</div>
           <FilterBar />
         </section>
 
-        <section style={{ display: "flex", flexDirection: "column" }}>
+        <section ref={resultsRef} style={{ display: "flex", flexDirection: "column" }}>
           <div style={sectionLabelStyle}>Results</div>
           <SearchResults />
         </section>

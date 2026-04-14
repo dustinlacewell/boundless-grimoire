@@ -42,6 +42,16 @@ const KEYBINDS: KeybindSection[] = [
       { keys: "Shift + right click", description: "Toggle favorite" },
     ],
   },
+  {
+    title: "Navigation",
+    entries: [
+      { keys: "T", description: "Jump to the top (press again to go back)" },
+      { keys: "D", description: "Jump to the deck view (press again to go back)" },
+      { keys: "A", description: "Jump to analytics (press again to go back)" },
+      { keys: "F", description: "Jump to filters (press again to go back)" },
+      { keys: "R", description: "Jump to results (press again to go back)" },
+    ],
+  },
 ];
 
 const overlayStyle: React.CSSProperties = {
