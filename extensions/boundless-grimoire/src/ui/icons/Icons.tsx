@@ -61,3 +61,13 @@ export function ClipboardIcon({ size = 16, style, title = "Copy" }: IconProps) {
     </svg>
   );
 }
+
+export function HelpIcon({ size = 16, style, title = "Help" }: IconProps) {
+  return (
+    <svg {...baseProps(size, title)} style={style}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.1 9a3 3 0 015.8 1c0 2-3 2-3 4" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}

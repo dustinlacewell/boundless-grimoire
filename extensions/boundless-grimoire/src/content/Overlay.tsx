@@ -8,11 +8,12 @@ import { LegalityBadge } from "../decks/LegalityBadge";
 import { LegalityToast } from "../decks/LegalityToast";
 import { FilterBar } from "../filters/FilterBar";
 import { SearchResults } from "../search/SearchResults";
+import { HelpModal } from "../help/HelpModal";
 import { SettingsModal } from "../settings/SettingsModal";
 import { useDeckStore, selectedDeck } from "../storage/deckStore";
 import { colors } from "../ui/colors";
 import { IconButton } from "../ui/IconButton";
-import { GearIcon } from "../ui/icons/Icons";
+import { GearIcon, HelpIcon } from "../ui/icons/Icons";
 import { TRIGGER_H, TRIGGER_W } from "./TriggerButton";
 
 type Props = Record<string, never>;
@@ -73,16 +74,21 @@ const sectionLabelStyle: React.CSSProperties = {
 export function Overlay(_props: Props) {
   const selected = useDeckStore(selectedDeck);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   return (
     <div style={overlayStyle} role="dialog" aria-modal="true" aria-label="Boundless Grimoire">
       <div style={headerStyle}>
         <div style={titleStyle}>Boundless Grimoire</div>
+        <IconButton title="Help" onClick={() => setHelpOpen(true)} stopPropagation={false}>
+          <HelpIcon size={14} />
+        </IconButton>
         <IconButton title="Settings" onClick={() => setSettingsOpen(true)} stopPropagation={false}>
           <GearIcon size={14} />
         </IconButton>
       </div>
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
+      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
       <LegalityToast />
       <div style={bodyStyle}>
         <section>
