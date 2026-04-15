@@ -8,6 +8,7 @@ import {
 } from "../storage/deckStore";
 import { HScroll } from "@boundless-grimoire/ui";
 import { DeckRibbonItem } from "./DeckRibbonItem";
+import { GenerateDeckTile } from "./GenerateDeckTile";
 import { ImportDeckTile } from "./ImportDeckTile";
 import { NewDeckTile } from "./NewDeckTile";
 
@@ -109,6 +110,7 @@ export function DeckRibbon() {
         <NewDeckTile label="New deck" onCreate={() => createDeck("Untitled")} />
       )}
       {!isCubeTab && <ImportDeckTile />}
+      {!isCubeTab && <GenerateDeckTile />}
     </HScroll>
   );
 }

@@ -14,7 +14,9 @@
       "Bash(gh api:*)",
       "Bash(git mv:*)",
       "Bash(git rm:*)",
-      "Bash(grep -E \"^export\" /d/code/ts/boundless-grimoire/extensions/boundless-grimoire/src/sync/*.ts)"
+      "Bash(grep -E \"^export\" /d/code/ts/boundless-grimoire/extensions/boundless-grimoire/src/sync/*.ts)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }
