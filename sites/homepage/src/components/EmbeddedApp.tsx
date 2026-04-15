@@ -7,6 +7,7 @@ import {
   hydrateDeckStore,
   hydrateFavoritesStore,
   hydrateGridSizeStore,
+  hydrateLegalityStore,
   hydrateMetaGroupsStore,
   hydratePinnedCardsStore,
   hydratePresetStore,
@@ -56,6 +57,7 @@ function bootOnce(): { services: Services; ready: Promise<void> } {
     hydrateCustomFormatStore(),
     hydrateSettingsStore(),
     hydrateMetaGroupsStore(),
+    hydrateLegalityStore(),
   ]).then((results) => {
     for (const r of results) {
       if (r.status === "rejected") console.error("[demo] hydrate failed", r.reason);

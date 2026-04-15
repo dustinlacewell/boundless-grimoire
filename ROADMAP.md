@@ -1,0 +1,2 @@
+# Format mechanics
+We should extend format validation. Some validation like "do you have a commander" should be baked into the format. Others like, "Do you only have 1 copy of each card?" can be a configuration parameter of the format interface. Each format should specify an actual format, a list of sets, and any extra scryfall query.

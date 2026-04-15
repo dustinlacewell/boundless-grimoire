@@ -6,7 +6,19 @@ Keep this file up to date as the codebase evolves.
 
 A full-screen MTG deck-builder built with React 18, Zustand, TanStack Query, Zod, and `scryfall-api`. The core app (`packages/app`) is environment-agnostic — it ships as a Chrome extension (Manifest V3) overlaid on untap.in and as a standalone web demo on the marketing site. Bundled by Vite (no CRX plugin — plain multi-entry build).
 
-**Branches:** `dev` — active development. `master` — stable releases.
+**Branches:** `dev` — active development (**commit here by default**).
+`master` — stable releases only; `dev` merges into `master` as part of
+cutting a release. Never commit feature work directly to `master`. The
+standard flow is:
+
+1. `git checkout dev` before starting any feature work.
+2. Commit on `dev`, push as needed.
+3. When rolling a release: bump `APP_VERSION` + the five package
+   `version` fields + the extension manifest on `dev`, commit as
+   `Release X.Y.Z`, then merge `dev → master`, tag `vX.Y.Z` on
+   `master`, and push both branches + the tag. Tagged pushes on
+   `master` are what trigger the release-side automation (Discord
+   announce, etc.).
 
 pnpm monorepo. Workspace members:
 
@@ -176,3 +188,5 @@ All charts use `ChartCard` as their outer shell (Surface + pinned title + center
 **Push** (`pushDeck.ts`) — goes through the MAIN-world bridge (`untapBridge.ts`) to reach `apiStore.send("update-deck", …)`. Deletions use `pinia:deckStore:deleteDeck` so untap's reactive sidebar re-renders without a page reload. Pushes are debounced at 1500 ms (`pushSchedule.ts`); rapid edits collapse into one push.
 
 **Boot sequence** (`bootSync.ts`) — pull-then-push ordering prevents duplicates: pulling first links any unseen untap decks before the push phase runs. The push phase waits for the bridge (via `UntapSync.whenReady()`) and skips gracefully if it never comes up. Freshly pulled (still-enriching) decks are skipped during boot push.
+
+**Quick or Proper?** When deciding between possible architectural and implementation routes you will ALWAYS pick the **proper** route. Every session should accomplish the task, but also involving the codebase **as you notice**. 

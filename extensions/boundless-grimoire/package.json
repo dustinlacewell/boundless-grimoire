@@ -1,12 +1,11 @@
 {
   "name": "boundless-grimoire",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
-    "watch": "vite build --watch --mode development",
+    "dev": "vite build --watch --mode development",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

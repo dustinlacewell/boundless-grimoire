@@ -156,6 +156,43 @@ export function createDeck(name = "Untitled"): string {
   return deck.id;
 }
 
+/**
+ * Commit a fully-built generated deck atomically. Adds it to the library,
+ * pushes onto display order, sets it as selected, and switches to the
+ * decks tab — all in a single setState so the deck appears in one render.
+ */
+export function commitGeneratedDeck(args: {
+  name: string;
+  cards: { snapshot: CardSnapshot; count: number }[];
+  commander?: CardSnapshot;
+  formatIndex?: number | null;
+}): string {
+  const deck = makeEntity(args.name, false);
+  const now = Date.now();
+  const cards: Record<string, DeckCard> = {};
+  for (const c of args.cards) {
+    const existing = cards[c.snapshot.id];
+    if (existing) cards[c.snapshot.id] = { ...existing, count: existing.count + c.count };
+    else cards[c.snapshot.id] = { snapshot: c.snapshot, count: c.count, addedAt: now, zone: "deck-1" };
+  }
+  const enriched: Deck = {
+    ...deck,
+    cards,
+    commander: args.commander,
+    coverCardId: args.commander?.id,
+    formatIndex: args.formatIndex ?? null,
+    groupBy: "cmc",
+  };
+  mutate((lib) => ({
+    ...lib,
+    decks: { ...lib.decks, [enriched.id]: enriched },
+    order: [...lib.order, enriched.id],
+    selectedId: enriched.id,
+    libraryView: "decks",
+  }));
+  return enriched.id;
+}
+
 export function createCube(name = "Untitled Cube"): string {
   const cube = makeEntity(name, true);
   mutate((lib) => ({
