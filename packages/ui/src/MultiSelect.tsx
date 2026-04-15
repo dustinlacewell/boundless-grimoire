@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState, useEffect, type ReactNode } from "react";
-import { colors } from "./colors";
 import { Pill } from "./Pill";
 import { Popover } from "./Popover";
 import { SearchInput } from "./SearchInput";
@@ -20,37 +19,20 @@ interface Props<T extends string> {
   width?: number | string;
 }
 
-const triggerWrapper = (open: boolean): React.CSSProperties => ({
-  minHeight: 32,
-  padding: 4,
-  background: colors.bg2,
-  border: `1px solid ${open ? colors.accent : colors.borderStrong}`,
-  borderRadius: 6,
-  cursor: "pointer",
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  gap: 4,
-  width: "100%",
-  boxSizing: "border-box",
-});
+const triggerClass = (open: boolean) =>
+  [
+    "min-h-8 p-1 w-full box-border flex flex-wrap items-center gap-1 cursor-pointer",
+    "bg-bg-2 rounded-md ui-interactive ui-interactive-border",
+    open && "ui-interactive-active",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-const placeholderStyle: React.CSSProperties = {
-  color: colors.textMuted,
-  fontSize: 12,
-  padding: "0 6px",
-  fontWeight: 600,
-};
-
-const optionStyle = (selected: boolean): React.CSSProperties => ({
-  padding: "8px 12px",
-  fontSize: 13,
-  cursor: "pointer",
-  background: selected ? colors.accent : "transparent",
-  color: selected ? "#0a0a0c" : colors.text,
-  fontWeight: selected ? 700 : 400,
-  whiteSpace: "nowrap",
-});
+const optionClass = (selected: boolean) =>
+  [
+    "px-3 py-2 text-[13px] cursor-pointer whitespace-nowrap",
+    selected ? "ui-interactive-selected font-bold" : "text-text font-normal ui-interactive",
+  ].join(" ");
 
 /**
  * Pill-bar trigger + popover with search-filtered multi-select list.
@@ -109,9 +91,11 @@ export function MultiSelect<T extends string>({
         align="left"
         triggerFullWidth
         trigger={
-          <div style={triggerWrapper(open)} onClick={() => setOpen(true)}>
+          <div className={triggerClass(open)} onClick={() => setOpen(true)}>
             {selectedOptions.length === 0 && (
-              <span style={placeholderStyle}>{placeholder}</span>
+              <span className="text-text-muted text-xs px-1.5 font-semibold">
+                {placeholder}
+              </span>
             )}
             {selectedOptions.map((opt) => (
               <Pill key={opt.value} size="sm" onRemove={() => remove(opt.value)}>
@@ -121,7 +105,7 @@ export function MultiSelect<T extends string>({
           </div>
         }
       >
-        <div style={{ padding: 8, borderBottom: `1px solid ${colors.border}` }}>
+        <div className="p-2 border-b border-border">
           <SearchInput
             ref={inputRef}
             value={query}
@@ -129,14 +113,14 @@ export function MultiSelect<T extends string>({
             placeholder={searchPlaceholder}
           />
         </div>
-        <div style={{ overflowY: "auto", padding: 4 }}>
+        <div className="overflow-y-auto">
           {filtered.length === 0 && (
-            <div style={{ ...optionStyle(false), opacity: 0.5 }}>No matches</div>
+            <div className={`${optionClass(false)} opacity-50`}>No matches</div>
           )}
           {filtered.map((opt) => (
             <div
               key={opt.value}
-              style={optionStyle(selectedSet.has(opt.value))}
+              className={optionClass(selectedSet.has(opt.value))}
               onClick={() => toggle(opt.value)}
             >
               {opt.label}

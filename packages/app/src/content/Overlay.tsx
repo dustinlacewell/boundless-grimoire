@@ -1,22 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { DeckAnalytics } from "../analytics/DeckAnalytics";
-import { DeckFormatPicker } from "../decks/DeckFormatPicker";
+import { CubeView } from "../decks/CubeView";
 import { DeckRibbon } from "../decks/DeckRibbon";
 import { DeckView } from "../decks/DeckView";
 import { EditableDeckTitle } from "../decks/EditableDeckTitle";
-import { LegalityBadge } from "../decks/LegalityBadge";
+import { EntityHeaderControls } from "../decks/EntityHeaderControls";
 import { LegalityToast } from "../decks/LegalityToast";
+import { LibraryViewTabs } from "../decks/LibraryViewTabs";
 import { MetaGroupingToast } from "../decks/MetaGroupingToast";
 import { ToastStack } from "../notifications";
 import { FilterBar } from "../filters/FilterBar";
+import { FilterPresets } from "../filters/components/FilterPresets";
+import { SortFilter } from "../filters/components/SortFilter";
 import { SearchResults } from "../search/SearchResults";
 import { HelpModal } from "../help/HelpModal";
 import { SettingsModal } from "../settings/SettingsModal";
 import { redo, undo } from "../commands/historyStore";
-import { useDeckStore, selectedDeck } from "../storage/deckStore";
+import { setLibraryView, useDeckStore, selectedDeck } from "../storage/deckStore";
 import { colors } from "@boundless-grimoire/ui";
 import { IconButton } from "@boundless-grimoire/ui";
 import { GearIcon, HelpIcon } from "@boundless-grimoire/ui";
+import { Section } from "./Section";
 import { TRIGGER_H, TRIGGER_W } from "./TriggerButton";
 
 type Props = Record<string, never>;
@@ -66,19 +70,6 @@ const bodyStyle: React.CSSProperties = {
   overflowAnchor: "none",
 };
 
-// Level-1 section heading used by the top-level panes (Decks, Analytics,
-// Browse · Filters, Results). Larger, bolder, in full-strength text with
-// a subtle bottom rule so these read clearly as the spine of the layout.
-const sectionLabelStyle: React.CSSProperties = {
-  fontSize: 13,
-  letterSpacing: 2,
-  textTransform: "uppercase",
-  color: colors.text,
-  fontWeight: 800,
-  paddingBottom: 4,
-  marginBottom: 8,
-  borderBottom: `2px solid ${colors.bg3}`,
-};
 
 /** True when focus is inside an input/textarea/contenteditable field. */
 function isTypingTarget(el: EventTarget | null): boolean {
@@ -91,6 +82,10 @@ function isTypingTarget(el: EventTarget | null): boolean {
 
 export function Overlay(_props: Props) {
   const selected = useDeckStore(selectedDeck);
+  const library = useDeckStore((s) => s.library);
+  let deckCount = 0;
+  let cubeCount = 0;
+  for (const d of Object.values(library.decks)) (d.isCube ? cubeCount++ : deckCount++);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -182,62 +177,61 @@ export function Overlay(_props: Props) {
       <MetaGroupingToast />
       <ToastStack />
       <div ref={bodyRef} style={bodyStyle}>
-        <section>
-          <div style={sectionLabelStyle}>Decks</div>
+        <Section
+          label="Library"
+          controls={
+            <LibraryViewTabs
+              view={library.libraryView}
+              deckCount={deckCount}
+              cubeCount={cubeCount}
+              onChange={setLibraryView}
+            />
+          }
+        >
           <DeckRibbon />
-        </section>
+        </Section>
 
-        <section ref={deckRef} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {selected ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <Section
+          ref={deckRef}
+          label={
+            selected ? (
               <EditableDeckTitle deckId={selected.id} name={selected.name} />
-              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
-                <span
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: 1.2,
-                    textTransform: "uppercase",
-                    color: colors.textMuted,
-                    fontWeight: 700,
-                  }}
-                >
-                  Format
-                </span>
-                <LegalityBadge deckId={selected.id} hasFormat={selected.formatIndex != null} />
-                <DeckFormatPicker deckId={selected.id} formatIndex={selected.formatIndex} />
+            ) : (
+              <div style={{ fontSize: 12, color: colors.textMuted, fontStyle: "italic" }}>
+                {library.libraryView === "cubes" ? "No cube selected" : "No deck selected"}
               </div>
-            </div>
-          ) : (
-            <div style={{ fontSize: 12, color: colors.textMuted, fontStyle: "italic" }}>
-              No deck selected
-            </div>
-          )}
+            )
+          }
+          controls={selected ? <EntityHeaderControls deck={selected} /> : undefined}
+        >
           {selected ? (
-            <DeckView deck={selected} />
+            selected.isCube ? <CubeView cube={selected} /> : <DeckView deck={selected} />
           ) : (
             <div style={{ opacity: 0.4, fontSize: 13 }}>
-              Select a deck above, or create one with the “+” tile — or just
-              click a card below to start a new one.
+              {library.libraryView === "cubes"
+                ? "Select a cube above, or create one with the “+” tile."
+                : "Select a deck above, or create one with the “+” tile — or just click a card below to start a new one."}
             </div>
           )}
-        </section>
+        </Section>
 
         {selected && (
-          <section ref={analyticsRef}>
-            <div style={sectionLabelStyle}>Analytics</div>
+          <Section ref={analyticsRef} label="Analytics">
             <DeckAnalytics deck={selected} />
-          </section>
+          </Section>
         )}
 
-        <section ref={filtersRef} style={{ display: "flex", flexDirection: "column" }}>
-          <div style={sectionLabelStyle}>Browse · Filters</div>
+        <Section
+          ref={filtersRef}
+          label="Search"
+          controls={<FilterPresets />}
+        >
           <FilterBar />
-        </section>
+        </Section>
 
-        <section ref={resultsRef} style={{ display: "flex", flexDirection: "column" }}>
-          <div style={sectionLabelStyle}>Results</div>
+        <Section ref={resultsRef} label="Results" controls={<SortFilter />}>
           <SearchResults />
-        </section>
+        </Section>
       </div>
     </div>
   );

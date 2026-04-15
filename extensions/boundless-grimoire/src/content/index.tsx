@@ -68,6 +68,7 @@ function ensureMounted() {
   if (document.getElementById(HOST_ID)) return;
   const host = document.createElement("div");
   host.id = HOST_ID;
+  host.className = "ui-scrollbars";
   // Establish a stacking context so all child portals (modals, previews)
   // share the same z-index space and render above the host page.
   host.style.cssText = "position:relative;z-index:2147483640;isolation:isolate;";

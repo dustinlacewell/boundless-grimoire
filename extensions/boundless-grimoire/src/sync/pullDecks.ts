@@ -61,6 +61,7 @@ interface UntapDeck {
   deleted: boolean;
   created_date: number;
   updated_date: number;
+  is_cube: boolean | null;
 }
 
 export async function pullUntapDecks(): Promise<void> {
@@ -152,8 +153,16 @@ function selectUnlinked(allDecks: UntapDeck[], lib: DeckLibrary): UntapDeck[] {
  */
 function buildThinDeck(untapDeck: UntapDeck): Deck {
   const now = Date.now();
-  const deckCards = untapDeck.cards.filter((c) => c.zone === DECK_ZONE);
-  const sideCards = untapDeck.cards.filter((c) => c.zone === SIDEBOARD_ZONE);
+  const isCube = !!untapDeck.is_cube;
+  // Cubes have no sideboard concept — every zone (basics, group-1…)
+  // lives in the mainboard card map, tagged by its zone string.
+  // Decks split into the fixed `deck-1` / `sideboard-1` pair.
+  const deckCards = isCube
+    ? untapDeck.cards
+    : untapDeck.cards.filter((c) => c.zone === DECK_ZONE);
+  const sideCards = isCube
+    ? []
+    : untapDeck.cards.filter((c) => c.zone === SIDEBOARD_ZONE);
   const cards: Record<string, DeckCard> = {};
   for (const [i, c] of deckCards.entries()) {
     // No Scryfall id yet — use untap's card_uid as a placeholder key.
@@ -162,6 +171,7 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
       snapshot: { id: c.card_uid, name: c.title, set: c.set },
       count: c.qty,
       addedAt: now - deckCards.length + i,
+      zone: c.zone,
     };
   }
   const sideboard: Record<string, DeckCard> = {};
@@ -170,6 +180,7 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
       snapshot: { id: c.card_uid, name: c.title, set: c.set },
       count: c.qty,
       addedAt: now - sideCards.length + i,
+      zone: c.zone,
     };
   }
   return {
@@ -185,6 +196,10 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
     filters: DEFAULT_FILTER_STATE,
     untapDeckUid: untapDeck.deck_uid,
     enriching: true,
+    isCube,
+    groupBy: isCube ? "zone" : "category",
+    layout: "scroll",
+    columnSort: "cmc",
   };
 }
 

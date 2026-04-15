@@ -67,8 +67,10 @@ export { storage } from "./services/storage";
 export {
   hydrateDeckStore,
   importDecklist,
+  selectDeck,
   setDeckCommander,
   setDeckFormat,
+  setLibraryView,
   useDeckStore,
 } from "./storage/deckStore";
 export { hydrateMetaGroupsStore } from "./decks/metaGroupsStore";

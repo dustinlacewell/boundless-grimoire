@@ -5,6 +5,7 @@
  * UI can render without re-fetching from Scryfall. The snapshot is the
  * subset of fields the UI actually needs.
  */
+import type { DeckGroupBy } from "../cards/categorize";
 import type { ScryfallCard } from "../scryfall/types";
 import { INITIAL_FILTER_STATE, type FilterState, type SortDir, type SortField } from "../filters/types";
 
@@ -40,6 +41,17 @@ export interface DeckCard {
   count: number;
   /** Insertion timestamp; used for "first card" thumbnail selection. */
   addedAt: number;
+  /**
+   * Untap's zone name for this card.
+   *
+   * Decks: `"deck-1"` (mainboard) or `"sideboard-1"` (stored separately
+   * in `Deck.sideboard` but still tagged so round-trip is lossless).
+   *
+   * Cubes: free-form organizational bucket — `"basics"`, `"group-1"` …
+   * `"group-10"`. We don't interpret these; we just preserve whatever
+   * untap sent so "by zone" grouping and push can round-trip cleanly.
+   */
+  zone: string;
 }
 
 export interface Deck {
@@ -66,10 +78,39 @@ export interface Deck {
   filters: FilterState;
   /** Index into the custom formats list, or null for no format. */
   formatIndex: number | null;
+  /**
+   * Grouping mode for the card-column grid. Persisted per deck/cube so
+   * each entity remembers its own preferred layout. Decks default to
+   * "category"; cubes default to "zone".
+   */
+  groupBy: DeckGroupBy;
+  /**
+   * Card-column layout: `"scroll"` keeps columns in a single row that
+   * scrolls horizontally, `"wrap"` wraps columns onto multiple rows.
+   * Persisted per entity (small decks often look better wrapped while
+   * large decks want to scroll).
+   */
+  layout: "scroll" | "wrap";
+  /**
+   * Sort order applied within each column in the card grid. Distinct
+   * from `sortField` which controls the search results grid.
+   *   - "cmc"   → cmc asc, then name (the long-standing default)
+   *   - "name"  → alphabetical
+   *   - "color" → WUBRG ordering (colorless first, multicolor last),
+   *               cmc then name as tiebreaker
+   */
+  columnSort: "cmc" | "name" | "color";
   /** Scryfall card id chosen as the deck's cover art for the ribbon tile. */
   coverCardId?: string;
   /** Linked untap.in deck UUID, set after first sync. */
   untapDeckUid?: string;
+  /**
+   * True if this entity is a draft cube rather than a constructed deck.
+   * Cubes hide the sideboard / commander / format picker / legality
+   * affordances and render via `CubeView`. Persisted + round-tripped to
+   * untap.in's `is_cube` flag.
+   */
+  isCube?: boolean;
   /**
    * True while a background task is fetching full Scryfall data for this
    * deck's cards. Set during the initial pull from untap.in (we commit
@@ -88,20 +129,27 @@ export interface DeckLibrary {
    * have no field at all — `migrateLibrary` treats `undefined` as 0.
    */
   version?: number;
-  /** All decks keyed by id. */
+  /** All decks and cubes keyed by id. Type is disambiguated by `isCube`. */
   decks: Record<string, Deck>;
-  /** Display order for the deck ribbon. */
+  /** Display order for the ribbon (covers both decks and cubes). */
   order: string[];
   /** Currently selected deck id, or null. */
   selectedId: string | null;
+  /** Currently selected cube id, or null. Tracked separately so switching
+   *  between Decks / Cubes tabs preserves each side's selection. */
+  selectedCubeId: string | null;
+  /** Which library tab is active in the ribbon. */
+  libraryView: "decks" | "cubes";
 }
 
 /** Bump when DeckLibrary's on-disk shape changes. See migrateLibrary. */
-export const LIBRARY_VERSION = 4;
+export const LIBRARY_VERSION = 8;
 
 export const EMPTY_LIBRARY: DeckLibrary = {
   version: LIBRARY_VERSION,
   decks: {},
   order: [],
   selectedId: null,
+  selectedCubeId: null,
+  libraryView: "decks",
 };

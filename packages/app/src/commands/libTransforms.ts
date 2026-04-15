@@ -43,6 +43,7 @@ function addToZone(
   map: Record<string, DeckCard>,
   snapshot: CardSnapshot,
   count: number,
+  zoneTag: string,
 ): Record<string, DeckCard> {
   const existing = map[snapshot.id];
   const baseline = sanitizeCount(existing?.count);
@@ -50,8 +51,19 @@ function addToZone(
     ...map,
     [snapshot.id]: existing
       ? { ...existing, count: baseline + count }
-      : { snapshot, count, addedAt: Date.now() },
+      : { snapshot, count, addedAt: Date.now(), zone: zoneTag },
   };
+}
+
+/**
+ * Resolve the untap zone tag for a newly-added card. Decks use the
+ * fixed "deck-1" / "sideboard-1" tags. Cubes have no sideboard and drop
+ * new cards into "group-1" — the user can reorganize into other groups
+ * later via cube-specific actions.
+ */
+function zoneTagFor(deck: Deck, semanticZone: DeckZone): string {
+  if (deck.isCube) return "group-1";
+  return semanticZone === "sideboard" ? "sideboard-1" : "deck-1";
 }
 
 function removeFromZone(
@@ -79,8 +91,9 @@ export function addCards(
   let cards = deck.cards;
   let sideboard = deck.sideboard;
   for (const d of deltas) {
-    if (d.zone === "sideboard") sideboard = addToZone(sideboard, d.snapshot, d.count);
-    else cards = addToZone(cards, d.snapshot, d.count);
+    const tag = zoneTagFor(deck, d.zone);
+    if (d.zone === "sideboard") sideboard = addToZone(sideboard, d.snapshot, d.count, tag);
+    else cards = addToZone(cards, d.snapshot, d.count, tag);
   }
   return withDeck(lib, deckId, touch({ ...deck, cards, sideboard }));
 }
@@ -121,7 +134,7 @@ export function moveCards(
   let dst = deck[dstKey];
   for (const d of deltas) {
     src = removeFromZone(src, d.snapshot.id, d.count);
-    dst = addToZone(dst, d.snapshot, d.count);
+    dst = addToZone(dst, d.snapshot, d.count, zoneTagFor(deck, to));
   }
   return withDeck(lib, deckId, touch({ ...deck, [srcKey]: src, [dstKey]: dst }));
 }

@@ -82,7 +82,82 @@ const migrations: Record<number, Migration> = {
   // v3 → v4: Commander field added on Deck. Optional, no backfill needed —
   // existing decks have no commander; the migration only bumps the version.
   3: (lib) => ({ ...lib, version: 4 }),
+
+  // v7 → v8: per-deck `columnSort`. "cmc" preserves the previous
+  // hardcoded within-column ordering (cmc asc then name).
+  7: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const raw = deck as unknown as Record<string, unknown>;
+      decks[id] = {
+        ...deck,
+        columnSort: (raw.columnSort as Deck["columnSort"] | undefined) ?? "cmc",
+      };
+    }
+    return { ...lib, version: 8, decks };
+  },
+
+  // v6 → v7: `layout` (scroll/wrap) migrated from a global setting to
+  // a per-deck field, alongside `groupBy`. Everyone starts on "scroll"
+  // since that was the product default.
+  6: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const raw = deck as unknown as Record<string, unknown>;
+      decks[id] = {
+        ...deck,
+        layout: (raw.layout as Deck["layout"] | undefined) ?? "scroll",
+      };
+    }
+    return { ...lib, version: 7, decks };
+  },
+
+  // v5 → v6: `groupBy` migrated from a global setting to a per-deck
+  // field. Decks default to "category"; cubes default to "zone" (the
+  // convention their zone tags exist to express).
+  5: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const raw = deck as unknown as Record<string, unknown>;
+      decks[id] = {
+        ...deck,
+        groupBy: (raw.groupBy as Deck["groupBy"] | undefined) ?? (deck.isCube ? "zone" : "category"),
+      };
+    }
+    return { ...lib, version: 6, decks };
+  },
+
+  // v4 → v5: cube support. Each DeckCard gets a `zone` tag, each Deck
+  // gets an `isCube` flag, and the library gets a `libraryView` /
+  // `selectedCubeId` pair so the ribbon can host Decks vs Cubes tabs.
+  4: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const cards = tagZone(deck.cards, "deck-1");
+      const sideboard = tagZone(deck.sideboard, "sideboard-1");
+      decks[id] = { ...deck, cards, sideboard, isCube: false };
+    }
+    const raw = lib as unknown as Record<string, unknown>;
+    return {
+      ...lib,
+      version: 5,
+      decks,
+      selectedCubeId: (raw.selectedCubeId as string | null | undefined) ?? null,
+      libraryView: (raw.libraryView as "decks" | "cubes" | undefined) ?? "decks",
+    };
+  },
 };
+
+function tagZone(
+  map: Record<string, Deck["cards"][string]>,
+  zone: string,
+): Record<string, Deck["cards"][string]> {
+  const out: Record<string, Deck["cards"][string]> = {};
+  for (const [k, c] of Object.entries(map)) {
+    out[k] = { ...c, zone: c.zone ?? zone };
+  }
+  return out;
+}
 
 export function migrateLibrary(lib: DeckLibrary): DeckLibrary {
   let current = lib;

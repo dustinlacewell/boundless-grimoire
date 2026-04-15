@@ -12,12 +12,10 @@ const sizeClass: Record<NonNullable<Props["size"]>, string> = {
 };
 
 const baseClass =
-  "inline-flex items-center justify-center box-border border rounded-[6px] font-sans font-semibold cursor-pointer transition-[background-color,color,border-color] duration-100";
+  "inline-flex items-center justify-center box-border rounded-[6px] font-sans font-semibold cursor-pointer ui-interactive ui-interactive-border";
 
 const stateClass = (selected: boolean) =>
-  selected
-    ? "bg-accent text-[#0a0a0c] border-accent hover:opacity-90"
-    : "bg-bg-2 text-text border-border-strong hover:bg-bg-3 hover:border-border";
+  selected ? "ui-interactive-selected" : "bg-bg-2 text-text";
 
 /** Single toggleable button. Used inside ButtonGroup. */
 export function ToggleButton({ children, selected, size = "md", className = "", ...rest }: Props) {

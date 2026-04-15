@@ -1,9 +1,8 @@
 import { useMemo, useState, type MouseEvent } from "react";
-import { MultiSelect, type MultiSelectOption } from "@boundless-grimoire/ui";
-import { Popover } from "@boundless-grimoire/ui";
-import { colors } from "@boundless-grimoire/ui";
+import { Button, MultiSelect, Popover, colors, type MultiSelectOption } from "@boundless-grimoire/ui";
 import { useCatalogs } from "../catalogs";
 import { useFilterStore, toggleIn } from "../store";
+import { ALL_SET_TYPES, DEFAULT_ENABLED_SET_TYPES } from "../types";
 
 const SET_TYPE_PRIORITY: Record<string, number> = {
   expansion: 0,
@@ -21,7 +20,12 @@ const SET_TYPE_PRIORITY: Record<string, number> = {
   memorabilia: 12,
 };
 
-/** Set types shown in the right-click visibility menu. */
+/**
+ * Set types shown in the right-click visibility menu. Must cover every
+ * entry in `ALL_SET_TYPES` — anything missing here is silently always-on
+ * (the left-click options filter lets it through because it lives in
+ * enabledSetTypes by default and the user has no way to toggle it off).
+ */
 const SET_TYPE_LABELS: Array<{ type: string; label: string }> = [
   { type: "expansion", label: "Expansions" },
   { type: "core", label: "Core Sets" },
@@ -29,8 +33,19 @@ const SET_TYPE_LABELS: Array<{ type: string; label: string }> = [
   { type: "draft_innovation", label: "Draft Innovation" },
   { type: "commander", label: "Commander" },
   { type: "eternal", label: "Eternal (UB)" },
+  { type: "alchemy", label: "Alchemy" },
   { type: "masterpiece", label: "Masterpiece / Bonus" },
   { type: "duel_deck", label: "Duel Decks" },
+  { type: "premium_deck", label: "Premium Decks" },
+  { type: "from_the_vault", label: "From the Vault" },
+  { type: "spellbook", label: "Signature Spellbook" },
+  { type: "planechase", label: "Planechase" },
+  { type: "archenemy", label: "Archenemy" },
+  { type: "vanguard", label: "Vanguard" },
+  { type: "arsenal", label: "Arsenal" },
+  { type: "box", label: "Box Sets" },
+  { type: "treasure_chest", label: "Treasure Chests" },
+  { type: "minigame", label: "Minigames" },
   { type: "funny", label: "Un-Sets" },
   { type: "starter", label: "Starter / Welcome" },
   { type: "promo", label: "Promos" },
@@ -112,7 +127,37 @@ export function SetFilter() {
           />
         }
       >
-        <div style={{ padding: 4 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "6px 8px",
+            borderBottom: `1px solid ${colors.border}`,
+            flexShrink: 0,
+          }}
+        >
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => patch({ enabledSetTypes: [...ALL_SET_TYPES] })}
+          >
+            All
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => patch({ enabledSetTypes: [] })}>
+            None
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => patch({ enabledSetTypes: [...DEFAULT_ENABLED_SET_TYPES] })}
+          >
+            Reset
+          </Button>
+        </div>
+        {/* Popover panel is overflow:hidden (it owns the viewport clip);
+            the inner scroll container is what actually handles tall lists. */}
+        <div style={{ overflowY: "auto", padding: 4, flex: 1, minHeight: 0 }}>
           {SET_TYPE_LABELS.map(({ type, label }) => (
             <div
               key={type}

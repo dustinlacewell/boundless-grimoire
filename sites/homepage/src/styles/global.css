@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "@boundless-grimoire/ui/theme.css";
 
+/* Tailwind v4 auto-scans sources relative to this CSS file. The embedded
+ * deck-builder lives in workspace packages outside that scan root, so
+ * their utility classes wouldn't make it into the build without these
+ * explicit @source entries. */
+@source "../../../../packages/app/src";
+@source "../../../../packages/ui/src";
+
 html, body {
   background: var(--color-bg-0);
   color: var(--color-text);

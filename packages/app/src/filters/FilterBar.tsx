@@ -8,7 +8,6 @@ import { CardTextFilter } from "./components/CardTextFilter";
 import { ColorFilter } from "./components/ColorFilter";
 import { ColorModeDot } from "./components/ColorModeDot";
 import { CustomQueryModeDot } from "./components/CustomQueryModeDot";
-import { FilterPresets } from "./components/FilterPresets";
 import { OracleTagFilter } from "./components/OracleTagFilter";
 import { RarityFilter } from "./components/RarityFilter";
 import { SetFilter } from "./components/SetFilter";
@@ -156,17 +155,21 @@ function CompiledQueryDisplay() {
 export function FilterBar() {
   const devMode = useSettingsStore((s) => s.settings.devMode);
 
+  const constrainedRow: React.CSSProperties = {
+    maxWidth: 1068,
+    width: "100%",
+    marginInline: "auto",
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <FilterPresets />
-
-      <div style={rowStyle}>
+      <div style={{ ...rowStyle, ...constrainedRow }}>
         <FilterField label="Set" style={{ flex: 1, minWidth: 0 }}>
           <SetFilter />
         </FilterField>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, alignItems: "flex-end" }}>
+      <div style={{ ...constrainedRow, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, alignItems: "flex-end" }}>
         <FilterField label="Card Name" style={{ minWidth: 0 }}>
           <CardNameFilter />
         </FilterField>
@@ -175,7 +178,9 @@ export function FilterBar() {
         </FilterField>
       </div>
 
-      <TextFilter />
+      <div style={constrainedRow}>
+        <TextFilter />
+      </div>
 
       <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
         <div style={{ flex: "0 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
@@ -191,12 +196,16 @@ export function FilterBar() {
           </FilterField>
         </div>
 
-        <div style={{ flex: "1 1 240px", minWidth: 0 }}>
+        <div style={{ flex: "0 1 704px", minWidth: 0 }}>
           <CustomQuerySection />
         </div>
       </div>
 
-      {devMode && <CompiledQueryDisplay />}
+      {devMode && (
+        <div style={constrainedRow}>
+          <CompiledQueryDisplay />
+        </div>
+      )}
     </div>
   );
 }

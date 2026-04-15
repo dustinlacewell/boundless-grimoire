@@ -3,13 +3,15 @@ import { Surface } from "@boundless-grimoire/ui";
 
 interface Props {
   onCreate: () => void;
+  /** Tile copy — "New deck" vs "New cube". */
+  label?: string;
 }
 
 const TILE_W = 220;
 const TILE_H = 110;
 
 /** "+" placeholder tile that creates a new deck on click. */
-export function NewDeckTile({ onCreate }: Props) {
+export function NewDeckTile({ onCreate, label = "New deck" }: Props) {
   return (
     <Surface
       elevation={1}
@@ -31,7 +33,7 @@ export function NewDeckTile({ onCreate }: Props) {
       }}
     >
       <div style={{ fontSize: 28, lineHeight: 1, fontWeight: 300 }}>+</div>
-      <div style={{ fontSize: 12, marginTop: 6, fontWeight: 600 }}>New deck</div>
+      <div style={{ fontSize: 12, marginTop: 6, fontWeight: 600 }}>{label}</div>
     </Surface>
   );
 }

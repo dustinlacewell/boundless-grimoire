@@ -55,7 +55,20 @@ async function call<T>(req: RawRequest, opts: FetchOpts): Promise<T> {
     };
     if (req.method === "POST") init.body = JSON.stringify(req.body);
 
-    const res = await fetch(`${API_BASE}${req.path}`, init);
+    let res: Response;
+    try {
+      res = await fetch(`${API_BASE}${req.path}`, init);
+    } catch (err) {
+      // `fetch()` rejects with TypeError when Scryfall returns 429 without
+      // the `Access-Control-Allow-Origin` header (their throttling edge
+      // sometimes strips it). We can't read the status, but the safe
+      // assumption is rate-limit — pause the bucket long enough for the
+      // throttle window to pass and surface a rate-limit error so callers
+      // can back off too. Abort errors pass through unchanged.
+      if ((err as Error)?.name === "AbortError") throw err;
+      bucket.pauseFor(30_000);
+      throw new ScryfallRateLimitError(30);
+    }
 
     if (res.status === 429) {
       const retryAfter = parseInt(res.headers.get("Retry-After") ?? "30", 10);

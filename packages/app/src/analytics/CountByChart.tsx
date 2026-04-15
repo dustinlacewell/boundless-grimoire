@@ -90,7 +90,7 @@ export function CountByChart({ deck, style }: Props) {
   const title = (
     <div style={titleRowStyle}>
       <div style={titleStyle}>Count by</div>
-      <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} width={110} />
+      <Dropdown options={MODE_OPTIONS} value={mode} onChange={(v) => setMode(v ?? "type")} compact />
     </div>
   );
 

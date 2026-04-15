@@ -23,7 +23,7 @@ export function DeckFormatPicker({ deckId, formatIndex }: Props) {
       onChange={(v) => setDeckFormat(deckId, v != null ? Number(v) : null)}
       placeholder="No format"
       clearable
-      width={140}
+      compact
     />
   );
 }

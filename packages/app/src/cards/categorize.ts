@@ -49,15 +49,46 @@ export interface DeckCategoryGroup {
   cards: DeckCard[];
 }
 
-export type DeckGroupBy = "category" | "cmc" | "meta";
+export type DeckGroupBy = "category" | "cmc" | "meta" | "zone" | "set";
 
-/** Sort cards within a group: by CMC ascending, then alphabetically. */
-function sortWithinGroup(a: DeckCard, b: DeckCard): number {
+export type ColumnSort = "cmc" | "name" | "color";
+
+/**
+ * WUBRG order with colorless first and multicolor last. Land-coloured
+ * rank falls through to secondary sort. Tiebreakers: CMC asc, name.
+ */
+const COLOR_RANK: Record<string, number> = { W: 1, U: 2, B: 3, R: 4, G: 5 };
+function colorRankOf(cs: DeckCard["snapshot"]): number {
+  const cols = cs.colors ?? [];
+  if (cols.length === 0) return 0;
+  if (cols.length === 1) return COLOR_RANK[cols[0]!] ?? 6;
+  return 6; // multicolor
+}
+
+function compareCmc(a: DeckCard, b: DeckCard): number {
   const ca = a.snapshot.cmc ?? 0;
   const cb = b.snapshot.cmc ?? 0;
   if (ca !== cb) return ca - cb;
   return a.snapshot.name.localeCompare(b.snapshot.name);
 }
+
+function compareName(a: DeckCard, b: DeckCard): number {
+  return a.snapshot.name.localeCompare(b.snapshot.name);
+}
+
+function compareColor(a: DeckCard, b: DeckCard): number {
+  const ra = colorRankOf(a.snapshot);
+  const rb = colorRankOf(b.snapshot);
+  if (ra !== rb) return ra - rb;
+  return compareCmc(a, b);
+}
+
+function comparatorFor(mode: ColumnSort): (a: DeckCard, b: DeckCard) => number {
+  if (mode === "name") return compareName;
+  if (mode === "color") return compareColor;
+  return compareCmc;
+}
+
 
 function cardMapOf(input: Deck | Record<string, DeckCard>): Record<string, DeckCard> {
   return "cards" in input && "id" in input
@@ -66,8 +97,12 @@ function cardMapOf(input: Deck | Record<string, DeckCard>): Record<string, DeckC
 }
 
 /** Bucket cards into ordered category groups. Empty groups omitted. */
-export function categorizeDeck(input: Deck | Record<string, DeckCard>): DeckCategoryGroup[] {
+export function categorizeDeck(
+  input: Deck | Record<string, DeckCard>,
+  sort: ColumnSort = "cmc",
+): DeckCategoryGroup[] {
   const cardMap = cardMapOf(input);
+  const cmp = comparatorFor(sort);
   const buckets = new Map<CategoryName, DeckCard[]>();
   for (const card of Object.values(cardMap)) {
     const cat = categoryFor(card.snapshot.type_line);
@@ -78,7 +113,7 @@ export function categorizeDeck(input: Deck | Record<string, DeckCard>): DeckCate
   return CATEGORY_ORDER.flatMap((name) => {
     const cards = buckets.get(name);
     if (!cards || cards.length === 0) return [];
-    return [{ name, cards: cards.sort(sortWithinGroup) }];
+    return [{ name, cards: cards.sort(cmp) }];
   });
 }
 
@@ -88,8 +123,12 @@ export function categorizeDeck(input: Deck | Record<string, DeckCard>): DeckCate
  * useful). Everything else groups by its CMC, ascending. 7+ are folded
  * together so the columns don't explode for big-mana decks.
  */
-export function groupByCmc(input: Deck | Record<string, DeckCard>): DeckCategoryGroup[] {
+export function groupByCmc(
+  input: Deck | Record<string, DeckCard>,
+  sort: ColumnSort = "cmc",
+): DeckCategoryGroup[] {
   const cardMap = cardMapOf(input);
+  const cmp = comparatorFor(sort);
   const LAND_KEY = -1;
   const HIGH = 7;
   const buckets = new Map<number, DeckCard[]>();
@@ -104,7 +143,7 @@ export function groupByCmc(input: Deck | Record<string, DeckCard>): DeckCategory
 
   const keys = [...buckets.keys()].sort((a, b) => a - b);
   return keys.map((k) => {
-    const cards = (buckets.get(k) ?? []).sort(sortWithinGroup);
+    const cards = (buckets.get(k) ?? []).sort(cmp);
     let name: string;
     if (k === LAND_KEY) name = "Lands";
     else if (k === HIGH) name = `${HIGH}+ mana`;
@@ -126,8 +165,10 @@ export function groupByMeta(
   input: Deck | Record<string, DeckCard>,
   oracleToMeta: Record<string, string>,
   metaTagLabels: Array<{ id: string; label: string }>,
+  sort: ColumnSort = "cmc",
 ): DeckCategoryGroup[] {
   const cardMap = cardMapOf(input);
+  const cmp = comparatorFor(sort);
   const metaBuckets = new Map<string, DeckCard[]>();
   const fallbackCards: DeckCard[] = [];
 
@@ -148,7 +189,7 @@ export function groupByMeta(
   for (const { id, label } of metaTagLabels) {
     const cards = metaBuckets.get(id);
     if (!cards || cards.length === 0) continue;
-    groups.push({ name: label, cards: cards.sort(sortWithinGroup) });
+    groups.push({ name: label, cards: cards.sort(cmp) });
   }
 
   // Cards not in any meta-tag → fall through to the normal category
@@ -156,10 +197,88 @@ export function groupByMeta(
   if (fallbackCards.length > 0) {
     const fallbackMap: Record<string, DeckCard> = {};
     for (const c of fallbackCards) fallbackMap[c.snapshot.id] = c;
-    groups.push(...categorizeDeck(fallbackMap));
+    groups.push(...categorizeDeck(fallbackMap, sort));
   }
 
   return groups;
+}
+
+/**
+ * Bucket cards by their untap zone tag. Primarily useful for cubes,
+ * which organize into `basics` / `group-1`…`group-10`. Zone order:
+ * `basics` first, then group-N numerically, then anything else
+ * (deck-1 / sideboard-1 / unknown) alphabetically.
+ */
+export function groupByZone(
+  input: Deck | Record<string, DeckCard>,
+  sort: ColumnSort = "cmc",
+): DeckCategoryGroup[] {
+  const cardMap = cardMapOf(input);
+  const cmp = comparatorFor(sort);
+  const buckets = new Map<string, DeckCard[]>();
+  for (const card of Object.values(cardMap)) {
+    const z = card.zone || "other";
+    const arr = buckets.get(z) ?? [];
+    arr.push(card);
+    buckets.set(z, arr);
+  }
+  const keys = [...buckets.keys()].sort(compareZone);
+  return keys.map((name) => ({
+    name: humanizeZone(name),
+    cards: (buckets.get(name) ?? []).sort(cmp),
+  }));
+}
+
+function compareZone(a: string, b: string): number {
+  const rank = (z: string) => {
+    if (z === "basics") return 0;
+    const m = /^group-(\d+)$/.exec(z);
+    if (m) return 1000 + Number(m[1]);
+    return 10_000;
+  };
+  const ra = rank(a);
+  const rb = rank(b);
+  if (ra !== rb) return ra - rb;
+  return a.localeCompare(b);
+}
+
+function humanizeZone(z: string): string {
+  if (z === "basics") return "Basics";
+  const m = /^group-(\d+)$/.exec(z);
+  if (m) return `Group ${m[1]}`;
+  if (z === "deck-1") return "Mainboard";
+  if (z === "sideboard-1") return "Sideboard";
+  return z;
+}
+
+/**
+ * Bucket cards by Scryfall set code. Columns are ordered by card count
+ * descending (most-represented sets first), ties broken by set code.
+ */
+export function groupBySet(
+  input: Deck | Record<string, DeckCard>,
+  sort: ColumnSort = "cmc",
+): DeckCategoryGroup[] {
+  const cardMap = cardMapOf(input);
+  const cmp = comparatorFor(sort);
+  const buckets = new Map<string, DeckCard[]>();
+  for (const card of Object.values(cardMap)) {
+    const s = (card.snapshot.set ?? "unknown").toLowerCase();
+    const arr = buckets.get(s) ?? [];
+    arr.push(card);
+    buckets.set(s, arr);
+  }
+  const keys = [...buckets.keys()].sort((a, b) => {
+    const ca = buckets.get(a)!.length;
+    const cb = buckets.get(b)!.length;
+    if (ca !== cb) return cb - ca;
+    return a.localeCompare(b);
+  });
+  return keys.map((code) => {
+    const cards = buckets.get(code)!.sort(cmp);
+    const label = cards[0]?.snapshot.set_name ?? code.toUpperCase();
+    return { name: label, cards };
+  });
 }
 
 /** Dispatcher: pick a grouping function by mode. */
@@ -169,11 +288,15 @@ export function groupDeck(
   ctx?: {
     oracleToMeta?: Record<string, string>;
     metaTagLabels?: Array<{ id: string; label: string }>;
+    sort?: ColumnSort;
   },
 ): DeckCategoryGroup[] {
-  if (mode === "cmc") return groupByCmc(input);
+  const sort = ctx?.sort ?? "cmc";
+  if (mode === "cmc") return groupByCmc(input, sort);
+  if (mode === "zone") return groupByZone(input, sort);
+  if (mode === "set") return groupBySet(input, sort);
   if (mode === "meta" && ctx?.oracleToMeta && ctx.metaTagLabels) {
-    return groupByMeta(input, ctx.oracleToMeta, ctx.metaTagLabels);
+    return groupByMeta(input, ctx.oracleToMeta, ctx.metaTagLabels, sort);
   }
-  return categorizeDeck(input);
+  return categorizeDeck(input, sort);
 }

@@ -15,13 +15,15 @@ import {
   importDecklist,
   parseDecklist,
   provideServices,
+  selectDeck,
   setDeckFormat,
+  setLibraryView,
   storage,
   useDeckStore,
   type Services,
 } from "@boundless-grimoire/app";
 import { createBrowserServices } from "../services";
-import { SEED_DECKS } from "../seedDecks";
+import { SEED_CUBES, SEED_DECKS } from "../seedDecks";
 
 const SEED_FLAG_KEY = "boundless-grimoire:demo:seeded:v1";
 
@@ -95,6 +97,25 @@ async function maybeSeedExampleDecks(): Promise<void> {
       console.error(`[demo] failed to seed "${seed.name}"`, err);
     }
   }
+
+  // Seed cubes too — same import pipeline, just flagged so they land
+  // in the Cubes tab and skip sideboard / format / legality chrome.
+  for (const cube of SEED_CUBES) {
+    try {
+      await importDecklist(parseDecklist(cube.cardlist), cube.name, { isCube: true });
+    } catch (err) {
+      console.error(`[demo] failed to seed cube "${cube.name}"`, err);
+    }
+  }
+
+  // Leave the demo on the Decks tab with the first deck selected so the
+  // initial view shows the richer constructed-deck chrome (commander /
+  // sideboard / format / legality). createCube would otherwise leave us
+  // on the Cubes tab because it was the last seed action.
+  const lib = useDeckStore.getState().library;
+  const firstDeckId = lib.order.find((id) => lib.decks[id] && !lib.decks[id]!.isCube);
+  setLibraryView("decks");
+  if (firstDeckId) selectDeck(firstDeckId);
 
   await storage.set(SEED_FLAG_KEY, true);
 }

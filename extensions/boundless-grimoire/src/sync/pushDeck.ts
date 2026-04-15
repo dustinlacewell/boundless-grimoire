@@ -56,6 +56,18 @@ interface PasteResult {
 export async function pushDeck(deck: Deck): Promise<string | null> {
   if (!isUntapAvailable()) return null;
 
+  // For cubes we skip the paste-deck/update-deck pipeline entirely — that
+  // path is designed around deck-1/sideboard-1 zones and would flatten
+  // the user's group-1…group-10 organization. Cubes round-trip their
+  // cards+zones directly via update-deck using the stored `zone` tag on
+  // each DeckCard.
+  if (deck.isCube) {
+    const untapDeck = await getOrCreateUntapDeck(deck);
+    if (!untapDeck) return null;
+    const ok = await updateUntapDeckDirect(untapDeck, deck);
+    return ok ? untapDeck.deck_uid : null;
+  }
+
   const cardText = deckToText(deck, { includeHeaders: false });
   const sideText = sideboardToText(deck, { includeHeaders: false });
 
@@ -124,22 +136,67 @@ async function getOrCreateUntapDeck(deck: Deck): Promise<UntapDeck | null> {
       // Fall through to create — the saved uid is stale.
     }
   }
-  const newUid = await createUntapDeck(deck.name);
+  const newUid = await createUntapDeck(deck.name, !!deck.isCube);
   if (!newUid) return null;
   return (await untapSend("get-deck", newUid)) as UntapDeck;
 }
 
-async function createUntapDeck(name: string): Promise<string | null> {
+async function createUntapDeck(name: string, isCube: boolean): Promise<string | null> {
   try {
-    const result = (await untapSend("create-deck", { title: name, type: "mtg" })) as [
-      string | null,
-      string,
-      string | null,
-    ];
+    const result = (await untapSend("create-deck", {
+      title: name,
+      type: "mtg",
+      is_cube: isCube,
+    })) as [string | null, string, string | null];
     return result[2] ?? null;
   } catch (e) {
     console.error("[untap-sync] create-deck failed", e);
     return null;
+  }
+}
+
+/**
+ * Cube push path. Cubes organize cards into user-defined zones
+ * (`basics`, `group-1`…`group-10`) that paste-deck would flatten. We
+ * already have each card's zone tagged locally, and Scryfall-enriched
+ * cards carry their `set` and `name` fields, so we reconstruct untap's
+ * `cards` payload directly from our stored snapshots — no resolution
+ * round trip. untap's `card_uid` field isn't something we can synthesize
+ * from Scryfall, but it's not actually required for an update: the
+ * server re-resolves cards by (set, title, zone) if card_uid is missing.
+ */
+async function updateUntapDeckDirect(untapDeck: UntapDeck, deck: Deck): Promise<boolean> {
+  // Flatten mainboard + sideboard (cubes won't have sideboard entries
+  // but we include it for safety) into untap's card shape, preserving
+  // each card's original zone.
+  const entries = [...Object.values(deck.cards), ...Object.values(deck.sideboard)];
+  let i = 0;
+  const cards = entries.map((c) => ({
+    // Prefer the untap card_uid we may have preserved (pull sets the
+    // DeckCard id to untap's uid until enrichment replaces it), else
+    // fall back to the Scryfall id.
+    card_uid: c.snapshot.id,
+    set: c.snapshot.set ?? "",
+    zone: c.zone || "group-1",
+    qty: c.count,
+    order: i++,
+    title: c.snapshot.name,
+  }));
+  try {
+    const result = (await untapSend("update-deck", {
+      ...untapDeck,
+      title: deck.name,
+      is_cube: true,
+      cards,
+    })) as [string | null, string | null];
+    if (result[0]) {
+      console.error("[untap-sync] update-cube failed:", result[0]);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error("[untap-sync] update-cube error", e);
+    return false;
   }
 }
 

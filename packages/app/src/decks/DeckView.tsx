@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { groupDeck } from "../cards/categorize";
-import { stackReveal } from "../cards/CategoryStack";
 import { openPrintPicker } from "../cards/printPickerStore";
 import { useCustomFormatStore } from "../filters/customFormatStore";
 import { useCustomQueryStore } from "../filters/customQueryStore";
 import { useGridSizeStore } from "../search/gridSizeStore";
-import { useSettingsStore } from "../settings/settingsStore";
 import { decrementCard, incrementCard, moveCardToZone } from "../commands/cardActions";
 import { pushToast, ToastFrame } from "../notifications";
 import { setDeckCommander, setDeckCover } from "../storage/deckStore";
 import type { CardSnapshot, Deck, DeckCard } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
-import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
+import { CardColumnGrid } from "./CardColumnGrid";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
 import { checkLegality, clearLegality, useLegalityStore } from "./legalityStore";
 import { classify } from "./meta/classify";
@@ -24,23 +22,6 @@ import {
 interface Props {
   deck: Deck;
 }
-
-const scrollWrapperBase: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "row",
-  gap: 24,
-  alignItems: "flex-start",
-  overflowX: "auto",
-  overflowY: "visible",
-};
-
-const wrapWrapperBase: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  gap: 24,
-  alignItems: "flex-start",
-};
 
 const emptyStyle: React.CSSProperties = {
   fontSize: 13,
@@ -64,26 +45,23 @@ function isLegendary(snapshot: CardSnapshot): boolean {
   return (snapshot.type_line ?? "").toLowerCase().includes("legendary");
 }
 
+/**
+ * Detail view for a constructed deck.
+ *
+ * Responsibilities unique to decks (i.e. NOT shared with CubeView):
+ *   - Commander slot (fixed first column; alt+shift+click gesture)
+ *   - Sideboard section (secondary grid under the mainboard)
+ *   - Format-driven legality checks (reads formatIndex, emits illegal set)
+ *   - Meta-tag grouping (categorize by custom query buckets)
+ *
+ * Everything to do with card-row rendering, scroll/wrap layout, and
+ * ctrl-wheel resize lives in `CardColumnGrid`.
+ */
 export function DeckView({ deck }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
-  const deckLayout = useSettingsStore((s) => s.settings.deckLayout);
-  // Reserve bottom space equal to the worst-case hover-slide on the
-  // deepest card. Applied only once at the wrapper bottom rather than
-  // per-column, so only the last row of cards pushes the section taller
-  // instead of every column carrying the extra whitespace.
-  const base = deckLayout === "wrap" ? wrapWrapperBase : scrollWrapperBase;
-  const wrapperStyle: React.CSSProperties = {
-    ...base,
-    padding: `4px 4px ${stackReveal(cardWidth)}px`,
-  };
   const formats = useCustomFormatStore((s) => s.formats);
   const formatFragment = deck.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
   const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);
-
-  const mainRef = useRef<HTMLDivElement>(null);
-  const sideRef = useRef<HTMLDivElement>(null);
-  useCtrlWheelCardResize(mainRef);
-  useCtrlWheelCardResize(sideRef);
 
   // Run legality check when format or cards change.
   useEffect(() => {
@@ -94,17 +72,10 @@ export function DeckView({ deck }: Props) {
     void checkLegality(deck.id, formatFragment, deck.cards, deck.sideboard);
   }, [deck.id, formatFragment, deck.cards, deck.sideboard]);
 
-  const deckGroupBy = useSettingsStore((s) => s.settings.deckGroupBy);
+  const deckGroupBy = deck.groupBy;
 
-  // Meta grouping derivation.
-  //
-  // We deliberately do NOT cache the derived `oracle_id → queryId`
-  // mapping. The only thing worth caching across renders is the
-  // per-fragment Scryfall match data (which lives in metaGroupsStore);
-  // running `classify` over that cache is microseconds and side-effect
-  // free. Deriving synchronously here means reorders, renames, adds,
-  // and deletes of custom queries all flow through React's normal
-  // memo-dependency path with no extra invalidation plumbing.
+  // Meta grouping derivation — see Deck architecture notes for why we
+  // derive this per-render instead of caching the oracle_id → queryId map.
   const customQueries = useCustomQueryStore((s) => s.queries);
   const matchCache = useMetaGroupsStore((s) => s.cache);
   const cacheVersion = useMetaGroupsStore((s) => s.version);
@@ -124,14 +95,10 @@ export function DeckView({ deck }: Props) {
       if (c.snapshot.oracle_id) oracleIds.push(c.snapshot.oracle_id);
     }
     return classify(matchCache, metaQueries, oracleIds).assignments;
-    // matchCache is mutated in place by ensureMetaGroups; cacheVersion
-    // is what actually triggers the re-derivation.
   }, [deckGroupBy, metaQueries, deck.cards, deck.sideboard, cacheVersion, matchCache]);
 
   useEffect(() => {
     if (deckGroupBy !== "meta") return;
-    // Fire-and-forget: fills gaps in the shared match cache. Each fetch
-    // bumps cacheVersion, which re-runs the classify memo above.
     void ensureMetaGroups(deck.id, deck.cards, deck.sideboard);
   }, [deckGroupBy, deck.id, deck.cards, deck.sideboard, customQueries]);
 
@@ -139,7 +106,7 @@ export function DeckView({ deck }: Props) {
     () => metaQueries.map((m) => ({ id: m.id, label: m.name })),
     [metaQueries],
   );
-  const groupCtx = { oracleToMeta, metaTagLabels };
+  const groupCtx = { oracleToMeta, metaTagLabels, sort: deck.columnSort };
   const mainGroups = groupDeck(deck.cards, deckGroupBy, groupCtx);
   const sideGroups = groupDeck(deck.sideboard, deckGroupBy, groupCtx);
 
@@ -152,20 +119,17 @@ export function DeckView({ deck }: Props) {
   const onPickPrint = (snapshot: CardSnapshot) => openPrintPicker(deck.id, snapshot);
   const onAltClickMain = (snapshot: CardSnapshot) => moveCardToZone(deck.id, snapshot.id, "main");
   const onSetCover = (snapshot: CardSnapshot) => setDeckCover(deck.id, snapshot.id);
+
   // Toggle: alt+shift+click on the current commander releases it; on
-  // any other card, promotes it (which itself releases the previous
-  // commander back to the mainboard via setDeckCommander's own logic).
-  // Promotion is gated on the card being legendary — the rules-correct
-  // surface for what can be a commander. Release is always allowed; the
-  // current commander is already legendary by virtue of having been set.
+  // any other card, promotes it (setDeckCommander returns the previous
+  // commander to the mainboard). Promotion is rules-gated on Legendary;
+  // release is always allowed.
   const onSetCommander = (snapshot: CardSnapshot) => {
     if (deck.commander?.id === snapshot.id) {
       setDeckCommander(deck.id, null);
       return;
     }
     if (!isLegendary(snapshot)) {
-      // Dedup by key so mashing alt+shift+click on a non-legendary card
-      // surfaces one toast, not a stack of identical ones.
       pushToast({
         key: "commander-not-legendary",
         durationMs: 4000,
@@ -184,71 +148,60 @@ export function DeckView({ deck }: Props) {
   const onSideDecrement = (cardId: string) => decrementCard(deck.id, cardId, "sideboard");
   const onAltClickSide = (snapshot: CardSnapshot) => moveCardToZone(deck.id, snapshot.id, "sideboard");
 
-  // Commander column has singleton semantics — +1 / -1 are no-ops. The
-  // only way to remove a commander is alt+shift+click on it (the same
-  // gesture that promotes), wired via onSetCommander.
-  const commanderGroup = deck.commander
-    ? {
-        name: "Commander",
-        cards: [{ snapshot: deck.commander, count: 1, addedAt: 0 } satisfies DeckCard],
-      }
-    : null;
+  // Commander column has singleton semantics — +1/-1 are no-ops. The
+  // only way to remove a commander is alt+shift+click (via onSetCommander).
   const noop = () => {};
+  const commanderColumn = deck.commander ? (
+    <DeckCategoryColumn
+      key="__commander__"
+      group={{
+        name: "Commander",
+        cards: [
+          { snapshot: deck.commander, count: 1, addedAt: 0, zone: "deck-1" } satisfies DeckCard,
+        ],
+      }}
+      cardWidth={cardWidth}
+      onIncrement={noop}
+      onDecrement={noop}
+      onPickPrint={onPickPrint}
+      onSetCover={onSetCover}
+      onSetCommander={onSetCommander}
+      illegalCards={illegalSet}
+    />
+  ) : null;
 
   return (
     <div>
-      {(commanderGroup || mainGroups.length > 0) && (
-        <div ref={mainRef} style={wrapperStyle}>
-          {commanderGroup && (
-            <DeckCategoryColumn
-              key="__commander__"
-              group={commanderGroup}
-              cardWidth={cardWidth}
-              onIncrement={noop}
-              onDecrement={noop}
-              onPickPrint={onPickPrint}
-              onSetCover={onSetCover}
-              onSetCommander={onSetCommander}
-              illegalCards={illegalSet}
-            />
-          )}
-          {mainGroups.map((group) => (
-            <DeckCategoryColumn
-              key={group.name}
-              group={group}
-              cardWidth={cardWidth}
-              onIncrement={onIncrement}
-              onDecrement={onDecrement}
-              onPickPrint={onPickPrint}
-              onAltClick={onAltClickMain}
-              onSetCover={onSetCover}
-              onSetCommander={onSetCommander}
-              illegalCards={illegalSet}
-            />
-          ))}
-        </div>
+      {(commanderColumn || mainGroups.length > 0) && (
+        <CardColumnGrid
+          groups={mainGroups}
+          layout={deck.layout}
+          leadingColumns={commanderColumn}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+          onPickPrint={onPickPrint}
+          onAltClick={onAltClickMain}
+          onSetCover={onSetCover}
+          onSetCommander={onSetCommander}
+          illegalCards={illegalSet}
+        />
       )}
       {sideGroups.length > 0 && (
         <>
           <div style={sideboardLabelStyle}>
             Sideboard · {Object.values(deck.sideboard).reduce((s, c) => s + c.count, 0)}
           </div>
-          <div ref={sideRef} style={wrapperStyle}>
-            {sideGroups.map((group) => (
-              <DeckCategoryColumn
-                key={`sb-${group.name}`}
-                group={group}
-                cardWidth={cardWidth}
-                onIncrement={onSideIncrement}
-                onDecrement={onSideDecrement}
-                onPickPrint={onPickPrint}
-                onAltClick={onAltClickSide}
-                onSetCover={onSetCover}
-                onSetCommander={onSetCommander}
-                illegalCards={illegalSet}
-              />
-            ))}
-          </div>
+          <CardColumnGrid
+            groups={sideGroups}
+            layout={deck.layout}
+            onIncrement={onSideIncrement}
+            onDecrement={onSideDecrement}
+            onPickPrint={onPickPrint}
+            onAltClick={onAltClickSide}
+            onSetCover={onSetCover}
+            onSetCommander={onSetCommander}
+            illegalCards={illegalSet}
+          />
         </>
       )}
     </div>

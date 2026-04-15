@@ -42,6 +42,23 @@ export interface FilterState {
   enabledSetTypes: string[];
 }
 
+/**
+ * The product-default subset of set types a new deck starts with. The
+ * right-click "Reset to defaults" menu in the set filter restores this
+ * set, and it's what `INITIAL_FILTER_STATE` uses for fresh decks.
+ * Intentionally narrower than `ALL_SET_TYPES` — most players don't want
+ * Archenemy / Vanguard / Planechase / etc. in their search results by
+ * default, but they can opt in via the right-click menu.
+ */
+export const DEFAULT_ENABLED_SET_TYPES = [
+  "expansion",
+  "core",
+  "masters",
+  "draft_innovation",
+  "commander",
+  "eternal",
+];
+
 export const ALL_SET_TYPES = [
   "expansion",
   "core",
@@ -83,5 +100,5 @@ export const INITIAL_FILTER_STATE: FilterState = {
   sets: [],
   oracleTags: [],
   customQueryMode: "or",
-  enabledSetTypes: [...ALL_SET_TYPES],
+  enabledSetTypes: [...DEFAULT_ENABLED_SET_TYPES],
 };

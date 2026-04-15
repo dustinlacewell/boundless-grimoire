@@ -31,7 +31,7 @@ export function IconButton({
         if (stopPropagation) e.stopPropagation();
         onClick(e);
       }}
-      className="inline-flex items-center justify-center rounded-full p-0 box-border cursor-pointer text-text border border-border-strong bg-[rgba(15,15,18,0.8)]"
+      className="inline-flex items-center justify-center rounded-full p-0 box-border cursor-pointer text-text bg-[rgba(15,15,18,0.8)] ui-interactive ui-interactive-border"
       style={{ width: size, height: size, ...style }}
     >
       {children}

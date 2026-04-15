@@ -22,6 +22,12 @@ interface SeedDeck {
   formatIndex: number;
 }
 
+interface SeedCube {
+  name: string;
+  /** Singleton list in the "1 Card Name" format. */
+  cardlist: string;
+}
+
 export const SEED_DECKS: SeedDeck[] = [
   {
     name: "Mono-Red Burn",
@@ -151,6 +157,144 @@ export const SEED_DECKS: SeedDeck[] = [
 6 Plains
 6 Island
 6 Swamp
+`.trim(),
+  },
+];
+
+/**
+ * Example cubes shown alongside the seed decks on the first demo visit.
+ * Kept deliberately small (~60 singletons each) so the Scryfall batch
+ * resolves in a single request and the demo doesn't block for minutes
+ * waiting on rate-limited lookups. Real user cubes tend to run 360-720
+ * cards — the point here is to illustrate the cube view, not to publish
+ * playable cubes.
+ */
+export const SEED_CUBES: SeedCube[] = [
+  {
+    name: "Mini Power Cube",
+    cardlist: `
+1 Black Lotus
+1 Mox Sapphire
+1 Mox Jet
+1 Mox Ruby
+1 Mox Emerald
+1 Mox Pearl
+1 Sol Ring
+1 Mana Crypt
+1 Ancestral Recall
+1 Time Walk
+1 Timetwister
+1 Brainstorm
+1 Ponder
+1 Preordain
+1 Force of Will
+1 Counterspell
+1 Mana Drain
+1 Dig Through Time
+1 Treasure Cruise
+1 Jace, the Mind Sculptor
+1 Snapcaster Mage
+1 True-Name Nemesis
+1 Dark Confidant
+1 Thoughtseize
+1 Inquisition of Kozilek
+1 Demonic Tutor
+1 Vampiric Tutor
+1 Toxic Deluge
+1 Liliana of the Veil
+1 Lightning Bolt
+1 Fireblast
+1 Goblin Guide
+1 Monastery Swiftspear
+1 Young Pyromancer
+1 Chandra, Torch of Defiance
+1 Birds of Paradise
+1 Noble Hierarch
+1 Tarmogoyf
+1 Green Sun's Zenith
+1 Oko, Thief of Crowns
+1 Swords to Plowshares
+1 Path to Exile
+1 Stoneforge Mystic
+1 Batterskull
+1 Elspeth, Sun's Champion
+1 Teferi, Hero of Dominaria
+1 Karakas
+1 Wasteland
+1 Strip Mine
+1 Library of Alexandria
+1 Mishra's Workshop
+1 Tolarian Academy
+1 Scalding Tarn
+1 Polluted Delta
+1 Verdant Catacombs
+1 Misty Rainforest
+1 Flooded Strand
+1 Bloodstained Mire
+1 Wooded Foothills
+1 Windswept Heath
+1 Marsh Flats
+1 Arid Mesa
+`.trim(),
+  },
+  {
+    name: "Pauper Cube Sampler",
+    cardlist: `
+1 Lightning Bolt
+1 Chain Lightning
+1 Lava Dart
+1 Rift Bolt
+1 Kiln Fiend
+1 Monastery Swiftspear
+1 Goblin Bushwhacker
+1 Counterspell
+1 Brainstorm
+1 Preordain
+1 Ponder
+1 Daze
+1 Delver of Secrets
+1 Faerie Miscreant
+1 Ninja of the Deep Hours
+1 Thorn of the Black Rose
+1 Gurmag Angler
+1 Chainer's Edict
+1 Duress
+1 Cast Down
+1 Sign in Blood
+1 Night's Whisper
+1 Gray Merchant of Asphodel
+1 Unearth
+1 Path to Exile
+1 Journey to Nowhere
+1 Battle Screech
+1 Squadron Hawk
+1 Soul Warden
+1 Soul's Attendant
+1 Disenchant
+1 Llanowar Elves
+1 Elvish Mystic
+1 Quirion Ranger
+1 Rancor
+1 Elephant Guide
+1 Scrapheap Scrounger
+1 Mulldrifter
+1 Augur of Bolas
+1 Satyr Wayfinder
+1 Farseek
+1 Evolving Wilds
+1 Terramorphic Expanse
+1 Ash Barrens
+1 Radiant Fountain
+1 Seat of the Synod
+1 Great Furnace
+1 Tree of Tales
+1 Ancient Den
+1 Vault of Whispers
+1 Mountain
+1 Island
+1 Swamp
+1 Forest
+1 Plains
 `.trim(),
   },
 ];

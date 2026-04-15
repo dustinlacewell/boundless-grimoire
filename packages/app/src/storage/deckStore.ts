@@ -120,10 +120,10 @@ function touch(deck: Deck): Deck {
 
 export type DeckZone = "main" | "sideboard";
 
-export function createDeck(name = "Untitled"): string {
+function makeEntity(name: string, isCube: boolean): Deck {
   const id = crypto.randomUUID();
   const now = Date.now();
-  const deck: Deck = {
+  return {
     id,
     name,
     createdAt: now,
@@ -134,14 +134,42 @@ export function createDeck(name = "Untitled"): string {
     sortField: DEFAULT_SORT_FIELD,
     sortDir: DEFAULT_SORT_DIR,
     filters: DEFAULT_FILTER_STATE,
+    isCube,
+    // Cubes sensibly default to zone grouping — their zone tags
+    // (basics, group-1…group-10) are the main axis. Decks default
+    // to type-line category columns.
+    groupBy: isCube ? "zone" : "category",
+    layout: "scroll",
+    columnSort: "cmc",
   };
+}
+
+export function createDeck(name = "Untitled"): string {
+  const deck = makeEntity(name, false);
   mutate((lib) => ({
     ...lib,
-    decks: { ...lib.decks, [id]: deck },
-    order: [...lib.order, id],
-    selectedId: id,
+    decks: { ...lib.decks, [deck.id]: deck },
+    order: [...lib.order, deck.id],
+    selectedId: deck.id,
+    libraryView: "decks",
   }));
-  return id;
+  return deck.id;
+}
+
+export function createCube(name = "Untitled Cube"): string {
+  const cube = makeEntity(name, true);
+  mutate((lib) => ({
+    ...lib,
+    decks: { ...lib.decks, [cube.id]: cube },
+    order: [...lib.order, cube.id],
+    selectedCubeId: cube.id,
+    libraryView: "cubes",
+  }));
+  return cube.id;
+}
+
+export function setLibraryView(view: "decks" | "cubes"): void {
+  mutate((lib) => (lib.libraryView === view ? lib : { ...lib, libraryView: view }));
 }
 
 /**
@@ -249,6 +277,7 @@ export function deleteDeck(deckId: string): void {
       decks: rest,
       order: lib.order.filter((id) => id !== deckId),
       selectedId: lib.selectedId === deckId ? null : lib.selectedId,
+      selectedCubeId: lib.selectedCubeId === deckId ? null : lib.selectedCubeId,
     };
   });
 }
@@ -295,7 +324,7 @@ export function setDeckCommander(deckId: string, snapshot: CardSnapshot | null):
         ...cards,
         [prev.id]: existing
           ? { ...existing, count: existing.count + 1 }
-          : { snapshot: prev, count: 1, addedAt: Date.now() },
+          : { snapshot: prev, count: 1, addedAt: Date.now(), zone: "deck-1" },
       };
     }
 
@@ -351,6 +380,48 @@ export function setDeckFormat(deckId: string, formatIndex: number | null): void 
   });
 }
 
+export function setDeckGroupBy(
+  deckId: string,
+  groupBy: import("../cards/categorize").DeckGroupBy,
+): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    if (deck.groupBy === groupBy) return lib;
+    return {
+      ...lib,
+      decks: { ...lib.decks, [deckId]: touch({ ...deck, groupBy }) },
+    };
+  });
+}
+
+export function setDeckLayout(deckId: string, layout: "scroll" | "wrap"): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    if (deck.layout === layout) return lib;
+    return {
+      ...lib,
+      decks: { ...lib.decks, [deckId]: touch({ ...deck, layout }) },
+    };
+  });
+}
+
+export function setDeckColumnSort(
+  deckId: string,
+  columnSort: import("../cards/categorize").ColumnSort,
+): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    if (deck.columnSort === columnSort) return lib;
+    return {
+      ...lib,
+      decks: { ...lib.decks, [deckId]: touch({ ...deck, columnSort }) },
+    };
+  });
+}
+
 export function setDeckCover(deckId: string, cardId: string): void {
   mutate((lib) => {
     const deck = lib.decks[deckId];
@@ -362,8 +433,24 @@ export function setDeckCover(deckId: string, cardId: string): void {
   });
 }
 
-export function selectDeck(deckId: string | null): void {
-  mutate((lib) => ({ ...lib, selectedId: deckId }));
+/**
+ * Select an entity. Routes to `selectedId` or `selectedCubeId` based on
+ * the entity's `isCube` flag, so switching tabs preserves each side's
+ * selection. Passing null clears the selection for the active tab.
+ */
+export function selectDeck(id: string | null): void {
+  mutate((lib) => {
+    if (id === null) {
+      return lib.libraryView === "cubes"
+        ? { ...lib, selectedCubeId: null }
+        : { ...lib, selectedId: null };
+    }
+    const entity = lib.decks[id];
+    if (!entity) return lib;
+    return entity.isCube
+      ? { ...lib, selectedCubeId: id, libraryView: "cubes" }
+      : { ...lib, selectedId: id, libraryView: "decks" };
+  });
 }
 
 /**
@@ -429,7 +516,7 @@ export function swapCardPrint(
     const existing = map[newSnapshot.id];
     map[newSnapshot.id] = existing
       ? { ...existing, count: existing.count + old.count }
-      : { snapshot: newSnapshot, count: old.count, addedAt: old.addedAt };
+      : { snapshot: newSnapshot, count: old.count, addedAt: old.addedAt, zone: old.zone };
     return { ...lib, decks: { ...lib.decks, [deckId]: touch({ ...deck, [field]: map }) } };
   });
 }
@@ -439,25 +526,68 @@ export function swapCardPrint(
  * Import a parsed decklist: create a new deck, resolve card names via
  * Scryfall's /cards/collection, and populate it. Returns the new deck id.
  */
-export async function importDecklist(
+/**
+ * Two-phase import of a decklist into a newly-created deck or cube.
+ *
+ * Phase 1 — INSTANT:
+ *   Create the entity with `enriching: true` and an empty card map.
+ *   The ribbon tile appears immediately (with a spinner overlay via
+ *   DeckRibbonItem's `enriching` handling), so the user gets visual
+ *   feedback that something is loading rather than a blank UI.
+ *
+ * Phase 2 — BACKGROUND (fire-and-forget):
+ *   Resolve card names via Scryfall `/cards/collection`, populate the
+ *   card map, clear the `enriching` flag. The promise is NOT awaited
+ *   by the return value — callers get the deck id right away so they
+ *   can seed multiple decks in parallel and watch them fill in.
+ *
+ * This mirrors the extension's `pullDecks.ts` pattern (thin commit now,
+ * rich data later) so the demo seed path and the untap pull path feel
+ * the same.
+ */
+export function importDecklist(
   entries: import("../decks/parseDecklist").DecklistEntry[],
   name = "Imported Deck",
+  options: { isCube?: boolean } = {},
 ): Promise<string> {
+  const { isCube = false } = options;
+  const deckId = isCube ? createCube(name) : createDeck(name);
+  // Flag as enriching so the ribbon tile spins.
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    return { ...lib, decks: { ...lib.decks, [deckId]: { ...deck, enriching: true } } };
+  });
+  // Phase 2 runs in the background. Errors don't propagate to the
+  // caller — we log and clear `enriching` so the spinner stops.
+  void resolveAndPopulate(deckId, entries, isCube).catch((err) => {
+    console.error(`[importDecklist] "${name}" failed`, err);
+    mutate((lib) => {
+      const deck = lib.decks[deckId];
+      if (!deck) return lib;
+      return { ...lib, decks: { ...lib.decks, [deckId]: { ...deck, enriching: false } } };
+    });
+  });
+  return Promise.resolve(deckId);
+}
+
+async function resolveAndPopulate(
+  deckId: string,
+  entries: import("../decks/parseDecklist").DecklistEntry[],
+  isCube: boolean,
+): Promise<void> {
   const { getCardsByIds } = await import("../services/scryfall");
   const { toSnapshot } = await import("../scryfall/snapshot");
 
-  // Dedupe names for the batch lookup
   const uniqueNames = [...new Set(entries.map((e) => e.name))];
   const identifiers = uniqueNames.map((n) => ({ name: n }));
   const resolved = await getCardsByIds(identifiers);
 
-  // Build name → snapshot lookup (case-insensitive)
   const byName = new Map<string, CardSnapshot>();
   for (const card of resolved) {
     byName.set(card.name.toLowerCase(), toSnapshot(card));
   }
 
-  const deckId = createDeck(name);
   mutate((lib) => {
     const deck = lib.decks[deckId];
     if (!deck) return lib;
@@ -467,28 +597,40 @@ export async function importDecklist(
     for (const entry of entries) {
       const snap = byName.get(entry.name.toLowerCase());
       if (!snap) continue;
-      const target = entry.zone === "sideboard" ? sideboard : cards;
+      // Cubes: all cards go in the mainboard under "group-1" (no
+      // sideboard concept). Decks: standard main / sideboard split.
+      const isSide = !isCube && entry.zone === "sideboard";
+      const target = isSide ? sideboard : cards;
+      const zoneTag = isCube ? "group-1" : isSide ? "sideboard-1" : "deck-1";
       const existing = target[snap.id];
       if (existing) {
         target[snap.id] = { ...existing, count: existing.count + entry.count };
       } else {
-        target[snap.id] = { snapshot: snap, count: entry.count, addedAt: now };
+        target[snap.id] = { snapshot: snap, count: entry.count, addedAt: now, zone: zoneTag };
       }
     }
     return {
       ...lib,
-      decks: { ...lib.decks, [deckId]: touch({ ...deck, cards, sideboard }) },
+      decks: {
+        ...lib.decks,
+        [deckId]: touch({ ...deck, cards, sideboard, enriching: false }),
+      },
     };
   });
-
-  return deckId;
 }
 
 // ---------- Selectors ----------
 
+/**
+ * The entity shown in the detail view — the selected deck OR cube,
+ * depending on the active library tab. Named `selectedDeck` for
+ * historical reasons (and because the type is `Deck` either way — cubes
+ * are just decks with `isCube: true`).
+ */
 export function selectedDeck(state: DeckStoreState): Deck | null {
-  const id = state.library.selectedId;
-  return id ? state.library.decks[id] ?? null : null;
+  const { libraryView, selectedId, selectedCubeId, decks } = state.library;
+  const id = libraryView === "cubes" ? selectedCubeId : selectedId;
+  return id ? decks[id] ?? null : null;
 }
 
 export function deckCardCount(deck: Deck): number {

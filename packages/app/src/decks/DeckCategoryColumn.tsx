@@ -22,15 +22,21 @@ const labelStyle: React.CSSProperties = {
   color: colors.textMuted,
   marginBottom: 6,
   fontWeight: 700,
-  whiteSpace: "nowrap",
+  // Wrap long titles (e.g. "The Lost Caverns of Ixalan") instead of
+  // bleeding into the next column. `break-word` handles set names that
+  // contain a single unusually long word. Line-height tightens the
+  // two-line case so it doesn't push the cards too far down.
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+  lineHeight: 1.2,
 };
 
 /**
- * Minimum column width so the category heading never wraps, regardless
- * of how far the user zooms out. Sized for the longest category
- * ("Planeswalkers") + " · NN" at the label font. The card art inside
- * still renders at `cardWidth`; any extra width shows as empty space
- * to the right of the stack.
+ * Minimum column width. Sized so the standard type-line categories
+ * ("Planeswalkers" + " · NN") fit on a single line; long set names
+ * from the "by set" grouping wrap onto a second line rather than
+ * widen the column. The card art inside renders at `cardWidth`; any
+ * extra width shows as empty space to the right of the stack.
  */
 const MIN_COLUMN_WIDTH = 150;
 
@@ -60,7 +66,7 @@ export function DeckCategoryColumn({
       }}
     >
       <div style={labelStyle}>
-        {group.name} · {total}
+        {group.name} · <span style={{ color: colors.accent }}>{total}</span>
       </div>
       <CategoryStack
         cards={group.cards}

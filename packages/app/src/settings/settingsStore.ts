@@ -5,15 +5,11 @@ import { preserveOnHmr } from "../storage/preserveOnHmr";
 const STORAGE_KEY = "boundless-grimoire:settings";
 
 export type AnalyticsLayout = "scroll" | "wrap";
-export type DeckLayout = "scroll" | "wrap";
-export type DeckGroupBy = "category" | "cmc" | "meta";
 export type PreviewMode = "image" | "text" | "both";
 
 export interface Settings {
   devMode: boolean;
   analyticsLayout: AnalyticsLayout;
-  deckLayout: DeckLayout;
-  deckGroupBy: DeckGroupBy;
   previewMode: PreviewMode;
   /** Maximum undo entries per deck. `null` means unbounded. */
   undoHistoryLimit: number | null;
@@ -27,8 +23,6 @@ interface SettingsStoreState {
 const DEFAULT_SETTINGS: Settings = {
   devMode: false,
   analyticsLayout: "scroll",
-  deckLayout: "scroll",
-  deckGroupBy: "category",
   previewMode: "both",
   undoHistoryLimit: 100,
 };
@@ -60,18 +54,6 @@ export function setDevMode(enabled: boolean): void {
 export function setAnalyticsLayout(layout: AnalyticsLayout): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, analyticsLayout: layout },
-  }));
-}
-
-export function setDeckLayout(layout: DeckLayout): void {
-  useSettingsStore.setState((s) => ({
-    settings: { ...s.settings, deckLayout: layout },
-  }));
-}
-
-export function setDeckGroupBy(mode: DeckGroupBy): void {
-  useSettingsStore.setState((s) => ({
-    settings: { ...s.settings, deckGroupBy: mode },
   }));
 }
 

@@ -10,9 +10,9 @@ interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type"> {
 }
 
 const variantClass: Record<Variant, string> = {
-  default: "bg-bg-2 text-text border-border-strong",
-  primary: "bg-accent text-[#0a0a0c] border-accent",
-  ghost: "bg-transparent text-text-muted border-border",
+  default: "bg-bg-2 text-text",
+  primary: "ui-interactive-selected",
+  ghost: "bg-transparent text-text-muted",
 };
 
 const sizeClass: Record<Size, string> = {
@@ -21,7 +21,7 @@ const sizeClass: Record<Size, string> = {
 };
 
 const baseClass =
-  "inline-flex items-center justify-center box-border border font-sans font-semibold rounded-[6px] cursor-pointer";
+  "inline-flex items-center justify-center box-border font-sans font-semibold rounded-[6px] cursor-pointer ui-interactive ui-interactive-border";
 
 /** Plain button primitive — no behavior, just styling. */
 export function Button({ children, variant = "default", size = "md", className = "", ...rest }: Props) {

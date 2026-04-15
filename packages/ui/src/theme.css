@@ -34,3 +34,86 @@
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
+
+/* ----------------------------------------------------------------------
+ * Interactive-surface semantic classes.
+ *
+ * Every focusable/clickable primitive (buttons, triggers, options, inputs)
+ * should layer one of these on top of its own layout/size classes. This
+ * is the single place that defines the look of hovered/selected/open
+ * states — change it here and every primitive updates.
+ *
+ *   .ui-interactive         — resting border + accent on hover
+ *   .ui-interactive-active  — force the accent border (open/focused state)
+ *   .ui-interactive-selected — accent fill (selected / pressed)
+ * ------------------------------------------------------------------- */
+
+/* Resting border is transparent so options / list rows don't show a
+ * resting outline — hover lights it up without causing a layout shift.
+ * Primitives that want a visible resting border (buttons, inputs,
+ * dropdown triggers) add `.ui-interactive-border` alongside. */
+.ui-interactive {
+  border: 1px solid transparent;
+  transition: border-color 100ms ease, background-color 100ms ease, color 100ms ease;
+}
+.ui-interactive:hover,
+.ui-interactive:focus-visible {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.ui-interactive-border {
+  border-color: var(--color-border-strong);
+}
+
+.ui-interactive-active {
+  border-color: var(--color-accent) !important;
+}
+
+.ui-interactive-selected {
+  background-color: var(--color-accent);
+  color: #0a0a0c;
+  border-color: var(--color-accent);
+}
+.ui-interactive-selected:hover {
+  border-color: var(--color-accent);
+}
+
+/* ----------------------------------------------------------------------
+ * Scrollbars.
+ *
+ * Dark, thin scrollbars. Opt-in via the `.ui-scrollbars` class so each
+ * host picks its own scope — the extension adds it to
+ * `#boundless-grimoire-root` (so untap.in's own scrollbars aren't
+ * touched), the homepage adds it to <html> (owning the whole page).
+ * ------------------------------------------------------------------- */
+.ui-scrollbars,
+.ui-scrollbars * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-3) transparent;
+}
+.ui-scrollbars::-webkit-scrollbar,
+.ui-scrollbars *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.ui-scrollbars::-webkit-scrollbar-track,
+.ui-scrollbars *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ui-scrollbars::-webkit-scrollbar-thumb,
+.ui-scrollbars *::-webkit-scrollbar-thumb {
+  background: var(--color-bg-3);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.ui-scrollbars::-webkit-scrollbar-thumb:hover,
+.ui-scrollbars *::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+  background-clip: padding-box;
+}
+.ui-scrollbars::-webkit-scrollbar-corner,
+.ui-scrollbars *::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from "react";
-import { colors } from "./colors";
 import { Popover } from "./Popover";
 
 export interface DropdownOption<T extends string> {
@@ -15,36 +14,31 @@ interface Props<T extends string> {
   /** Allow clearing back to null. */
   clearable?: boolean;
   width?: number | string;
+  /**
+   * When true, the trigger sizes to content and keeps the caret right
+   * next to the label (no justify-between whitespace). Use this for
+   * compact header controls where the dropdown sits in a row of other
+   * controls — fixed-width form dropdowns should leave this off.
+   */
+  compact?: boolean;
 }
 
-const triggerStyle = (open: boolean): React.CSSProperties => ({
-  height: 32,
-  padding: "0 12px",
-  background: colors.bg2,
-  color: colors.text,
-  border: `1px solid ${open ? colors.accent : colors.borderStrong}`,
-  borderRadius: 6,
-  fontFamily: "system-ui, sans-serif",
-  fontSize: 13,
-  fontWeight: 600,
-  cursor: "pointer",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: 8,
-  width: "100%",
-  boxSizing: "border-box",
-});
+const triggerClass = (open: boolean, compact: boolean) =>
+  [
+    "h-8 px-3 box-border inline-flex items-center gap-2",
+    compact ? "justify-start" : "w-full justify-between",
+    "rounded-md font-sans text-[13px] font-semibold cursor-pointer",
+    "bg-bg-2 text-text ui-interactive ui-interactive-border",
+    open && "ui-interactive-active",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-const optionStyle = (selected: boolean): React.CSSProperties => ({
-  padding: "8px 12px",
-  fontSize: 13,
-  cursor: "pointer",
-  background: selected ? colors.accent : "transparent",
-  color: selected ? "#0a0a0c" : colors.text,
-  fontWeight: selected ? 700 : 400,
-  whiteSpace: "nowrap",
-});
+const optionClass = (selected: boolean) =>
+  [
+    "px-3 py-2 text-[13px] cursor-pointer whitespace-nowrap",
+    selected ? "ui-interactive-selected font-bold" : "text-text font-normal ui-interactive",
+  ].join(" ");
 
 /**
  * Single-select dropdown. Uses Popover for the open/close mechanics.
@@ -56,13 +50,17 @@ export function Dropdown<T extends string>({
   onChange,
   placeholder = "Select…",
   clearable = false,
-  width = 180,
+  width,
+  compact = false,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const current = options.find((o) => o.value === value) ?? null;
+  // Compact trigger is content-sized; fixed-width form dropdowns default
+  // to 180 to match common short-field sizing.
+  const effectiveWidth = width ?? (compact ? "auto" : 180);
 
   return (
-    <div style={{ width }}>
+    <div style={{ width: effectiveWidth, display: compact ? "inline-block" : undefined }}>
       <Popover
         open={open}
         onClose={() => setOpen(false)}
@@ -70,39 +68,35 @@ export function Dropdown<T extends string>({
         trigger={
           <button
             type="button"
-            style={triggerStyle(open)}
+            className={triggerClass(open, compact)}
             onClick={() => setOpen((o) => !o)}
           >
             <span
-              style={{
-                opacity: current ? 1 : 0.5,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
+              className="overflow-hidden text-ellipsis whitespace-nowrap"
+              style={{ opacity: current ? 1 : 0.5 }}
             >
               {current ? current.label : placeholder}
             </span>
-            <span style={{ opacity: 0.6, fontSize: 11 }}>▾</span>
+            <span className="opacity-60 text-[11px]">▾</span>
           </button>
         }
       >
-        <div style={{ overflowY: "auto", padding: 4 }}>
+        <div className="overflow-y-auto">
           {clearable && (
             <div
-              style={optionStyle(value === null)}
+              className={optionClass(value === null)}
               onClick={() => {
                 onChange(null);
                 setOpen(false);
               }}
             >
-              <em style={{ opacity: 0.6 }}>{placeholder}</em>
+              <em className="opacity-60">{placeholder}</em>
             </div>
           )}
           {options.map((opt) => (
             <div
               key={opt.value}
-              style={optionStyle(opt.value === value)}
+              className={optionClass(opt.value === value)}
               onClick={() => {
                 onChange(opt.value);
                 setOpen(false);

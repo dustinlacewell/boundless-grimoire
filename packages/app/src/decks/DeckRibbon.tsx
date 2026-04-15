@@ -1,5 +1,6 @@
 import { useMemo, useState, type DragEvent } from "react";
 import {
+  createCube,
   createDeck,
   reorderDecks,
   selectDeck,
@@ -28,17 +29,18 @@ const NULL_DRAG: DragState = { sourceId: "", hoverId: null, edge: null };
  */
 export function DeckRibbon() {
   const library = useDeckStore((s) => s.library);
-  // Materialize the ordered, non-null deck list once per library change.
-  // Without this, every unrelated re-render walks the order array and
-  // allocates a fresh decks[] — and any unrelated store mutation that
-  // re-renders the ribbon (e.g. card count tick) does the same work.
+  const isCubeTab = library.libraryView === "cubes";
+  // Materialize the ordered, non-null entity list filtered to the active
+  // tab. Re-deriving per library change keeps unrelated re-renders cheap.
   const decks = useMemo(
     () =>
       library.order
         .map((id) => library.decks[id])
-        .filter((d): d is NonNullable<typeof d> => Boolean(d)),
-    [library.order, library.decks],
+        .filter((d): d is NonNullable<typeof d> => Boolean(d))
+        .filter((d) => !!d.isCube === isCubeTab),
+    [library.order, library.decks, isCubeTab],
   );
+  const selectedId = isCubeTab ? library.selectedCubeId : library.selectedId;
 
   const [drag, setDrag] = useState<DragState>(NULL_DRAG);
 
@@ -91,7 +93,7 @@ export function DeckRibbon() {
         <DeckRibbonItem
           key={deck.id}
           deck={deck}
-          selected={deck.id === library.selectedId}
+          selected={deck.id === selectedId}
           onSelect={() => selectDeck(deck.id)}
           onDragStart={onDragStart}
           onDragOver={onDragOver}
@@ -101,8 +103,12 @@ export function DeckRibbon() {
           isDragging={drag.sourceId === deck.id}
         />
       ))}
-      <NewDeckTile onCreate={() => createDeck("Untitled")} />
-      <ImportDeckTile />
+      {isCubeTab ? (
+        <NewDeckTile label="New cube" onCreate={() => createCube("Untitled Cube")} />
+      ) : (
+        <NewDeckTile label="New deck" onCreate={() => createDeck("Untitled")} />
+      )}
+      {!isCubeTab && <ImportDeckTile />}
     </HScroll>
   );
 }

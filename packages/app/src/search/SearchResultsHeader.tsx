@@ -1,6 +1,3 @@
-import { SortFilter } from "../filters/components/SortFilter";
-import { useFilterStore } from "../filters/store";
-import { Button } from "@boundless-grimoire/ui";
 import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
@@ -11,49 +8,26 @@ interface Props {
 const wrapStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
-  gap: 12,
+  gap: 6,
   fontSize: 12,
   color: colors.textMuted,
   marginBottom: 8,
 };
 
-const countStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  flex: 1,
-};
-
-const rightStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 12,
-};
-
 /**
- * Result count on the left + sort and reset on the right. Sits directly
- * above the card grid so the controls that affect grid contents/order
- * are right next to it.
+ * Result count caption. Sort moved up to the Results section header,
+ * Reset moved next to Save Preset / Load / Copy-Paste in the Search
+ * section header — this just shows how many cards matched.
  */
 export function SearchResultsHeader({ totalCards, loading }: Props) {
-  const reset = useFilterStore((s) => s.reset);
-
   return (
     <div style={wrapStyle}>
-      <div style={countStyle}>
-        {totalCards !== null && (
-          <span>
-            {totalCards.toLocaleString()} {totalCards === 1 ? "result" : "results"}
-          </span>
-        )}
-        {loading && <span>· loading…</span>}
-      </div>
-      <div style={rightStyle}>
-        <SortFilter />
-        <Button size="sm" variant="ghost" onClick={reset}>
-          Reset
-        </Button>
-      </div>
+      {totalCards !== null && (
+        <span>
+          {totalCards.toLocaleString()} {totalCards === 1 ? "result" : "results"}
+        </span>
+      )}
+      {loading && <span>· loading…</span>}
     </div>
   );
 }

@@ -23,35 +23,6 @@
   selector: #boundless-grimoire-root;
 }
 
-/* Dark, thin scrollbars scoped to our root so untap.in's scrollbars are
- * left alone. Colors inlined because this file is pure CSS. */
-#boundless-grimoire-root *::-webkit-scrollbar,
-#boundless-grimoire-root::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-#boundless-grimoire-root *::-webkit-scrollbar-track,
-#boundless-grimoire-root::-webkit-scrollbar-track {
-  background: transparent;
-}
-#boundless-grimoire-root *::-webkit-scrollbar-thumb,
-#boundless-grimoire-root::-webkit-scrollbar-thumb {
-  background: #2a2a30;
-  border-radius: 5px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-#boundless-grimoire-root *::-webkit-scrollbar-thumb:hover,
-#boundless-grimoire-root::-webkit-scrollbar-thumb:hover {
-  background: #3a3a44;
-  background-clip: padding-box;
-}
-#boundless-grimoire-root *::-webkit-scrollbar-corner,
-#boundless-grimoire-root::-webkit-scrollbar-corner {
-  background: transparent;
-}
-#boundless-grimoire-root,
-#boundless-grimoire-root * {
-  scrollbar-width: thin;
-  scrollbar-color: #2a2a30 transparent;
-}
+/* Scrollbar styling lives in @boundless-grimoire/ui's theme.css so the
+ * extension and the homepage demo render identical scrollbars without
+ * duplicating rules. */

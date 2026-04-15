@@ -209,6 +209,7 @@ function LoadPopover() {
 export function FilterPresets() {
   const [saving, setSaving] = useState(false);
   const state = useFilterStore((s) => s.state);
+  const reset = useFilterStore((s) => s.reset);
   const { copy, paste, copied } = useCopyPaste();
 
   const handleSave = (name: string) => {
@@ -216,25 +217,32 @@ export function FilterPresets() {
     setSaving(false);
   };
 
+  if (saving) return <SaveInput onSave={handleSave} onCancel={() => setSaving(false)} />;
+
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
-      {saving ? (
-        <SaveInput onSave={handleSave} onCancel={() => setSaving(false)} />
-      ) : (
-        <>
-          <Button size="sm" variant="ghost" onClick={() => setSaving(true)}>
-            Save Preset
-          </Button>
-          <LoadPopover />
-          <div style={{ width: 1, height: 18, background: colors.border, flexShrink: 0 }} />
-          <Button size="sm" variant="ghost" onClick={copy}>
-            {copied ? "Copied!" : "Copy Filters"}
-          </Button>
-          <Button size="sm" variant="ghost" onClick={paste}>
-            Paste Filters
-          </Button>
-        </>
-      )}
-    </div>
+    <>
+      <Button size="sm" variant="ghost" onClick={() => setSaving(true)}>
+        Save Preset
+      </Button>
+      <LoadPopover />
+      <div style={dividerStyle} />
+      <Button size="sm" variant="ghost" onClick={copy}>
+        {copied ? "Copied!" : "Copy Filters"}
+      </Button>
+      <Button size="sm" variant="ghost" onClick={paste}>
+        Paste Filters
+      </Button>
+      <div style={dividerStyle} />
+      <Button size="sm" variant="ghost" onClick={reset}>
+        Reset
+      </Button>
+    </>
   );
 }
+
+const dividerStyle: React.CSSProperties = {
+  width: 1,
+  height: 18,
+  background: colors.border,
+  flexShrink: 0,
+};
