@@ -83,6 +83,41 @@ const migrations: Record<number, Migration> = {
   // existing decks have no commander; the migration only bumps the version.
   3: (lib) => ({ ...lib, version: 4 }),
 
+  // v9 → v10: backfill negative custom-query list.
+  9: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const f = deck.filters ?? DEFAULT_FILTER_STATE;
+      const raw = f as unknown as Record<string, unknown>;
+      decks[id] = {
+        ...deck,
+        filters: {
+          ...f,
+          excludedOracleTags: (raw.excludedOracleTags as string[]) ?? [],
+        },
+      };
+    }
+    return { ...lib, version: 10, decks };
+  },
+
+  // v8 → v9: backfill per-filter type AND/OR mode + negative type list.
+  8: (lib) => {
+    const decks: Record<string, Deck> = {};
+    for (const [id, deck] of Object.entries(lib.decks)) {
+      const f = deck.filters ?? DEFAULT_FILTER_STATE;
+      const raw = f as unknown as Record<string, unknown>;
+      decks[id] = {
+        ...deck,
+        filters: {
+          ...f,
+          typeMode: (raw.typeMode as "or" | "and") ?? "or",
+          excludedTypes: (raw.excludedTypes as string[]) ?? [],
+        },
+      };
+    }
+    return { ...lib, version: 9, decks };
+  },
+
   // v7 → v8: per-deck `columnSort`. "cmc" preserves the previous
   // hardcoded within-column ordering (cmc asc then name).
   7: (lib) => {

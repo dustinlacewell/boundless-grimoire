@@ -87,8 +87,18 @@ export function buildScryfallQuery(state: FilterState): string {
   // Rarity (OR within group)
   parts.push(orGroup("r:", state.rarities));
 
-  // Types (OR within group). Each value goes in as t:<value>.
-  parts.push(orGroup("t:", state.types));
+  // Types — combine via state.typeMode (OR within group by default, or
+  // AND when the user flips the mode dot). Excluded types are always
+  // emitted as individual negative clauses so they AND with everything.
+  const typeMode = state.typeMode ?? "or";
+  if (state.types.length > 0) {
+    if (typeMode === "and") {
+      for (const t of state.types) parts.push(`t:${t}`);
+    } else {
+      parts.push(orGroup("t:", state.types));
+    }
+  }
+  for (const t of state.excludedTypes ?? []) parts.push(`-t:${t}`);
   parts.push(orGroup("t:", state.supertypes));
   parts.push(orGroup("t:", state.subtypes));
 
@@ -114,6 +124,17 @@ export function buildScryfallQuery(state: FilterState): string {
       } else {
         parts.push(`(${fragments.join(" or ")})`);
       }
+    }
+  }
+
+  // Excluded custom queries — emit as `-(<fragment>)` AND-combined so
+  // negation applies regardless of the positive combine mode.
+  const excludedIndices = state.excludedOracleTags ?? [];
+  if (excludedIndices.length > 0) {
+    const queries = useCustomQueryStore.getState().queries;
+    for (const i of excludedIndices) {
+      const fragment = queries[Number(i)]?.fragment;
+      if (fragment) parts.push(`-(${fragment})`);
     }
   }
 

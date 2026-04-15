@@ -28,6 +28,10 @@ export interface FilterState {
   rarities: Rarity[];
   /** Card types: creature, instant, sorcery, etc. */
   types: string[];
+  /** Negated card types — emitted as `-t:X` clauses (always AND-combined). */
+  excludedTypes: string[];
+  /** How multiple positive types combine: OR (any) or AND (all). */
+  typeMode: "or" | "and";
   /** Supertypes: legendary, basic, snow, world. */
   supertypes: string[];
   /** Subtypes: dragon, wizard, elf, etc. */
@@ -36,6 +40,8 @@ export interface FilterState {
   sets: string[];
   /** Oracle tags from tagger.scryfall.com (otag: syntax). */
   oracleTags: string[];
+  /** Negated custom queries — always AND-combined as `-(<fragment>)`. */
+  excludedOracleTags: string[];
   /** How multiple custom query toggles combine: OR (any) or AND (all). */
   customQueryMode: "or" | "and";
   /** Which set_type values to show in the set dropdown. All on by default. */
@@ -95,10 +101,13 @@ export const INITIAL_FILTER_STATE: FilterState = {
   colorMode: "identity-subset",
   rarities: [],
   types: [],
+  excludedTypes: [],
+  typeMode: "or",
   supertypes: [],
   subtypes: [],
   sets: [],
   oracleTags: [],
+  excludedOracleTags: [],
   customQueryMode: "or",
   enabledSetTypes: [...DEFAULT_ENABLED_SET_TYPES],
 };

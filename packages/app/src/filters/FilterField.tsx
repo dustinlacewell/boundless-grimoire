@@ -13,14 +13,15 @@ interface Props {
 
 /** Vertical label + control wrapper used by every filter row entry. */
 export function FilterField({ label, children, style, action, align = "start" }: Props) {
-  const labelJustify = align === "center" ? "center" : "flex-start";
+  // Action is always pinned to the right. For centered alignment, a
+  // matching left spacer keeps the label visually centered within the
+  // row (three-column flex: spacer | label | action).
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 4, ...style }}>
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: labelJustify,
           gap: 6,
           fontSize: 10,
           letterSpacing: 1.2,
@@ -29,10 +30,11 @@ export function FilterField({ label, children, style, action, align = "start" }:
           fontWeight: 700,
         }}
       >
+        {align === "center" && <span style={{ flex: 1 }} />}
         <span>{label}</span>
-        {action && (
-          <span style={{ marginLeft: align === "center" ? 0 : "auto" }}>{action}</span>
-        )}
+        <span style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          {action}
+        </span>
       </div>
       {children}
     </div>
