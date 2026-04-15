@@ -1,8 +1,7 @@
 import { useMemo } from "react";
-import { ButtonGroup } from "@boundless-grimoire/ui";
+import { ButtonGroup, colors } from "@boundless-grimoire/ui";
 import { groupIntoSections, useCustomQueryStore } from "../customQueryStore";
 import { useFilterStore, toggleIn } from "../store";
-import { colors } from "@boundless-grimoire/ui";
 
 const modeOptions = [
   { value: "or" as const, label: "OR" },
@@ -37,45 +36,104 @@ const sectionLabelStyle: React.CSSProperties = {
   marginTop: 2,
 };
 
+type State = "neutral" | "included" | "excluded";
+
+const baseButtonClass =
+  "inline-flex items-center justify-center box-border rounded-[6px] font-sans font-semibold cursor-pointer ui-interactive ui-interactive-border h-[26px] px-2.5 text-[12px]";
+
+function styleFor(state: State): React.CSSProperties {
+  if (state === "excluded") {
+    return {
+      background: colors.bg2,
+      color: colors.danger,
+      borderColor: colors.danger,
+      textDecoration: "line-through",
+    };
+  }
+  return {};
+}
+
 /**
  * Custom query toggle buttons grouped by section headers.
  * If there are no section headers, renders a flat list under "Custom".
+ *
+ * Tri-state: left click toggles include ↔ neutral; right click toggles
+ * exclude ↔ neutral. A query can be only in one state at a time.
  */
 export function OracleTagFilter() {
   const queries = useCustomQueryStore((s) => s.queries);
-  const selected = useFilterStore((s) => s.state.oracleTags);
+  const selected = useFilterStore((s) => s.state.oracleTags) ?? [];
+  const excluded = useFilterStore((s) => s.state.excludedOracleTags ?? []);
   const patch = useFilterStore((s) => s.patch);
 
   const sections = useMemo(() => groupIntoSections(queries), [queries]);
   const hasHeaders = sections.some((s) => s.header !== null);
 
-  const toggle = (v: string) => patch({ oracleTags: toggleIn(selected ?? [], v) });
-  const isSelected = (v: string) => (selected ?? []).includes(v);
+  const stateOf = (v: string): State => {
+    if (selected.includes(v)) return "included";
+    if (excluded.includes(v)) return "excluded";
+    return "neutral";
+  };
+
+  const leftClick = (v: string) => {
+    if (excluded.includes(v)) {
+      patch({
+        excludedOracleTags: excluded.filter((x) => x !== v),
+        oracleTags: [...selected, v],
+      });
+    } else {
+      patch({ oracleTags: toggleIn(selected, v) });
+    }
+  };
+
+  const rightClick = (v: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (selected.includes(v)) {
+      patch({
+        oracleTags: selected.filter((x) => x !== v),
+        excludedOracleTags: [...excluded, v],
+      });
+    } else {
+      patch({ excludedOracleTags: toggleIn(excluded, v) });
+    }
+  };
+
+  const renderButtons = (entries: { index: number; query: { name: string } }[]) => (
+    <div className="inline-flex flex-wrap" style={{ gap: 4 }}>
+      {entries.map((e) => {
+        const v = String(e.index);
+        const s = stateOf(v);
+        const selectedClass = s === "included" ? "ui-interactive-selected" : "bg-bg-2 text-text";
+        return (
+          <button
+            key={v}
+            type="button"
+            className={`${baseButtonClass} ${selectedClass}`.trim()}
+            style={styleFor(s)}
+            onClick={() => leftClick(v)}
+            onContextMenu={(ev) => rightClick(v, ev)}
+            title={`${e.query.name} — left click to include, right click to exclude`}
+          >
+            {e.query.name}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   if (!hasHeaders) {
-    // Flat list — no section headers in the text
-    const options = sections.flatMap((s) =>
-      s.entries.map((e) => ({ value: String(e.index), label: e.query.name })),
-    );
-    return (
-      <ButtonGroup options={options} isSelected={isSelected} onToggle={toggle} size="sm" />
-    );
+    const flat = sections.flatMap((s) => s.entries);
+    return renderButtons(flat);
   }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       {sections.map((section, si) => {
-        const options = section.entries.map((e) => ({
-          value: String(e.index),
-          label: e.query.name,
-        }));
-        if (options.length === 0) return null;
+        if (section.entries.length === 0) return null;
         return (
           <div key={si} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {section.header && (
-              <div style={sectionLabelStyle}>{section.header}</div>
-            )}
-            <ButtonGroup options={options} isSelected={isSelected} onToggle={toggle} size="sm" />
+            {section.header && <div style={sectionLabelStyle}>{section.header}</div>}
+            {renderButtons(section.entries)}
           </div>
         );
       })}

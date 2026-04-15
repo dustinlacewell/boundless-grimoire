@@ -15,6 +15,7 @@ import { SubtypeFilter } from "./components/SubtypeFilter";
 import { SupertypeFilter } from "./components/SupertypeFilter";
 import { TextFilter } from "./components/TextFilter";
 import { TypeFilter } from "./components/TypeFilter";
+import { TypeModeDot } from "./components/TypeModeDot";
 import { useSettingsStore } from "../settings/settingsStore";
 import { selectedDeck, useDeckStore } from "../storage/deckStore";
 import { colors } from "@boundless-grimoire/ui";
@@ -185,7 +186,7 @@ export function FilterBar() {
       <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
         <div style={{ flex: "0 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
           <RarityAndColorPanel />
-          <FilterField label="Type" align="center">
+          <FilterField label="Type" align="center" action={<TypeModeDot />}>
             <TypeFilter />
           </FilterField>
           <FilterField label="Subtype" align="center">
