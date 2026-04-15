@@ -10,10 +10,12 @@
  */
 import { create } from "zustand";
 import { searchCards, ScryfallError } from "../services/scryfall";
+import { storage } from "../services/storage";
 import type { DeckCard } from "../storage/types";
 import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface LegalityState {
+  hydrated: boolean;
   /** deck id → set of illegal Scryfall card IDs */
   illegalByDeck: Record<string, Set<string>>;
   /** deck id → true while checking */
@@ -27,10 +29,67 @@ interface LegalityState {
 }
 
 export const useLegalityStore = create<LegalityState>(() => ({
+  hydrated: false,
   illegalByDeck: {},
   checking: {},
   checkedKeyByDeck: {},
 }));
+
+// ---------- Persistence ----------
+//
+// The legality cache survives reloads so that re-opening the app doesn't
+// re-check decks whose cards + format haven't changed since last run.
+// `checking` is intentionally excluded — an in-progress flag from a
+// previous session is meaningless.
+
+const STORAGE_KEY = "boundless-grimoire:legality";
+
+interface PersistedShape {
+  illegalByDeck: Record<string, string[]>;
+  checkedKeyByDeck: Record<string, string>;
+}
+
+export async function hydrateLegalityStore(): Promise<void> {
+  const stored = await storage.get<PersistedShape>(STORAGE_KEY);
+  const illegalByDeck: Record<string, Set<string>> = {};
+  if (stored?.illegalByDeck) {
+    for (const [id, arr] of Object.entries(stored.illegalByDeck)) {
+      illegalByDeck[id] = new Set(arr);
+    }
+  }
+  useLegalityStore.setState({
+    hydrated: true,
+    illegalByDeck,
+    checking: {},
+    checkedKeyByDeck: stored?.checkedKeyByDeck ?? {},
+  });
+}
+
+let writeChain: Promise<void> = Promise.resolve();
+
+function persist(state: LegalityState): void {
+  const shape: PersistedShape = {
+    illegalByDeck: Object.fromEntries(
+      Object.entries(state.illegalByDeck).map(([id, set]) => [id, [...set]]),
+    ),
+    checkedKeyByDeck: state.checkedKeyByDeck,
+  };
+  writeChain = writeChain
+    .catch(() => {})
+    .then(() => storage.set(STORAGE_KEY, shape))
+    .catch((e) => console.error("[legalityStore] persist failed", e));
+}
+
+useLegalityStore.subscribe((state, prev) => {
+  if (!state.hydrated) return;
+  if (
+    state.illegalByDeck === prev.illegalByDeck &&
+    state.checkedKeyByDeck === prev.checkedKeyByDeck
+  ) {
+    return;
+  }
+  persist(state);
+});
 
 /** Stable signature: if this matches a prior run for the same deck, skip. */
 function legalityKey(

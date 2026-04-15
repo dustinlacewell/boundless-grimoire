@@ -188,3 +188,5 @@ All charts use `ChartCard` as their outer shell (Surface + pinned title + center
 **Push** (`pushDeck.ts`) — goes through the MAIN-world bridge (`untapBridge.ts`) to reach `apiStore.send("update-deck", …)`. Deletions use `pinia:deckStore:deleteDeck` so untap's reactive sidebar re-renders without a page reload. Pushes are debounced at 1500 ms (`pushSchedule.ts`); rapid edits collapse into one push.
 
 **Boot sequence** (`bootSync.ts`) — pull-then-push ordering prevents duplicates: pulling first links any unseen untap decks before the push phase runs. The push phase waits for the bridge (via `UntapSync.whenReady()`) and skips gracefully if it never comes up. Freshly pulled (still-enriching) decks are skipped during boot push.
+
+**Quick or Proper?** When deciding between possible architectural and implementation routes you will ALWAYS pick the **proper** route. Every session should accomplish the task, but also involving the codebase **as you notice**. 

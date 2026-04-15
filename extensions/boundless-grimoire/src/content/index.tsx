@@ -13,6 +13,7 @@ import { hydrateCustomQueryStore } from "@boundless-grimoire/app";
 import { hydratePresetStore } from "@boundless-grimoire/app";
 import { hydratePrintSizeStore } from "@boundless-grimoire/app";
 import { hydrateSettingsStore } from "@boundless-grimoire/app";
+import { hydrateLegalityStore } from "@boundless-grimoire/app";
 import { App } from "@boundless-grimoire/app";
 
 const HOST_ID = "boundless-grimoire-root";
@@ -43,6 +44,7 @@ const allHydrated = Promise.allSettled([
   hydrateCustomFormatStore(),
   hydrateSettingsStore(),
   hydrateMetaGroupsStore(),
+  hydrateLegalityStore(),
 ]).then((results) => {
   for (const r of results) {
     if (r.status === "rejected") {

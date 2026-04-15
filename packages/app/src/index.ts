@@ -82,6 +82,7 @@ export { hydrateCustomFormatStore } from "./filters/customFormatStore";
 export { hydrateCustomQueryStore } from "./filters/customQueryStore";
 export { hydratePresetStore } from "./filters/presetStore";
 export { hydrateSettingsStore } from "./settings/settingsStore";
+export { hydrateLegalityStore } from "./decks/legalityStore";
 
 // --- Domain types --------------------------------------------------------
 
