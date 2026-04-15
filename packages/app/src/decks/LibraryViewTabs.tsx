@@ -1,3 +1,5 @@
+import { ButtonGroup } from "@boundless-grimoire/ui";
+
 interface Props {
   view: "decks" | "cubes";
   deckCount: number;
@@ -7,39 +9,30 @@ interface Props {
 
 /**
  * Segmented control above the ribbon that switches the library between
- * Decks and Cubes. Each tab shows its entity count so the user can see
- * at a glance what's on the other side. Selected tab uses the design
- * system's `ui-interactive-selected` treatment; unselected uses
- * `ui-interactive` (hover lights up the accent border).
+ * Decks and Cubes. Renders through the design-system `ButtonGroup` so
+ * the buttons get the same fixed-height / padding / font sizing as
+ * every other segmented control (DeckLayoutToggle, etc.). Rolling a
+ * custom `<button>` here rendered fine on the homepage but squished
+ * under untap.in, because the button inherited untap's tighter
+ * line-height.
  */
 export function LibraryViewTabs({ view, deckCount, cubeCount, onChange }: Props) {
+  const options = [
+    {
+      value: "decks" as const,
+      label: `Decks${deckCount > 0 ? ` (${deckCount})` : ""}`,
+    },
+    {
+      value: "cubes" as const,
+      label: `Cubes${cubeCount > 0 ? ` (${cubeCount})` : ""}`,
+    },
+  ];
   return (
-    <div className="inline-flex gap-1">
-      <Tab active={view === "decks"} onClick={() => onChange("decks")}>
-        Decks{deckCount > 0 ? ` (${deckCount})` : ""}
-      </Tab>
-      <Tab active={view === "cubes"} onClick={() => onChange("cubes")}>
-        Cubes{cubeCount > 0 ? ` (${cubeCount})` : ""}
-      </Tab>
-    </div>
-  );
-}
-
-function Tab({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  const base =
-    "px-3 py-1 rounded-md text-[12px] font-semibold tracking-wider uppercase cursor-pointer ui-interactive ui-interactive-border";
-  const state = active ? "ui-interactive-selected" : "bg-bg-2 text-text-muted";
-  return (
-    <button type="button" onClick={onClick} className={`${base} ${state}`}>
-      {children}
-    </button>
+    <ButtonGroup
+      options={options}
+      isSelected={(v) => v === view}
+      onToggle={(v) => onChange(v)}
+      size="sm"
+    />
   );
 }

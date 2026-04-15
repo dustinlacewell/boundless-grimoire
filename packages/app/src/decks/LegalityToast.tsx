@@ -1,66 +1,90 @@
 /**
  * Bridges the legality-store state machine into the global toast system.
- * Renders nothing itself — the actual toast UI lives in <ToastStack/>.
+ * One toast per deck being checked:
  *
- * Single dedup key (`legality`) means the "checking" toast and the
- * subsequent "legal"/"illegal" verdict naturally replace each other in
- * the stack instead of doubling up.
+ *   checking        → sticky spinner deck-themed toast
+ *   done (legal)    → ✓ linger toast (auto-dismiss)
+ *   done (illegal)  → ✗ linger toast (auto-dismiss)
+ *
+ * Renders nothing itself — the actual toast UI lives in <ToastStack/>.
  */
 import { useEffect, useRef } from "react";
 import { Spinner, colors } from "@boundless-grimoire/ui";
-import { dismissByKey, pushToast, ToastFrame } from "../notifications";
+import { dismissByKey, pushToast, DeckToastFrame } from "../notifications";
+import { useDeckStore } from "../storage/deckStore";
 import { useLegalityStore } from "./legalityStore";
 
-const LEGALITY_KEY = "legality";
-const VERDICT_LINGER_MS = 5000;
+const VERDICT_LINGER_MS = 3500;
+
+const keyFor = (deckId: string) => `legality:${deckId}`;
 
 export function LegalityToast() {
-  const isChecking = useLegalityStore((s) => Object.values(s.checking).some(Boolean));
-  // Track the previous value of isChecking so we can detect the
-  // checking → not-checking transition that should fire the verdict.
-  const prevChecking = useRef(false);
+  const checking = useLegalityStore((s) => s.checking);
+  const illegalByDeck = useLegalityStore((s) => s.illegalByDeck);
+  const decks = useDeckStore((s) => s.library.decks);
+
+  // Track which decks were "checking" last tick so we fire once per
+  // checking→idle transition (verdict), not every render.
+  const prevChecking = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    if (isChecking) {
+    const nowChecking = new Set<string>();
+    for (const [id, v] of Object.entries(checking)) if (v) nowChecking.add(id);
+
+    // Newly checking: sticky spinner toast.
+    for (const id of nowChecking) {
+      if (prevChecking.current.has(id)) continue;
+      const deckLabel = decks[id]?.name ?? id;
       pushToast({
-        key: LEGALITY_KEY,
+        key: keyFor(id),
         render: () => (
-          <ToastFrame variant="info" icon={<Spinner size={20} />}>
-            Checking deck legality…
-          </ToastFrame>
+          <DeckToastFrame deckId={id} icon={<Spinner size={20} />}>
+            Checking legality of “{deckLabel}”…
+          </DeckToastFrame>
         ),
       });
-    } else if (prevChecking.current) {
-      // Just finished a check — push the verdict.
-      const { illegalByDeck } = useLegalityStore.getState();
-      const hasIllegal = Object.values(illegalByDeck).some((s) => s.size > 0);
+    }
+
+    // Just finished checking: swap to verdict toast.
+    for (const id of prevChecking.current) {
+      if (nowChecking.has(id)) continue;
+      if (!decks[id]) {
+        dismissByKey(keyFor(id));
+        continue;
+      }
+      const deckLabel = decks[id].name;
+      const hasIllegal = (illegalByDeck[id]?.size ?? 0) > 0;
       pushToast({
-        key: LEGALITY_KEY,
+        key: keyFor(id),
         durationMs: VERDICT_LINGER_MS,
         render: () =>
           hasIllegal ? (
-            <ToastFrame
-              variant="error"
+            <DeckToastFrame
+              deckId={id}
               icon={<span style={{ fontSize: 18, lineHeight: 1, color: colors.danger }}>✗</span>}
             >
-              Deck contains illegal cards.
-            </ToastFrame>
+              “{deckLabel}” contains illegal cards.
+            </DeckToastFrame>
           ) : (
-            <ToastFrame
-              variant="success"
+            <DeckToastFrame
+              deckId={id}
               icon={<span style={{ fontSize: 18, lineHeight: 1, color: colors.success }}>✓</span>}
             >
-              Deck is legal.
-            </ToastFrame>
+              “{deckLabel}” is legal.
+            </DeckToastFrame>
           ),
       });
     }
-    prevChecking.current = isChecking;
-  }, [isChecking]);
 
-  // Tear down on unmount so a remount doesn't leave a stale toast hanging.
+    prevChecking.current = nowChecking;
+  }, [checking, illegalByDeck, decks]);
+
+  // Tear down any lingering toasts on unmount.
   useEffect(() => {
-    return () => dismissByKey(LEGALITY_KEY);
+    return () => {
+      for (const id of prevChecking.current) dismissByKey(keyFor(id));
+      prevChecking.current = new Set();
+    };
   }, []);
 
   return null;

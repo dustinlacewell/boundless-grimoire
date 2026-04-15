@@ -138,9 +138,13 @@ function selectUnlinked(allDecks: UntapDeck[], lib: DeckLibrary): UntapDeck[] {
     if (d.deleted) return false;
     if (linked.has(d.deck_uid)) return false;
     // Untap auto-creates an empty "Untitled" deck as a session workspace on
-    // page load. Skip empty decks so they don't keep reappearing locally
-    // every time we pull — nothing to import, and the user didn't ask for it.
-    if (d.cards.length === 0) return false;
+    // page load. Skip those specifically so they don't keep reappearing
+    // locally — but don't drop intentionally-empty cubes / decks the user
+    // actually made (named, or is_cube-flagged), since the user did ask
+    // for those.
+    if (d.cards.length === 0 && !d.is_cube && d.title.trim().toLowerCase() === "untitled") {
+      return false;
+    }
     return true;
   });
 }

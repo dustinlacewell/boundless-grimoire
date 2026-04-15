@@ -4,6 +4,7 @@ import { CubeView } from "../decks/CubeView";
 import { DeckRibbon } from "../decks/DeckRibbon";
 import { DeckView } from "../decks/DeckView";
 import { EditableDeckTitle } from "../decks/EditableDeckTitle";
+import { EnrichmentToast } from "../decks/EnrichmentToast";
 import { EntityHeaderControls } from "../decks/EntityHeaderControls";
 import { LegalityToast } from "../decks/LegalityToast";
 import { LibraryViewTabs } from "../decks/LibraryViewTabs";
@@ -119,7 +120,11 @@ export function Overlay(_props: Props) {
         const isUndo = key === "z" && !e.shiftKey;
         const isRedo = key === "y" || (key === "z" && e.shiftKey);
         if (isUndo || isRedo) {
-          const deckId = useDeckStore.getState().library.selectedId;
+          // Route by the active tab — cubes live under selectedCubeId,
+          // decks under selectedId. Using selectedId alone blanks undo
+          // whenever the Cubes tab is active.
+          const lib = useDeckStore.getState().library;
+          const deckId = lib.libraryView === "cubes" ? lib.selectedCubeId : lib.selectedId;
           if (!deckId) return;
           e.preventDefault();
           if (isUndo) undo(deckId);
@@ -175,6 +180,7 @@ export function Overlay(_props: Props) {
       */}
       <LegalityToast />
       <MetaGroupingToast />
+      <EnrichmentToast />
       <ToastStack />
       <div ref={bodyRef} style={bodyStyle}>
         <Section

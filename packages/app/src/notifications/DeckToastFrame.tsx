@@ -1,8 +1,9 @@
 /**
- * Deck-themed toast — same shape as ToastFrame but with the deck's
- * hero-card art as the background. Used for deck-scoped notifications
- * (grouping, enrichment, sync) so the user can immediately tell which
- * deck a toast is talking about without reading the name.
+ * Deck-themed toast — single-line message with the deck's hero art as
+ * the background so the user can tell which deck a toast refers to
+ * without a title row. Callers include the deck name in the message
+ * when useful; for quick status updates on a single deck, multiple
+ * toasts can stack without ballooning vertically.
  *
  * Hero selection mirrors the deck-ribbon tile: explicit `coverCardId`
  * if set, falling back to the first card by add time.
