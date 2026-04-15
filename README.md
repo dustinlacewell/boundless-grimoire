@@ -37,7 +37,7 @@ The built extension lands in `extensions/boundless-grimoire/dist/`.
 ## Development (watch mode)
 
 ```bash
-pnpm --filter boundless-grimoire watch
+pnpm --filter boundless-grimoire dev
 ```
 
 Rebuilds the extension into `dist/` on every file change. Load the extension from `extensions/boundless-grimoire/dist/` in Chrome and manually reload it after each rebuild.

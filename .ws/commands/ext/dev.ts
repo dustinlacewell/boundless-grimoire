@@ -9,7 +9,7 @@ const pnpm = platform() === "win32" ? "pnpm.cmd" : "pnpm";
 export default {
   name: "ext_dev",
   label: "Watch-build extension",
-  description: "Watch-build a Chrome extension (vite build --watch).",
+  description: "Watch-build a Chrome extension into dist/ on every file change.",
   factory: (workspace) => {
     const exts = workspace.withTag("extension");
     const names = exts.map((p) => p.name) as [string, ...string[]];
