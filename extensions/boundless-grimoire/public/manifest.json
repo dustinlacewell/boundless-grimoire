@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Boundless Grimoire",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Local-first deckbuilder overlay for untap.in. Uses Scryfall for card data; decks live in chrome.storage.",
   "permissions": ["storage"],
   "host_permissions": [
