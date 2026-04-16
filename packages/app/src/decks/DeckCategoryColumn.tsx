@@ -32,15 +32,6 @@ const labelStyle: React.CSSProperties = {
 };
 
 /**
- * Minimum column width. Sized so the standard type-line categories
- * ("Planeswalkers" + " · NN") fit on a single line; long set names
- * from the "by set" grouping wrap onto a second line rather than
- * widen the column. The card art inside renders at `cardWidth`; any
- * extra width shows as empty space to the right of the stack.
- */
-const MIN_COLUMN_WIDTH = 150;
-
-/**
  * One column in the deck view: a category title above its CategoryStack.
  */
 export function DeckCategoryColumn({
@@ -62,7 +53,7 @@ export function DeckCategoryColumn({
         display: "flex",
         flexDirection: "column",
         alignItems: "stretch",
-        width: Math.max(cardWidth, MIN_COLUMN_WIDTH),
+        width: cardWidth,
       }}
     >
       <div style={labelStyle}>

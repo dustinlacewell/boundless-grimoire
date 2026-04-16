@@ -152,7 +152,8 @@ Storage key: `boundless-grimoire:library`. Schema version tracked in `LIBRARY_VE
 ## State management
 
 - **`deckStore`** (Zustand) — single source of truth for the deck library. Hydrated once via `hydrateDeckStore()`, persisted on every change through the `storage` service. All mutations go through exported action functions.
-- **Filter/sort/format state** — persisted inside `Deck` (not a separate store). `useFilterStore` is a facade that reads/writes the active deck's `FilterState`. `customFormatStore` holds named Scryfall query fragments; `customQueryStore` holds user-defined oracle-tag toggles; `presetStore` holds named filter snapshots. Separate Zustand slices for favorites, pins, card preview, print picker, grid size, print size, legality.
+- **Filter/sort/format state** — persisted inside `Deck` (not a separate store). `useFilterStore` is a facade that reads/writes the active deck's `FilterState`. `customFormatStore` holds named Scryfall query fragments; `customQueryStore` holds user-defined oracle-tag toggles; `presetStore` holds named filter snapshots. Separate Zustand slices for favorites, pins, card preview, print picker, print size, legality.
+- **Card zoom** — two independent stores: `gridSizeStore` (search grid, MIN 100px) and `deckGridSizeStore` (deck columns, MIN 150px — wide enough for category labels). By default they move together (`zoomLinked` setting); unchecking "Link search and deck zoom" in Settings makes them independent. `useCtrlWheelCardResize(ref, context)` routes Ctrl+scroll to the right store(s). When linked, search is the leader: deck is derived as `clamp(newSearchWidth, DECK_MIN, DECK_MAX)`, so deck waits at 150 while search is below that floor and they re-align naturally when zooming back up.
 - **TanStack Query** — Scryfall search results (infinite pagination), via the `scryfall` service.
 
 ## Scryfall API flow

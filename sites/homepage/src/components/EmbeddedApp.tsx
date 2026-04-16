@@ -7,6 +7,7 @@ import {
   hydrateDeckStore,
   hydrateFavoritesStore,
   hydrateGridSizeStore,
+  hydrateDeckGridSizeStore,
   hydrateLegalityStore,
   hydrateMetaGroupsStore,
   hydratePinnedCardsStore,
@@ -49,6 +50,7 @@ function bootOnce(): { services: Services; ready: Promise<void> } {
   const ready = Promise.allSettled([
     hydrateDeckStore(),
     hydrateGridSizeStore(),
+    hydrateDeckGridSizeStore(),
     hydratePinnedCardsStore(),
     hydrateFavoritesStore(),
     hydratePrintSizeStore(),

@@ -76,6 +76,7 @@ export {
 export { hydrateMetaGroupsStore } from "./decks/metaGroupsStore";
 export { hydrateFavoritesStore } from "./search/favoritesStore";
 export { hydrateGridSizeStore } from "./search/gridSizeStore";
+export { hydrateDeckGridSizeStore } from "./decks/deckGridSizeStore";
 export { hydratePinnedCardsStore } from "./search/pinnedCardsStore";
 export { hydratePrintSizeStore } from "./cards/printSizeStore";
 export { hydrateCustomFormatStore } from "./filters/customFormatStore";
