@@ -129,3 +129,4 @@ export { toSnapshot } from "./scryfall/snapshot";
 // of truth for the Scryfall throttle policy.
 export { RateLimitedBucket } from "./scryfall/rateLimiter";
 export { bucketFor, searchBucket, defaultBucket } from "./scryfall/buckets";
+export { directScryfall } from "./scryfall/directClient";

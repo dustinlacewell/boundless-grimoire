@@ -30,7 +30,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         content: resolve(__dirname, "src/content/index.tsx"),
-        background: resolve(__dirname, "src/background/index.ts"),
         untapBridge: resolve(__dirname, "src/sync/untapBridge.ts"),
       },
       output: {
