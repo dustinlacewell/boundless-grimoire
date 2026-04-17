@@ -1,6 +1,6 @@
 {
   "name": "@boundless-grimoire/app",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "The Boundless Grimoire deck-builder — UI, stores, and service interfaces. Consumed by the Chrome extension and the marketing site's /demo route.",
   "private": true,
   "type": "module",
