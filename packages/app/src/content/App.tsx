@@ -4,8 +4,15 @@ import { PrintPickerModal } from "../cards/PrintPickerModal";
 import { Overlay } from "./Overlay";
 import { TriggerButton } from "./TriggerButton";
 
-export function App() {
-  const [open, setOpen] = useState(false);
+interface AppProps {
+  /** Start with the overlay already open. Used by the homepage demo. */
+  initialOpen?: boolean;
+  /** Start with the Help modal visible on the About tab. */
+  initialHelpOpen?: boolean;
+}
+
+export function App({ initialOpen = false, initialHelpOpen = false }: AppProps) {
+  const [open, setOpen] = useState(initialOpen);
 
   // Esc closes the overlay
   useEffect(() => {
@@ -38,7 +45,7 @@ export function App() {
 
   return (
     <>
-      {open && <Overlay />}
+      {open && <Overlay initialHelpOpen={initialHelpOpen} />}
       <TriggerButton open={open} onToggle={() => setOpen((v) => !v)} />
       <PrintPickerModal />
       <CardPreview />

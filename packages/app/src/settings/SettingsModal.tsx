@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  formatsToText,
-  textToFormats,
-  setCustomFormats,
-  resetCustomFormats,
-  useCustomFormatStore,
-} from "../filters/customFormatStore";
+import { FormatList } from "../formats/FormatList";
 import {
   queriesToText,
   textToQueries,
@@ -150,14 +144,12 @@ interface Props {
 
 export function SettingsModal({ onClose }: Props) {
   const queries = useCustomQueryStore((s) => s.queries);
-  const formats = useCustomFormatStore((s) => s.formats);
   const devMode = useSettingsStore((s) => s.settings.devMode);
   const analyticsLayout = useSettingsStore((s) => s.settings.analyticsLayout);
   const previewMode = useSettingsStore((s) => s.settings.previewMode);
   const undoHistoryLimit = useSettingsStore((s) => s.settings.undoHistoryLimit);
   const zoomLinked = useSettingsStore((s) => s.settings.zoomLinked);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
-  const [formatText, setFormatText] = useState(() => formatsToText(formats));
   const [tab, setTab] = useState<Tab>("general");
 
   useEffect(() => {
@@ -178,15 +170,6 @@ export function SettingsModal({ onClose }: Props) {
     setFilterText(queriesToText(defaults));
   };
 
-  const handleSaveFormats = () => {
-    setCustomFormats(textToFormats(formatText));
-    onClose();
-  };
-
-  const handleResetFormats = () => {
-    const defaults = resetCustomFormats();
-    setFormatText(formatsToText(defaults));
-  };
 
   const host = document.getElementById("boundless-grimoire-root");
   if (!host) return null;
@@ -374,34 +357,7 @@ export function SettingsModal({ onClose }: Props) {
               </div>
             </>
           )}
-          {tab === "formats" && (
-            <>
-              <div style={hintStyle}>
-                Define formats that can be assigned to decks. One per line, format:{" "}
-                <strong>Name=scryfall query</strong>
-                <br />
-                When a deck has a format, it applies to all searches and flags illegal cards.
-                <br />
-                Example: <code style={{ color: colors.text }}>Standard=f:standard</code>
-                {" "}or{" "}
-                <code style={{ color: colors.text }}>My Cube=s:mkm or s:dsk or s:blb</code>
-              </div>
-              <textarea
-                style={{ ...textareaStyle, minHeight: 180 }}
-                value={formatText}
-                onChange={(e) => setFormatText(e.target.value)}
-                spellCheck={false}
-              />
-              <div style={footerStyle}>
-                <button type="button" style={closeBtnStyle} onClick={handleResetFormats}>
-                  Reset to Defaults
-                </button>
-                <button type="button" style={saveBtnStyle} onClick={handleSaveFormats}>
-                  Save
-                </button>
-              </div>
-            </>
-          )}
+          {tab === "formats" && <FormatList />}
         </div>
       </div>
     </div>,

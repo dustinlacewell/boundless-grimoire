@@ -1,13 +1,89 @@
-## Boundless Grimoire
+<div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
 
-A deck-builder for untap.in
-
-<div style={{ display: "flex", justifyContent: "center", margin: "8px 0 20px" }}>
-  <GrimoireLogo size={220} hoverSwap />
+<div style={{
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: 240,
+  margin: "8px 0 -12px",
+}}>
+  <div style={{
+    position: "absolute",
+    width: 260,
+    height: 260,
+    borderRadius: "50%",
+    background: "radial-gradient(circle, rgba(155,75,255,0.25) 0%, transparent 70%)",
+    pointerEvents: "none",
+  }} />
+  <GrimoireLogo size={180} hoverSwap />
+  <div style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  }}>
+    <HeroTitle>Boundless Grimoire</HeroTitle>
+  </div>
 </div>
 
-<div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+<p style={{ fontSize: "15px", lineHeight: 1.6, maxWidth: 420, margin: "12px auto 16px", color: "var(--text-muted, #aaa)" }}>
+  A comfy and customizable Magic: the Gathering deck-builder that syncs
+  with <a href="https://untap.in" target="_blank" rel="noopener">untap.in</a>.
+  Search cards on Scryfall, filter with the full query language,
+  and your decks stay in sync!
+</p>
+
+<div style={{ marginBottom: 20 }}>
   <Version />
 </div>
 
-[Source Code](https://github.com/dustinlacewell/boundless-grimoire)
+<div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+  <a
+    href="https://github.com/dustinlacewell/boundless-grimoire/releases/latest"
+    target="_blank"
+    rel="noopener"
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "8px 16px",
+      fontSize: "13px",
+      fontWeight: 600,
+      borderRadius: 6,
+      background: "#ff7e3a",
+      color: "#0a0a0c",
+      textDecoration: "none",
+    }}
+  >
+    Download for Chrome
+  </a>
+  <a
+    href="https://github.com/dustinlacewell/boundless-grimoire"
+    target="_blank"
+    rel="noopener"
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "8px 16px",
+      fontSize: "13px",
+      fontWeight: 600,
+      borderRadius: 6,
+      background: "var(--bg-2, #1a1a2e)",
+      border: "1px solid var(--border-strong, #444)",
+      color: "var(--text, #eee)",
+      textDecoration: "none",
+    }}
+  >
+    View on GitHub
+  </a>
+</div>
+
+</div>

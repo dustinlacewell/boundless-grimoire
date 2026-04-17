@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { buildScryfallQuery } from "../filters/buildQuery";
-import { useCustomFormatStore } from "../filters/customFormatStore";
+import { useCustomFormatStore, compileFragment } from "../formats";
 import { useFilterStore } from "../filters/store";
 import type { ScryfallCard } from "../scryfall/types";
 import { selectedDeck, useDeckStore } from "../storage/deckStore";
@@ -95,7 +95,8 @@ export function SearchResults() {
   const sortField = deck?.sortField ?? DEFAULT_SORT_FIELD;
   const sortDir = deck?.sortDir ?? DEFAULT_SORT_DIR;
   const formats = useCustomFormatStore((s) => s.formats);
-  const formatFragment = deck?.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
+  const fmt = deck?.formatIndex != null ? formats[deck.formatIndex] : null;
+  const formatFragment = fmt ? compileFragment(fmt) : null;
   const query = useMemo(() => {
     const base = buildScryfallQuery(filterState);
     return formatFragment ? `(${formatFragment}) ${base}`.trim() : base;

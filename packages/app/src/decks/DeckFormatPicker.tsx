@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCustomFormatStore } from "../filters/customFormatStore";
+import { useCustomFormatStore } from "../formats";
 import { setDeckFormat } from "../storage/deckStore";
 import { Dropdown } from "@boundless-grimoire/ui";
 

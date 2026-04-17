@@ -602,9 +602,9 @@ export function swapCardPrint(
 export function importDecklist(
   entries: import("../decks/parseDecklist").DecklistEntry[],
   name = "Imported Deck",
-  options: { isCube?: boolean } = {},
+  options: { isCube?: boolean; commander?: string } = {},
 ): Promise<string> {
-  const { isCube = false } = options;
+  const { isCube = false, commander } = options;
   const deckId = isCube ? createCube(name) : createDeck(name);
   // Flag as enriching so the ribbon tile spins.
   mutate((lib) => {
@@ -614,7 +614,7 @@ export function importDecklist(
   });
   // Phase 2 runs in the background. Errors don't propagate to the
   // caller — we log and clear `enriching` so the spinner stops.
-  void resolveAndPopulate(deckId, entries, isCube).catch((err) => {
+  void resolveAndPopulate(deckId, entries, isCube, commander).catch((err) => {
     console.error(`[importDecklist] "${name}" failed`, err);
     mutate((lib) => {
       const deck = lib.decks[deckId];
@@ -629,17 +629,26 @@ async function resolveAndPopulate(
   deckId: string,
   entries: import("../decks/parseDecklist").DecklistEntry[],
   isCube: boolean,
+  commanderName?: string,
 ): Promise<void> {
   const { getCardsByIds } = await import("../services/scryfall");
   const { toSnapshot } = await import("../scryfall/snapshot");
 
-  const uniqueNames = [...new Set(entries.map((e) => e.name))];
-  const identifiers = uniqueNames.map((n) => ({ name: n }));
+  const nameSet = new Set(entries.map((e) => e.name));
+  if (commanderName) nameSet.add(commanderName);
+  const identifiers = [...nameSet].map((n) => ({ name: n }));
   const resolved = await getCardsByIds(identifiers);
 
   const byName = new Map<string, CardSnapshot>();
   for (const card of resolved) {
-    byName.set(card.name.toLowerCase(), toSnapshot(card));
+    const snap = toSnapshot(card);
+    const name = card.name.toLowerCase();
+    byName.set(name, snap);
+    // Double-faced / split cards: Scryfall returns "A // B" but decklists
+    // often use just "A". Index under the front face too so lookups work
+    // regardless of which form the decklist used.
+    const splitIdx = name.indexOf(" // ");
+    if (splitIdx > 0) byName.set(name.slice(0, splitIdx), snap);
   }
 
   mutate((lib) => {
@@ -650,7 +659,10 @@ async function resolveAndPopulate(
     const now = Date.now();
     for (const entry of entries) {
       const snap = byName.get(entry.name.toLowerCase());
-      if (!snap) continue;
+      if (!snap) {
+        console.warn(`[importDecklist] card not found on Scryfall: "${entry.name}"`);
+        continue;
+      }
       // Cubes: all cards go in the mainboard under "group-1" (no
       // sideboard concept). Decks: standard main / sideboard split.
       const isSide = !isCube && entry.zone === "sideboard";
@@ -663,11 +675,25 @@ async function resolveAndPopulate(
         target[snap.id] = { snapshot: snap, count: entry.count, addedAt: now, zone: zoneTag };
       }
     }
+    // If a commander was requested, find it by name in the resolved cards
+    // and assign it. The commander is removed from the mainboard (cards map)
+    // since it lives in its own slot.
+    let commander: CardSnapshot | undefined;
+    if (commanderName) {
+      const cmdSnap = byName.get(commanderName.toLowerCase());
+      if (cmdSnap) {
+        commander = cmdSnap;
+        // Remove from mainboard/sideboard if it ended up there
+        // (e.g. commander was also in the decklist entries).
+        delete cards[cmdSnap.id];
+        delete sideboard[cmdSnap.id];
+      }
+    }
     return {
       ...lib,
       decks: {
         ...lib.decks,
-        [deckId]: touch({ ...deck, cards, sideboard, enriching: false }),
+        [deckId]: touch({ ...deck, cards, sideboard, commander, enriching: false }),
       },
     };
   });
@@ -688,7 +714,7 @@ export function selectedDeck(state: DeckStoreState): Deck | null {
 }
 
 export function deckCardCount(deck: Deck): number {
-  let total = 0;
+  let total = deck.commander ? 1 : 0;
   for (const c of Object.values(deck.cards)) total += sanitizeCount(c.count);
   for (const c of Object.values(deck.sideboard)) total += sanitizeCount(c.count);
   return total;

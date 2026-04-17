@@ -14,7 +14,7 @@ interface Props {
   onAltClick?: (snapshot: CardSnapshot) => void;
   onSetCover?: (snapshot: CardSnapshot) => void;
   onSetCommander?: (snapshot: CardSnapshot) => void;
-  illegalCards?: Set<string>;
+  illegalCards?: Map<string, string>;
 }
 
 const TRANSITION = "transform 200ms ease-out";
@@ -106,7 +106,7 @@ export function CategoryStack({
               onAltClick={onAltClick}
               onSetCover={onSetCover}
               onSetCommander={onSetCommander}
-              illegal={illegalCards?.has(entry.snapshot.id)}
+              illegalReason={illegalCards?.get(entry.snapshot.id)}
             />
           </div>
         );

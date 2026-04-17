@@ -11,13 +11,15 @@ interface SeedDeck {
   name: string;
   /** Pasted decklist in the standard "4 Card Name" format. */
   decklist: string;
+  /** Card name to assign as commander after import. */
+  commander?: string;
   /**
    * Index into the default custom-format list (see customFormatStore's
    * `defaultFormats`):
-   *   0 Standard, 1 Modern, 2 Pioneer, 3 Commander, 4 Pauper, 5 Legacy, 6 Vintage.
-   * Demo seeds run against the default formats — if a user has reordered
-   * their formats locally, the assigned index may point at the wrong
-   * format. Fine for a first-load seed; intentional edits stick.
+   *   0 Standard, 1 Modern, 2 Pioneer, 3 Legacy, 4 Vintage, 5 Pauper, 6 Commander.
+   * Must match the order in `formats/defaults.ts`. Demo seeds run against
+   * these defaults — if a user has reordered locally, the index may point
+   * at the wrong format. Fine for a first-load seed; intentional edits stick.
    */
   formatIndex: number;
 }
@@ -52,7 +54,7 @@ export const SEED_DECKS: SeedDeck[] = [
   },
   {
     name: "Mono-Blue Counters",
-    formatIndex: 5, // Legacy
+    formatIndex: 3, // Legacy
     decklist: `
 4 Counterspell
 4 Brainstorm
@@ -69,10 +71,9 @@ export const SEED_DECKS: SeedDeck[] = [
   },
   {
     name: "Atraxa Superfriends (Commander)",
-    formatIndex: 3, // Commander
+    formatIndex: 6, // Commander
+    commander: "Atraxa, Praetors' Voice",
     decklist: `
-1 Atraxa, Praetors' Voice
-
 1 Jace, the Mind Sculptor
 1 Elspeth, Sun's Champion
 1 Liliana of the Veil

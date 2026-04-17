@@ -63,6 +63,8 @@ export interface ScryfallSearchResponse {
   next_page?: string;
   data: ScryfallCard[];
   warnings?: string[];
+  /** Identifiers that Scryfall couldn't resolve (from /cards/collection). */
+  not_found?: unknown[];
 }
 
 export interface ScryfallErrorResponse {

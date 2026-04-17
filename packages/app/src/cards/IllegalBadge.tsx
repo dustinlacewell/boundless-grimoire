@@ -3,13 +3,15 @@
  *
  * A red-bordered overlay with a ⚠ emoji centered on the card art,
  * shown when a card doesn't match the deck's assigned format.
+ * Hover tooltip shows the specific reason.
  */
 
 interface Props {
   cardWidth: number;
+  reason: string;
 }
 
-export function IllegalBadge({ cardWidth }: Props) {
+export function IllegalBadge({ cardWidth, reason }: Props) {
   const size = Math.max(28, cardWidth * 0.3);
 
   return (
@@ -25,10 +27,10 @@ export function IllegalBadge({ cardWidth }: Props) {
           zIndex: 1,
         }}
       />
-      {/* Warning emoji */}
+      {/* Warning emoji with reason tooltip */}
       <div
-        aria-label="Not legal in format"
-        title="Not legal in this deck's format"
+        aria-label={reason}
+        title={reason}
         style={{
           position: "absolute",
           left: "50%",
@@ -39,9 +41,10 @@ export function IllegalBadge({ cardWidth }: Props) {
           fontFamily: "system-ui, sans-serif",
           filter:
             "drop-shadow(0 0 6px rgba(0,0,0,0.85)) drop-shadow(0 2px 4px rgba(0,0,0,0.6))",
-          pointerEvents: "none",
+          pointerEvents: "auto",
           userSelect: "none",
           zIndex: 2,
+          cursor: "help",
         }}
       >
         ⚠️

@@ -17,7 +17,7 @@ interface Props {
   onSetCommander?: (snapshot: CardSnapshot) => void;
   /** Extra columns (e.g. the commander slot) rendered before `groups`. */
   leadingColumns?: React.ReactNode;
-  illegalCards?: Set<string>;
+  illegalCards?: Map<string, string>;
 }
 
 const scrollWrapperBase: CSSProperties = {

@@ -95,7 +95,11 @@ async function maybeSeedExampleDecks(): Promise<void> {
 
   for (const seed of SEED_DECKS) {
     try {
-      const deckId = await importDecklist(parseDecklist(seed.decklist), seed.name);
+      const deckId = await importDecklist(
+        parseDecklist(seed.decklist),
+        seed.name,
+        { commander: seed.commander },
+      );
       setDeckFormat(deckId, seed.formatIndex);
     } catch (err) {
       console.error(`[demo] failed to seed "${seed.name}"`, err);
@@ -124,9 +128,22 @@ async function maybeSeedExampleDecks(): Promise<void> {
   await storage.set(SEED_FLAG_KEY, true);
 }
 
+const FIRST_VISIT_KEY = "boundless-grimoire:demo:visited";
+
 export function EmbeddedApp() {
   const [b] = useState(() => bootOnce());
   const [hydrated, setHydrated] = useState(false);
+  const [isFirstVisit] = useState(() => {
+    try {
+      const forced = new URLSearchParams(window.location.search).has("first-time");
+      if (forced) return true;
+      if (localStorage.getItem(FIRST_VISIT_KEY)) return false;
+      localStorage.setItem(FIRST_VISIT_KEY, "1");
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -138,24 +155,19 @@ export function EmbeddedApp() {
     };
   }, [b]);
 
-  // The host id is the portal target the global modals (HelpModal,
-  // PrintPickerModal, etc.) look up when mounting. It must exist before
-  // they render; nothing else about it matters. App's TriggerButton is
-  // fixed-positioned (top-left) and the Overlay is fixed-inset-0 when
-  // toggled open — both float over the marketing content beneath.
-  //
-  // Deliberately NO `isolate`: it would trap the overlay's max-int
-  // z-index inside this container, which from outside has default
-  // stacking. Page-level fixed elements (the Try-It callout) would
-  // then render ON TOP of the overlay. Without isolate, the overlay's
-  // z-index propagates to the document and covers everything.
+  // Ensure the portal target exists before App mounts. HelpModal and
+  // other portals look up this div by id — if it doesn't exist in the
+  // DOM when the first render runs, createPortal returns null and the
+  // modal silently doesn't mount. Splitting into two divs (outer target
+  // always present, inner app rendered after hydrate) fixes the race.
   return (
-    <div id="boundless-grimoire-root">
+    <>
       {hydrated && (
         <ServicesProvider services={b.services}>
-          <App />
+          <App initialOpen initialHelpOpen={isFirstVisit} />
         </ServicesProvider>
       )}
-    </div>
+      <div id="boundless-grimoire-root" className="ui-scrollbars" />
+    </>
   );
 }

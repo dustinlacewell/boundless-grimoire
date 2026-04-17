@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type DragEvent } from "react";
 import { imageUrl } from "../cards/imageUrl";
-import { useCustomFormatStore } from "../filters/customFormatStore";
+import { useCustomFormatStore, compileFragment } from "../formats";
 import { coverSnapshotOf, deckCardCount } from "../storage/deckStore";
 import type { Deck } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
@@ -9,7 +9,7 @@ import { Surface } from "@boundless-grimoire/ui";
 import { DeckTileActions } from "./DeckTileActions";
 import { LegalityBadge } from "./LegalityBadge";
 import { SyncBadge } from "./SyncBadge";
-import { checkLegality, clearLegality } from "./legalityStore";
+import { checkLegality, clearLegality, runValidation } from "./legalityStore";
 
 const WUBRG = ["W", "U", "B", "R", "G"] as const;
 
@@ -82,8 +82,9 @@ export function DeckRibbonItem({
       clearLegality(deck.id);
       return;
     }
-    void checkLegality(deck.id, format.fragment, deck.cards, deck.sideboard);
-  }, [deck.id, format?.fragment, deck.cards, deck.sideboard]);
+    runValidation(deck.id, deck, format);
+    void checkLegality(deck.id, compileFragment(format), deck.cards, deck.sideboard);
+  }, [deck.id, deck, format]);
 
   return (
     <div

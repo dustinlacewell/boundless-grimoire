@@ -50,8 +50,8 @@ interface Props {
   pinned?: boolean;
   /** Show the favorite indicator badge centered on the card art. */
   favorited?: boolean;
-  /** Show the illegal-in-format indicator. */
-  illegal?: boolean;
+  /** Reason why this card is illegal; truthy = show the badge. */
+  illegalReason?: string;
 }
 
 interface TitleOpts {
@@ -111,7 +111,7 @@ export function CardWithCount({
   onSetCommander,
   pinned = false,
   favorited = false,
-  illegal = false,
+  illegalReason,
 }: Props) {
   const { hovered, handlers: hoverHandlers } = useCardHoverPreview(snapshot);
   const ctrlHeld = useCtrlKey();
@@ -167,7 +167,7 @@ export function CardWithCount({
     >
       <CardImage snapshot={snapshot} width={width} />
       {count > 0 && <DogEar count={count} cardWidth={width} />}
-      {illegal && <IllegalBadge cardWidth={width} />}
+      {illegalReason && <IllegalBadge cardWidth={width} reason={illegalReason} />}
       {pinned && <PinBadge cardWidth={width} />}
       {favorited && !pinned && <FavoriteBadge cardWidth={width} />}
       {hovered && onPickPrint && (

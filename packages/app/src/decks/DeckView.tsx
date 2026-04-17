@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { groupDeck } from "../cards/categorize";
 import { openPrintPicker } from "../cards/printPickerStore";
-import { useCustomFormatStore } from "../filters/customFormatStore";
+import { useCustomFormatStore, compileFragment } from "../formats";
 import { useCustomQueryStore } from "../filters/customQueryStore";
 import { useGridSizeStore } from "../search/gridSizeStore";
 import { decrementCard, incrementCard, moveCardToZone } from "../commands/cardActions";
@@ -11,7 +11,7 @@ import type { CardSnapshot, Deck, DeckCard } from "../storage/types";
 import { colors } from "@boundless-grimoire/ui";
 import { CardColumnGrid } from "./CardColumnGrid";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
-import { checkLegality, clearLegality, useLegalityStore } from "./legalityStore";
+import { checkLegality, clearLegality, runValidation, useLegalityStore } from "./legalityStore";
 import { classify } from "./meta/classify";
 import {
   ensureMetaGroups,
@@ -60,17 +60,39 @@ function isLegendary(snapshot: CardSnapshot): boolean {
 export function DeckView({ deck }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
   const formats = useCustomFormatStore((s) => s.formats);
-  const formatFragment = deck.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
-  const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);
+  const format = deck.formatIndex != null ? formats[deck.formatIndex] : null;
+  const formatFragment = format ? compileFragment(format) : null;
+  const scryfallIllegal = useLegalityStore((s) => s.illegalByDeck[deck.id]);
+  const issues = useLegalityStore((s) => s.issuesByDeck[deck.id]);
 
-  // Run legality check when format or cards change.
+  // Combine Scryfall illegality + structural card-level issues into one
+  // map so each card's badge shows all reasons.
+  const illegalSet = useMemo(() => {
+    const combined = new Map<string, string>();
+    if (scryfallIllegal) for (const [id, r] of scryfallIllegal) combined.set(id, r);
+    if (issues) {
+      for (const issue of issues) {
+        if (!issue.cardIds) continue;
+        for (const id of issue.cardIds) {
+          const name = (deck.cards[id] ?? deck.sideboard[id])?.snapshot.name ?? "Unknown";
+          const reason = `${name}: ${issue.message}`;
+          const prev = combined.get(id);
+          combined.set(id, prev ? `${prev}; ${issue.message}` : reason);
+        }
+      }
+    }
+    return combined;
+  }, [scryfallIllegal, issues, deck.cards, deck.sideboard]);
+
+  // Run legality + structural validation when format or cards change.
   useEffect(() => {
-    if (!formatFragment) {
+    if (!format || !formatFragment) {
       clearLegality(deck.id);
       return;
     }
+    runValidation(deck.id, deck, format);
     void checkLegality(deck.id, formatFragment, deck.cards, deck.sideboard);
-  }, [deck.id, formatFragment, deck.cards, deck.sideboard]);
+  }, [deck.id, format, formatFragment, deck.cards, deck.sideboard, deck.commander]);
 
   const deckGroupBy = deck.groupBy;
 
