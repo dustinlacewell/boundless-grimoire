@@ -143,7 +143,7 @@ export interface DeckLibrary {
 }
 
 /** Bump when DeckLibrary's on-disk shape changes. See migrateLibrary. */
-export const LIBRARY_VERSION = 10;
+export const LIBRARY_VERSION = 11;
 
 export const EMPTY_LIBRARY: DeckLibrary = {
   version: LIBRARY_VERSION,

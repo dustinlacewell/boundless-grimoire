@@ -84,6 +84,10 @@ export function buildScryfallQuery(state: FilterState): string {
   const colorClause = buildColorClause(state);
   if (colorClause) parts.push(colorClause);
 
+  // CMC range
+  if (state.cmcMin != null) parts.push(`cmc>=${state.cmcMin}`);
+  if (state.cmcMax != null) parts.push(`cmc<=${state.cmcMax}`);
+
   // Rarity (OR within group)
   parts.push(orGroup("r:", state.rarities));
 

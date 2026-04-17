@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import type { ScryfallCard } from "../scryfall/types";
+import { useCtrlKey } from "../ui/useCtrlKey";
 import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { CardGridItem } from "./CardGridItem";
 import {
@@ -23,13 +24,14 @@ interface Props {
  */
 export function CardGrid({ cards }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
+  const ctrlHeld = useCtrlKey();
   const ref = useRef<HTMLDivElement>(null);
   useCtrlWheelCardResize(ref, "search");
 
   return (
     <div
       ref={ref}
-      title={`Card width: ${cardWidth}px (Ctrl+scroll to resize, ${MIN_CARD_WIDTH}–${MAX_CARD_WIDTH})`}
+      title={ctrlHeld ? undefined : `Card width: ${cardWidth}px (Ctrl+scroll to resize, ${MIN_CARD_WIDTH}–${MAX_CARD_WIDTH})`}
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(auto-fill, minmax(${cardWidth}px, 1fr))`,
