@@ -8,7 +8,6 @@
 import { create } from "zustand";
 import { storage } from "../services/storage";
 import type { FilterState } from "./types";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 export interface FilterPreset {
   id: string;
@@ -67,4 +66,3 @@ export function deletePreset(id: string): void {
   }));
 }
 
-preserveOnHmr(usePresetStore, import.meta.hot);

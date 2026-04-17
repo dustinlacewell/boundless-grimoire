@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { attachPersistence } from "../storage/persistedSlice";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:print-tile-width";
 
@@ -49,4 +48,3 @@ export function adjustPrintWidth(deltaY: number): void {
   );
 }
 
-preserveOnHmr(usePrintSizeStore, import.meta.hot);

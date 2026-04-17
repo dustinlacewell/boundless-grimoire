@@ -9,7 +9,6 @@
  */
 import { create } from "zustand";
 import type { CardSnapshot } from "../storage/types";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface PreviewState {
   snapshot: CardSnapshot | null;
@@ -42,4 +41,3 @@ export function hideCardPreview(): void {
 /** Mouse position in viewport coordinates, updated by the global listener. */
 export const mousePos = { x: 0, y: 0 };
 
-preserveOnHmr(useCardPreviewStore, import.meta.hot);

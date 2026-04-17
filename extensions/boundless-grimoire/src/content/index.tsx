@@ -53,9 +53,8 @@ const allHydrated = Promise.allSettled([
   }
 });
 
-// Boot sync once the deck store is hydrated — pull untap decks we're
-// missing, re-enrich any thin cards, then push every local deck to untap
-// (extension is authority). Runs in parallel with React mount below.
+// Boot sync once the deck store is hydrated. The sync runner itself
+// is stateless — it reads live state from useDeckStore when it runs.
 void deckHydrated.then(() => {
   void services.untap?.boot();
 });

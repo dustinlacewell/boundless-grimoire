@@ -21,7 +21,6 @@
  */
 import { create } from "zustand";
 import type { ReactNode } from "react";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 export interface ToastContext {
   /** Dismisses this toast. Safe to call multiple times. */
@@ -116,4 +115,3 @@ export function dismissByKey(key: string): void {
   }));
 }
 
-preserveOnHmr(useToastStore, import.meta.hot);

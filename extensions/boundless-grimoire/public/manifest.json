@@ -24,7 +24,7 @@
   "content_scripts": [
     {
       "matches": ["https://untap.in/*", "https://*.untap.in/*"],
-      "js": ["untapBridge-loader.js"],
+      "js": ["untapBridge.js"],
       "run_at": "document_idle",
       "world": "MAIN"
     },

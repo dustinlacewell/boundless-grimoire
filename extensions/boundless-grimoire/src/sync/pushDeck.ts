@@ -87,6 +87,83 @@ export async function pushDeck(deck: Deck): Promise<string | null> {
   return ok ? untapDeck.deck_uid : null;
 }
 
+/**
+ * Read the deck back from untap and verify its actual card list matches
+ * what we just pushed. Catches:
+ *   - Silent-drop: untap couldn't resolve a name and dropped the entry.
+ *   - Silent-substitution: untap resolved to a different card.
+ *   - Name typo / split-card mismatch surviving paste-deck.
+ *   - Title mismatch.
+ *
+ * Comparison is per-(card, zone): we build a multiset keyed by
+ * `name|zone` for both sides and diff. Card name is the only stable
+ * cross-system identifier — untap's `card_uid` is its own internal id
+ * and isn't comparable to our Scryfall ids. Names are normalized
+ * (lowercase + collapse "A // B" to "a") to dodge split-card noise.
+ *
+ * On mismatch the reason names the first divergent entry so the user
+ * (and logs) know exactly what went wrong.
+ */
+function normalizeCardName(name: string): string {
+  const lower = name.toLowerCase().trim();
+  const splitIdx = lower.indexOf(" // ");
+  return splitIdx > 0 ? lower.slice(0, splitIdx) : lower;
+}
+
+function entryKey(name: string, zone: string): string {
+  return `${normalizeCardName(name)}|${zone}`;
+}
+
+export async function verifyDeckSync(
+  deck: Deck,
+  untapDeckUid: string,
+): Promise<{ matches: true } | { matches: false; reason: string }> {
+  if (!isUntapAvailable()) return { matches: false, reason: "bridge unavailable" };
+  let remote: UntapDeck;
+  try {
+    remote = (await untapSend("get-deck", untapDeckUid)) as UntapDeck;
+  } catch (e) {
+    return { matches: false, reason: `verify get-deck failed: ${(e as Error).message ?? e}` };
+  }
+
+  if ((remote.title ?? "") !== deck.name) {
+    return { matches: false, reason: `name mismatch: local "${deck.name}", untap "${remote.title ?? ""}"` };
+  }
+
+  const local = new Map<string, number>();
+  for (const c of Object.values(deck.cards)) {
+    if (!c.snapshot.name) continue;
+    const k = entryKey(c.snapshot.name, c.zone);
+    local.set(k, (local.get(k) ?? 0) + c.count);
+  }
+  for (const c of Object.values(deck.sideboard)) {
+    if (!c.snapshot.name) continue;
+    const k = entryKey(c.snapshot.name, c.zone);
+    local.set(k, (local.get(k) ?? 0) + c.count);
+  }
+
+  const remoteCounts = new Map<string, number>();
+  for (const c of (remote.cards ?? []) as Array<{ title?: string; zone?: string; qty?: number }>) {
+    if (!c.title || !c.zone) continue;
+    const k = entryKey(c.title, c.zone);
+    remoteCounts.set(k, (remoteCounts.get(k) ?? 0) + (c.qty ?? 0));
+  }
+
+  // Diff both directions so missing AND extra entries surface.
+  const allKeys = new Set([...local.keys(), ...remoteCounts.keys()]);
+  for (const k of allKeys) {
+    const l = local.get(k) ?? 0;
+    const r = remoteCounts.get(k) ?? 0;
+    if (l !== r) {
+      const [name, zone] = k.split("|");
+      if (l === 0) return { matches: false, reason: `extra in untap "${name}" in ${zone}: untap has ${r}, local has 0` };
+      if (r === 0) return { matches: false, reason: `missing on untap "${name}" in ${zone}: local has ${l}, untap has 0` };
+      return { matches: false, reason: `count mismatch "${name}" in ${zone}: local ${l}, untap ${r}` };
+    }
+  }
+  return { matches: true };
+}
+
 export async function deleteUntapDeck(untapDeckUid: string): Promise<boolean> {
   if (!isUntapAvailable()) return false;
   try {

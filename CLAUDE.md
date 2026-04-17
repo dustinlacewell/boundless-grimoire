@@ -187,6 +187,10 @@ All charts use `ChartCard` as their outer shell (Surface + pinned title + center
 
 **Push** (`pushDeck.ts`) — goes through the MAIN-world bridge (`untapBridge.ts`) to reach `apiStore.send("update-deck", …)`. Deletions use `pinia:deckStore:deleteDeck` so untap's reactive sidebar re-renders without a page reload. Pushes are debounced at 1500 ms (`pushSchedule.ts`); rapid edits collapse into one push.
 
-**Boot sequence** (`bootSync.ts`) — pull-then-push ordering prevents duplicates: pulling first links any unseen untap decks before the push phase runs. The push phase waits for the bridge (via `UntapSync.whenReady()`) and skips gracefully if it never comes up. Freshly pulled (still-enriching) decks are skipped during boot push.
+**Boot sequence** (`bootSync.ts`) — push-first ordering prevents stale remote state from overwriting unpushed local edits: every existing local deck pushes before pull runs. Pull then imports any untap decks not already linked. Once a deck is linked (its `untapDeckUid` is set), pull never touches it again — BG is authoritative for everything we've already seen. The push phase waits for the bridge (via `UntapSync.whenReady()`) and skips gracefully if it never comes up.
+
+**Sync status** — `syncStatusStore` (in `packages/app`) is an in-memory per-deck projection (`pending` / `pushing` / `synced` / `error`) that the ribbon's `SyncBadge` reads. The push runner sets it; nothing persists. Terminal push failures fire one retryable toast.
+
+**Bridge wiring** — `untapBridge.js` is registered directly as a `world: "MAIN"` content script in the manifest. There is no separate loader: the loader pattern can't work in MAIN world because `chrome.runtime` is unavailable there.
 
 **Quick or Proper?** When deciding between possible architectural and implementation routes you will ALWAYS pick the **proper** route. Every session should accomplish the task, but also involving the codebase **as you notice**. 
