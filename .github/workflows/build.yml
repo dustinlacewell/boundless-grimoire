@@ -57,6 +57,21 @@ jobs:
           prerelease: true
           make_latest: false
 
+      # Publish to Chrome Web Store on tagged releases. Uses the refresh
+      # token to mint a fresh access token each run — no long-lived token
+      # needed. Requires CHROME_EXTENSION_ID, CHROME_CLIENT_ID,
+      # CHROME_CLIENT_SECRET, and CHROME_REFRESH_TOKEN repo secrets.
+      - name: Publish to Chrome Web Store
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: mobilefirstllc/cws-publish@latest
+        with:
+          action: publish
+          client_id: ${{ secrets.CHROME_CLIENT_ID }}
+          client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          extension_id: penjpgjomhbkcndhilhhkomelnknkcgm
+          zip_file: boundless-grimoire.zip
+
       # Announce a new tagged release in Discord. Fires only on `v*` tag
       # pushes — every-merge announces were too noisy. The script no-ops
       # when the webhook secret is missing, so forks without the secret
