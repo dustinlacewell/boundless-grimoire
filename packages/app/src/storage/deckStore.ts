@@ -10,8 +10,7 @@ import { create } from "zustand";
 import type { FilterState, SortDir, SortField } from "../filters/types";
 import { storage } from "../services/storage";
 import { getServices } from "../services";
-import { migrateLibrary } from "./migrations";
-import { preserveOnHmr } from "./preserveOnHmr";
+import { migrateLibrary, LATEST_LIBRARY_VERSION } from "./migrations";
 import {
   DEFAULT_FILTER_STATE,
   DEFAULT_SORT_DIR,
@@ -40,40 +39,51 @@ export const useDeckStore = create<DeckStoreState>(() => ({
 
 export async function hydrateDeckStore(): Promise<void> {
   const stored = await storage.get<DeckLibrary>(STORAGE_KEY);
-  useDeckStore.setState({
-    hydrated: true,
-    library: stored ? migrateLibrary(stored) : EMPTY_LIBRARY,
-  });
+  if (!stored) {
+    useDeckStore.setState({ hydrated: true, library: EMPTY_LIBRARY });
+    return;
+  }
+  if ((stored.version ?? 0) > LATEST_LIBRARY_VERSION) {
+    console.warn(
+      `[deckStore] stored library v${stored.version} is newer than this build v${LATEST_LIBRARY_VERSION}; loading as-is`,
+    );
+    useDeckStore.setState({ hydrated: true, library: stored });
+    return;
+  }
+  const result = migrateLibrary(stored);
+  useDeckStore.setState({ hydrated: true, library: result.library });
 }
 
 let writeChain: Promise<void> = Promise.resolve();
 
 function persist(library: DeckLibrary): void {
-  // Serialize writes so concurrent updates can't interleave-clobber.
-  // Tag the write with the current schema version so older clients can
-  // detect a forward migration is needed.
   const tagged: DeckLibrary = library.version === LIBRARY_VERSION
     ? library
     : { ...library, version: LIBRARY_VERSION };
-  writeChain = writeChain
-    .catch(() => {
-      /* prior failure already logged below — don't poison the chain */
-    })
-    .then(() => storage.set(STORAGE_KEY, tagged))
-    .catch((e) => {
-      // chrome.storage.local is bounded (~10 MB). Quota errors and
-      // permission errors will surface here. Surfacing them as console
-      // errors at minimum gives the user a chance to notice; a richer
-      // future fix would push this into a UI banner.
+  // Serialize writes so concurrent setStates can't interleave. A failed
+  // write logs the error but RESETS the chain — a single bad write
+  // must not poison persistence for the rest of the session.
+  writeChain = writeChain.then(
+    () =>
+      storage.set(STORAGE_KEY, tagged).catch((e) => {
+        console.error("[deckStore] persist failed", e);
+      }),
+    // Matching the failure branch keeps the chain alive if the previous
+    // write rejected (belt-and-suspenders; we already swallow above).
+    () => storage.set(STORAGE_KEY, tagged).catch((e) => {
       console.error("[deckStore] persist failed", e);
-    });
+    }),
+  );
 }
 
 useDeckStore.subscribe((state, prev) => {
   if (!state.hydrated) return;
   if (state.library === prev.library) return;
   persist(state.library);
-  // Schedule untap sync for any deck whose cards/name changed
+  // Skip the hydration transition — otherwise every deck would get
+  // scheduled for a push the moment the store loads, racing the
+  // explicit boot push loop.
+  if (!prev.hydrated) return;
   scheduleSyncChanged(prev.library, state.library);
 });
 
@@ -90,12 +100,19 @@ function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
     // Pushes for added or modified decks.
     for (const [id, deck] of Object.entries(next.decks)) {
       const prevDeck = prev.decks[id];
-      if (!prevDeck || prevDeck.cards !== deck.cards || prevDeck.sideboard !== deck.sideboard || prevDeck.name !== deck.name) {
+      if (
+        !prevDeck ||
+        prevDeck.cards !== deck.cards ||
+        prevDeck.sideboard !== deck.sideboard ||
+        prevDeck.name !== deck.name ||
+        prevDeck.commander !== deck.commander ||
+        prevDeck.isCube !== deck.isCube
+      ) {
         untap.schedulePush(deck);
       }
     }
 
-    // Deletions for any deck that disappeared from the library.
+    // Deletions: cancel pending push, delete the remote if linked.
     for (const [id, prevDeck] of Object.entries(prev.decks)) {
       if (id in next.decks) continue;
       untap.cancelPush(id);
@@ -704,5 +721,3 @@ export function coverSnapshotOf(deck: Deck): CardSnapshot | null {
 }
 
 type DeckCardEntry = Deck["cards"][string];
-
-preserveOnHmr(useDeckStore, import.meta.hot);

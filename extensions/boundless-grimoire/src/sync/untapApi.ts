@@ -32,6 +32,12 @@ interface PendingCall {
 
 const pending = new Map<string, PendingCall>();
 const readyWaiters: Array<() => void> = [];
+/**
+ * Persistent listeners for bridge-up events. Fires once when the bridge
+ * first comes up — used by the push runner to drain any dirty outbox
+ * entries that were blocked waiting for a reachable bridge.
+ */
+const readySubscribers = new Set<() => void>();
 let bridgeReady = false;
 
 window.addEventListener("message", (e: MessageEvent) => {
@@ -43,6 +49,9 @@ window.addEventListener("message", (e: MessageEvent) => {
     if (!bridgeReady) {
       bridgeReady = true;
       for (const fn of readyWaiters.splice(0)) fn();
+      for (const fn of readySubscribers) {
+        try { fn(); } catch (err) { console.error("[uh:api] bridge-ready subscriber threw", err); }
+      }
     }
     return;
   }
@@ -67,6 +76,23 @@ try {
 
 export function isUntapAvailable(): boolean {
   return bridgeReady;
+}
+
+/**
+ * Register a callback that fires when the bridge transitions to ready.
+ * If the bridge is already up, fires synchronously. Returns an
+ * unsubscribe function.
+ *
+ * Used by the push runner so an outbox that filled up while the bridge
+ * was unreachable drains automatically once it comes back.
+ */
+export function onBridgeReady(cb: () => void): () => void {
+  if (bridgeReady) {
+    try { cb(); } catch (err) { console.error("[uh:api] onBridgeReady immediate cb threw", err); }
+    return () => {};
+  }
+  readySubscribers.add(cb);
+  return () => readySubscribers.delete(cb);
 }
 
 /**

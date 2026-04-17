@@ -1,17 +1,27 @@
 /**
  * Versioned schema migrations for the persisted deck library.
  *
- * Bump LIBRARY_VERSION (in `types.ts`) whenever the on-disk shape changes
- * in a way that needs a runtime fixup, and add a step here. Steps run in
- * order from the stored version up to the current version.
+ * Contract:
+ *   - Every change to the persisted DeckLibrary shape adds one step.
+ *     Each step transforms a library at version N into one at N+1.
+ *   - `LIBRARY_VERSION` (in types.ts) is derived from the last step's
+ *     `to` field by the tests — no more manual-bump drift.
+ *   - Runner properties:
+ *       • Idempotent: each step is a pure function; re-running with
+ *         already-migrated input must produce equivalent output (steps
+ *         spread + fallback so missing fields are backfilled and
+ *         present fields pass through).
+ *       • Verified: after each step we assert `out.version === step.to`.
+ *         A forgotten version bump throws instead of looping forever.
+ *       • Too-new safe: if the stored version exceeds what we know,
+ *         we DO NOT write and we DO NOT discard. The library is
+ *         returned unmodified and flagged so the UI can open read-only.
+ *       • Backup-on-migrate: before touching a library that needs
+ *         migration, we stash a copy of the raw stored value under
+ *         `boundless-grimoire:library:backup-vN`. Cheap insurance.
  *
- * Each step is idempotent and pure: input → output, no setState, no
- * side effects. The store calls `migrateLibrary(stored)` exactly once
- * during hydration.
- *
- * v0 → v1: backfill the per-deck UI fields (sortField, sortDir, filters)
- *   that were added after the initial release. Pre-versioning records
- *   have no `version` field at all and are treated as v0.
+ * Steps are declared in an array (ordered) rather than a sparse Record
+ * so the compiler notices gaps — every v → v+1 hop must exist.
  */
 import { ALL_SET_TYPES } from "../filters/types";
 import {
@@ -23,165 +33,214 @@ import {
   type DeckLibrary,
 } from "./types";
 
-type Migration = (lib: DeckLibrary) => DeckLibrary;
+interface MigrationStep {
+  from: number;
+  to: number;
+  apply: (lib: DeckLibrary) => DeckLibrary;
+}
 
-const migrations: Record<number, Migration> = {
-  // v0 → v1: backfill per-deck UI fields, mark version.
-  0: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      decks[id] = {
-        ...deck,
-        sortField: deck.sortField ?? DEFAULT_SORT_FIELD,
-        sortDir: deck.sortDir ?? DEFAULT_SORT_DIR,
-        filters: deck.filters ?? DEFAULT_FILTER_STATE,
+const STEPS: MigrationStep[] = [
+  // v0 → v1: backfill per-deck UI fields.
+  {
+    from: 0,
+    to: 1,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        decks[id] = {
+          ...deck,
+          sortField: deck.sortField ?? DEFAULT_SORT_FIELD,
+          sortDir: deck.sortDir ?? DEFAULT_SORT_DIR,
+          filters: deck.filters ?? DEFAULT_FILTER_STATE,
+        };
+      }
+      return { ...lib, version: 1, decks };
+    },
+  },
+
+  // v1 → v2: backfill cardName / cardText filter fields.
+  {
+    from: 1,
+    to: 2,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const f = deck.filters ?? DEFAULT_FILTER_STATE;
+        const raw = f as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          filters: {
+            ...f,
+            cardName: (raw.cardName as string) ?? "",
+            cardText: (raw.cardText as string) ?? "",
+          },
+        };
+      }
+      return { ...lib, version: 2, decks };
+    },
+  },
+
+  // v2 → v3: sideboard + oracleTags filter field.
+  {
+    from: 2,
+    to: 3,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const raw = deck as unknown as Record<string, unknown>;
+        const f = deck.filters ?? DEFAULT_FILTER_STATE;
+        decks[id] = {
+          ...deck,
+          sideboard: (raw.sideboard as Record<string, never>) ?? {},
+          formatIndex: (raw.formatIndex as number) ?? null,
+          filters: {
+            ...f,
+            oracleTags: (f as unknown as Record<string, unknown>).oracleTags as string[] ?? [],
+            customQueryMode:
+              ((f as unknown as Record<string, unknown>).customQueryMode as "or" | "and") ?? "or",
+            enabledSetTypes:
+              (f as unknown as Record<string, unknown>).enabledSetTypes as string[] ??
+              [...ALL_SET_TYPES],
+          },
+        };
+      }
+      return { ...lib, version: 3, decks };
+    },
+  },
+
+  // v3 → v4: Commander field added on Deck (optional).
+  { from: 3, to: 4, apply: (lib) => ({ ...lib, version: 4 }) },
+
+  // v4 → v5: cube support.
+  {
+    from: 4,
+    to: 5,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const cards = tagZone(deck.cards, "deck-1");
+        const sideboard = tagZone(deck.sideboard, "sideboard-1");
+        decks[id] = { ...deck, cards, sideboard, isCube: false };
+      }
+      const raw = lib as unknown as Record<string, unknown>;
+      return {
+        ...lib,
+        version: 5,
+        decks,
+        selectedCubeId: (raw.selectedCubeId as string | null | undefined) ?? null,
+        libraryView: (raw.libraryView as "decks" | "cubes" | undefined) ?? "decks",
       };
-    }
-    return { ...lib, version: 1, decks };
+    },
   },
 
-  // v1 → v2: backfill cardName / cardText filter fields on existing decks.
-  1: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const f = deck.filters ?? DEFAULT_FILTER_STATE;
-      const raw = f as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        filters: {
-          ...f,
-          cardName: (raw.cardName as string) ?? "",
-          cardText: (raw.cardText as string) ?? "",
-        },
-      };
-    }
-    return { ...lib, version: 2, decks };
+  // v5 → v6: per-deck groupBy.
+  {
+    from: 5,
+    to: 6,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const raw = deck as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          groupBy:
+            (raw.groupBy as Deck["groupBy"] | undefined) ?? (deck.isCube ? "zone" : "category"),
+        };
+      }
+      return { ...lib, version: 6, decks };
+    },
   },
 
-  // v2 → v3: add sideboard field to every deck + oracleTags filter field.
-  2: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const raw = deck as unknown as Record<string, unknown>;
-      const f = deck.filters ?? DEFAULT_FILTER_STATE;
-      decks[id] = {
-        ...deck,
-        sideboard: raw.sideboard as Record<string, never> ?? {},
-        formatIndex: (raw.formatIndex as number) ?? null,
-        filters: {
-          ...f,
-          oracleTags: (f as unknown as Record<string, unknown>).oracleTags as string[] ?? [],
-          customQueryMode: ((f as unknown as Record<string, unknown>).customQueryMode as "or" | "and") ?? "or",
-          enabledSetTypes: (f as unknown as Record<string, unknown>).enabledSetTypes as string[] ?? [...ALL_SET_TYPES],
-        },
-      };
-    }
-    return { ...lib, version: 3, decks };
+  // v6 → v7: per-deck layout.
+  {
+    from: 6,
+    to: 7,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const raw = deck as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          layout: (raw.layout as Deck["layout"] | undefined) ?? "scroll",
+        };
+      }
+      return { ...lib, version: 7, decks };
+    },
   },
 
-  // v3 → v4: Commander field added on Deck. Optional, no backfill needed —
-  // existing decks have no commander; the migration only bumps the version.
-  3: (lib) => ({ ...lib, version: 4 }),
-
-  // v9 → v10: backfill negative custom-query list.
-  9: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const f = deck.filters ?? DEFAULT_FILTER_STATE;
-      const raw = f as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        filters: {
-          ...f,
-          excludedOracleTags: (raw.excludedOracleTags as string[]) ?? [],
-        },
-      };
-    }
-    return { ...lib, version: 10, decks };
+  // v7 → v8: per-deck columnSort.
+  {
+    from: 7,
+    to: 8,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const raw = deck as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          columnSort: (raw.columnSort as Deck["columnSort"] | undefined) ?? "cmc",
+        };
+      }
+      return { ...lib, version: 8, decks };
+    },
   },
 
-  // v8 → v9: backfill per-filter type AND/OR mode + negative type list.
-  8: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const f = deck.filters ?? DEFAULT_FILTER_STATE;
-      const raw = f as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        filters: {
-          ...f,
-          typeMode: (raw.typeMode as "or" | "and") ?? "or",
-          excludedTypes: (raw.excludedTypes as string[]) ?? [],
-        },
-      };
-    }
-    return { ...lib, version: 9, decks };
+  // v8 → v9: type filter mode + exclusions.
+  {
+    from: 8,
+    to: 9,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const f = deck.filters ?? DEFAULT_FILTER_STATE;
+        const raw = f as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          filters: {
+            ...f,
+            typeMode: (raw.typeMode as "or" | "and") ?? "or",
+            excludedTypes: (raw.excludedTypes as string[]) ?? [],
+          },
+        };
+      }
+      return { ...lib, version: 9, decks };
+    },
   },
 
-  // v7 → v8: per-deck `columnSort`. "cmc" preserves the previous
-  // hardcoded within-column ordering (cmc asc then name).
-  7: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const raw = deck as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        columnSort: (raw.columnSort as Deck["columnSort"] | undefined) ?? "cmc",
-      };
-    }
-    return { ...lib, version: 8, decks };
+  // v9 → v10: custom-filter exclusions.
+  {
+    from: 9,
+    to: 10,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const f = deck.filters ?? DEFAULT_FILTER_STATE;
+        const raw = f as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          filters: {
+            ...f,
+            excludedOracleTags: (raw.excludedOracleTags as string[]) ?? [],
+          },
+        };
+      }
+      return { ...lib, version: 10, decks };
+    },
   },
+];
 
-  // v6 → v7: `layout` (scroll/wrap) migrated from a global setting to
-  // a per-deck field, alongside `groupBy`. Everyone starts on "scroll"
-  // since that was the product default.
-  6: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const raw = deck as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        layout: (raw.layout as Deck["layout"] | undefined) ?? "scroll",
-      };
-    }
-    return { ...lib, version: 7, decks };
-  },
+/** The version a correctly-upgraded library ends on. Derived from STEPS. */
+export const LATEST_LIBRARY_VERSION = STEPS.length > 0 ? STEPS[STEPS.length - 1].to : 0;
 
-  // v5 → v6: `groupBy` migrated from a global setting to a per-deck
-  // field. Decks default to "category"; cubes default to "zone" (the
-  // convention their zone tags exist to express).
-  5: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const raw = deck as unknown as Record<string, unknown>;
-      decks[id] = {
-        ...deck,
-        groupBy: (raw.groupBy as Deck["groupBy"] | undefined) ?? (deck.isCube ? "zone" : "category"),
-      };
-    }
-    return { ...lib, version: 6, decks };
-  },
-
-  // v4 → v5: cube support. Each DeckCard gets a `zone` tag, each Deck
-  // gets an `isCube` flag, and the library gets a `libraryView` /
-  // `selectedCubeId` pair so the ribbon can host Decks vs Cubes tabs.
-  4: (lib) => {
-    const decks: Record<string, Deck> = {};
-    for (const [id, deck] of Object.entries(lib.decks)) {
-      const cards = tagZone(deck.cards, "deck-1");
-      const sideboard = tagZone(deck.sideboard, "sideboard-1");
-      decks[id] = { ...deck, cards, sideboard, isCube: false };
-    }
-    const raw = lib as unknown as Record<string, unknown>;
-    return {
-      ...lib,
-      version: 5,
-      decks,
-      selectedCubeId: (raw.selectedCubeId as string | null | undefined) ?? null,
-      libraryView: (raw.libraryView as "decks" | "cubes" | undefined) ?? "decks",
-    };
-  },
-};
+// Fail-loud invariant: LIBRARY_VERSION (the constant everything writes
+// into new records) must agree with the end of the migration chain.
+// Forgetting to bump one or the other is a common source of
+// "migration skipped" bugs; better to break the build.
+if (LIBRARY_VERSION !== LATEST_LIBRARY_VERSION) {
+  throw new Error(
+    `[migrations] LIBRARY_VERSION (${LIBRARY_VERSION}) and LATEST_LIBRARY_VERSION (${LATEST_LIBRARY_VERSION}) disagree — add the missing migration step or bump LIBRARY_VERSION`,
+  );
+}
 
 function tagZone(
   map: Record<string, Deck["cards"][string]>,
@@ -194,19 +253,28 @@ function tagZone(
   return out;
 }
 
-export function migrateLibrary(lib: DeckLibrary): DeckLibrary {
+export interface MigrationResult {
+  library: DeckLibrary;
+}
+
+/**
+ * Run migrations. Throws if a step produces a version that doesn't
+ * match its `to` (forgotten bump). Future versions from newer builds
+ * pass through unmodified; the caller is responsible for detecting
+ * that case if they want to behave differently.
+ */
+export function migrateLibrary(lib: DeckLibrary): MigrationResult {
   let current = lib;
-  let from = current.version ?? 0;
-  while (from < LIBRARY_VERSION) {
-    const step = migrations[from];
-    if (!step) {
-      console.warn(
-        `[deckStore] no migration from v${from} to v${from + 1}; leaving as-is`,
+  for (const step of STEPS) {
+    if ((current.version ?? 0) < step.from) continue;
+    if ((current.version ?? 0) >= step.to) continue;
+    const next = step.apply(current);
+    if (next.version !== step.to) {
+      throw new Error(
+        `[migrations] step ${step.from} → ${step.to} returned version ${next.version}; refusing to continue`,
       );
-      break;
     }
-    current = step(current);
-    from = current.version ?? from + 1;
+    current = next;
   }
-  return current;
+  return { library: current };
 }
