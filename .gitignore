@@ -5,3 +5,4 @@ dist/
 keyrune-master/
 .mcp.json
 tools/
+.env
