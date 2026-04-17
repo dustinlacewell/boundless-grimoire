@@ -1,4 +1,5 @@
 import { type MouseEvent } from "react";
+import { useCtrlKey } from "../ui/useCtrlKey";
 import type { CardSnapshot } from "../storage/types";
 import { CardImage } from "./CardImage";
 import { IllegalBadge } from "./IllegalBadge";
@@ -68,15 +69,20 @@ interface TitleOpts {
 // across an HMR swap, leading to a runtime "buildTitle is not defined".
 // Const arrows are captured correctly by the refresh signature.
 const buildTitle = (name: string, opts: TitleOpts): string => {
-  const parts = ["left click +1", "right click -1"];
-  if (opts.canPin) parts.push(`shift-click ${opts.pinned ? "unpin" : "pin"}`);
-  if (opts.canFavorite) {
-    parts.push(`shift-right-click ${opts.favorited ? "unfavorite" : "favorite"}`);
+  const lines = [
+    name,
+    "left click — +1, right click — -1",
+  ];
+  if (opts.canPin || opts.canFavorite) {
+    const mods: string[] = [];
+    if (opts.canPin) mods.push(`shift-click — ${opts.pinned ? "unpin" : "pin"}`);
+    if (opts.canFavorite) mods.push(`shift-right-click — ${opts.favorited ? "unfavorite" : "favorite"}`);
+    lines.push(mods.join(", "));
   }
-  if (opts.canAlt) parts.push(`alt-click ${opts.altLabel ?? "sideboard"}`);
-  if (opts.canSetCover) parts.push("ctrl-right-click set as cover");
-  parts.push("Ctrl-hover preview");
-  return `${name} — ${parts.join(", ")}`;
+  if (opts.canAlt) lines.push(`alt-click — ${opts.altLabel ?? "sideboard"}`);
+  if (opts.canSetCover) lines.push("ctrl-right-click — set cover");
+  lines.push("ctrl+hover — preview");
+  return lines.join("\n");
 };
 
 /**
@@ -108,6 +114,7 @@ export function CardWithCount({
   illegal = false,
 }: Props) {
   const { hovered, handlers: hoverHandlers } = useCardHoverPreview(snapshot);
+  const ctrlHeld = useCtrlKey();
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -149,7 +156,7 @@ export function CardWithCount({
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       {...hoverHandlers}
-      title={buildTitle(snapshot.name, {
+      title={ctrlHeld ? "" : buildTitle(snapshot.name, {
         canPin: !!onShiftClick,
         canFavorite: !!onShiftContextMenu,
         canAlt: !!onAltClick,
