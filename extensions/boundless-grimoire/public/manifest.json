@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Boundless Grimoire",
   "version": "0.7.1",
-  "description": "Local-first deckbuilder overlay for untap.in. Uses Scryfall for card data; decks live in chrome.storage.",
+  "description": "Comfy and customizable deck builder for Magic: The Gathering that syncs with Untap.in",
   "permissions": ["storage"],
   "web_accessible_resources": [
     {
