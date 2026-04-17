@@ -5,19 +5,22 @@ import { ok, fail } from "@ldlework/workmark/helpers";
 
 const EXTENSION_ID = "penjpgjomhbkcndhilhhkomelnknkcgm";
 
-/** Parse .env file into a key-value map. */
+/** Parse .env file into a key-value map. Tries the given dir first, then cwd. */
 function loadEnv(dir: string): Record<string, string> {
-  try {
-    const text = readFileSync(join(dir, ".env"), "utf8");
-    const env: Record<string, string> = {};
-    for (const line of text.split("\n")) {
-      const match = line.match(/^(\w+)=(.*)$/);
-      if (match) env[match[1]] = match[2].trim();
+  for (const base of [dir, process.cwd()]) {
+    try {
+      const text = readFileSync(join(base, ".env"), "utf8");
+      const env: Record<string, string> = {};
+      for (const line of text.split("\n")) {
+        const match = line.replace(/\r$/, "").match(/^(\w+)=(.*)$/);
+        if (match) env[match[1]] = match[2].trim();
+      }
+      if (Object.keys(env).length > 0) return env;
+    } catch {
+      continue;
     }
-    return env;
-  } catch {
-    return {};
   }
+  return {};
 }
 
 /** Mint a fresh access token from the refresh token. */
@@ -36,6 +39,18 @@ async function getAccessToken(env: Record<string, string>): Promise<string> {
   if (!json.access_token) throw new Error(`Token request failed: ${JSON.stringify(json)}`);
   return json.access_token;
 }
+
+/**
+ * CWS API uploadState values:
+ *   SUCCESS   — uploaded, not yet published
+ *   IN_PROGRESS — upload processing
+ *   NOT_FOUND — no pending draft (published version is live)
+ *   FAILURE   — upload rejected
+ *
+ * A NOT_FOUND uploadState with a crxVersion means the published
+ * version is live and there's no pending draft — ready to publish.
+ */
+const PUBLISHABLE = new Set(["SUCCESS", "NOT_FOUND"]);
 
 export default {
   name: "ext_cws_status",
@@ -60,14 +75,16 @@ export default {
           },
         );
         const json = await res.json();
+        const uploadState = json.uploadState ?? "unknown";
 
         const lines: string[] = [];
         lines.push(`Extension: ${json.name ?? EXTENSION_ID}`);
-        lines.push(`Status:    ${json.status ?? "unknown"}`);
-        if (json.statusDetail) lines.push(`Detail:    ${json.statusDetail}`);
+        lines.push(`Upload:    ${uploadState}`);
         lines.push(`Version:   ${json.crxVersion ?? "unknown"}`);
         lines.push("");
-        lines.push(json.status === "PUBLISHED" ? "Ready for a new release." : "Not ready — wait for review to complete.");
+        lines.push(PUBLISHABLE.has(uploadState)
+          ? "Ready for a new release."
+          : `Not ready — upload state: ${uploadState}`);
 
         return ok(lines.join("\n"));
       } catch (e) {

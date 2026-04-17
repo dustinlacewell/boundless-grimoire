@@ -30,6 +30,7 @@ Execute these steps **in order**. Stop immediately and report clearly on any fai
 - Confirm a bump level argument was provided (`major`, `minor`, `point`, or `patch`). If not, print usage and stop.
 - Run `git status --short` on dev. If there are **staged or unstaged tracked changes**, abort: "Uncommitted changes on dev. Commit or stash first."
 - Untracked files are OK.
+- Check Chrome Web Store status by running `npx ws ext_cws_status`. If the output does NOT contain "Ready for a new release", abort: "Chrome Web Store is not ready — previous version is still in review. Wait and retry."
 
 ### 2. Sync dev with remote
 
