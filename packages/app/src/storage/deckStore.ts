@@ -10,6 +10,8 @@ import { create } from "zustand";
 import type { FilterState, SortDir, SortField } from "../filters/types";
 import { storage } from "../services/storage";
 import { getServices } from "../services";
+import { getCardsByIds } from "../services/scryfall";
+import { toSnapshot } from "../scryfall/snapshot";
 import { migrateLibrary, LATEST_LIBRARY_VERSION } from "./migrations";
 import {
   DEFAULT_FILTER_STATE,
@@ -631,9 +633,6 @@ async function resolveAndPopulate(
   isCube: boolean,
   commanderName?: string,
 ): Promise<void> {
-  const { getCardsByIds } = await import("../services/scryfall");
-  const { toSnapshot } = await import("../scryfall/snapshot");
-
   const nameSet = new Set(entries.map((e) => e.name));
   if (commanderName) nameSet.add(commanderName);
   const identifiers = [...nameSet].map((n) => ({ name: n }));

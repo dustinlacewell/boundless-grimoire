@@ -4,17 +4,9 @@
   "version": "0.6.1",
   "description": "Local-first deckbuilder overlay for untap.in. Uses Scryfall for card data; decks live in chrome.storage.",
   "permissions": ["storage"],
-  "host_permissions": [
-    "https://api.scryfall.com/*",
-    "https://svgs.scryfall.io/*"
-  ],
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
   "web_accessible_resources": [
     {
-      "resources": ["keyrune/*", "assets/*", "chunks/*", "content.js", "untapBridge.js"],
+      "resources": ["keyrune/*", "assets/*", "chunks/*"],
       "matches": ["https://untap.in/*", "https://*.untap.in/*"]
     }
   ],
@@ -30,7 +22,7 @@
     },
     {
       "matches": ["https://untap.in/*", "https://*.untap.in/*"],
-      "js": ["content-loader.js"],
+      "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }

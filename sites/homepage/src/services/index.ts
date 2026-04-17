@@ -4,18 +4,16 @@
  * we don't want the demo writing to it.
  *
  *   storage   → window.localStorage
- *   scryfall  → direct fetch to api.scryfall.com (CORS-permissive)
- *   untap     → not provided. Components that depend on it
- *               (`useUntapSync()` returning undefined) just don't render.
+ *   scryfall  → direct fetch to api.scryfall.com (shared impl from app)
+ *   untap     → not provided
  */
 import type { Services } from "@boundless-grimoire/app";
+import { directScryfall } from "@boundless-grimoire/app";
 import { localStorageStorage } from "./storage";
-import { browserScryfall } from "./scryfall";
 
 export function createBrowserServices(): Services {
   return {
     storage: localStorageStorage,
-    scryfall: browserScryfall,
-    // No `untap` — see the UntapSync interface docs for the contract.
+    scryfall: directScryfall,
   };
 }
