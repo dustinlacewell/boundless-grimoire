@@ -57,11 +57,34 @@ jobs:
           prerelease: true
           make_latest: false
 
-      # Publish to Chrome Web Store on tagged releases. Uses the refresh
-      # token to mint a fresh access token each run — no long-lived token
-      # needed. Requires CHROME_EXTENSION_ID, CHROME_CLIENT_ID,
-      # CHROME_CLIENT_SECRET, and CHROME_REFRESH_TOKEN repo secrets.
+      # Check Chrome Web Store status before attempting publish. If the
+      # previous version is still in review (PENDING), fail early with
+      # a clear message instead of a cryptic ITEM_NOT_UPDATABLE error.
+      - name: Check Chrome Web Store status
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        run: |
+          TOKEN=$(curl -sS -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=${CHROME_CLIENT_ID}" \
+            -d "client_secret=${CHROME_CLIENT_SECRET}" \
+            -d "refresh_token=${CHROME_REFRESH_TOKEN}" \
+            -d "grant_type=refresh_token" | jq -r '.access_token')
+          RESPONSE=$(curl -sS \
+            -H "Authorization: Bearer ${TOKEN}" \
+            -H "x-goog-api-version: 2" \
+            "https://www.googleapis.com/chromewebstore/v1.1/items/penjpgjomhbkcndhilhhkomelnknkcgm?projection=DRAFT")
+          STATUS=$(echo "$RESPONSE" | jq -r '.status')
+          echo "Chrome Web Store status: ${STATUS}"
+          if [ "$STATUS" = "PENDING" ]; then
+            echo "::error::Previous version is still in review. Cannot publish until review completes."
+            exit 1
+          fi
+
       - name: Publish to Chrome Web Store
+        id: cws
         if: startsWith(github.ref, 'refs/tags/v')
         uses: mobilefirstllc/cws-publish@latest
         with:
@@ -72,12 +95,9 @@ jobs:
           extension_id: penjpgjomhbkcndhilhhkomelnknkcgm
           zip_file: boundless-grimoire.zip
 
-      # Announce a new tagged release in Discord. Fires only on `v*` tag
-      # pushes — every-merge announces were too noisy. The script no-ops
-      # when the webhook secret is missing, so forks without the secret
-      # don't fail the workflow.
+      # Announce only after a successful Chrome Store publish.
       - name: Announce tagged release in Discord
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') && steps.cws.outcome == 'success'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           TAG: ${{ github.ref_name }}
