@@ -12,7 +12,7 @@ interface Props {
   onAltClick?: (snapshot: CardSnapshot) => void;
   onSetCover?: (snapshot: CardSnapshot) => void;
   onSetCommander?: (snapshot: CardSnapshot) => void;
-  illegalCards?: Set<string>;
+  illegalCards?: Map<string, string>;
 }
 
 const labelStyle: React.CSSProperties = {

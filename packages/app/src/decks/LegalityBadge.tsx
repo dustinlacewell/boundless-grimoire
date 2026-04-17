@@ -27,7 +27,7 @@ const dotStyle = (bg: string): React.CSSProperties => ({
  * card legality and the local structural validation.
  */
 export function LegalityBadge({ deckId, hasFormat }: Props) {
-  const illegalCount = useLegalityStore((s) => s.illegalByDeck[deckId]?.size ?? 0);
+  const illegalCount = useLegalityStore((s) => s.illegalByDeck[deckId]?.size ?? 0) as number;
   const issues = useLegalityStore((s) => s.issuesByDeck[deckId]);
   const checking = useLegalityStore((s) => !!s.checking[deckId]);
   const checked = useLegalityStore((s) => s.checkedKeyByDeck[deckId] !== undefined);

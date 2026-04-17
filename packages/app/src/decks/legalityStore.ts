@@ -18,8 +18,8 @@ import { validateDeck } from "../formats/validate";
 
 interface LegalityState {
   hydrated: boolean;
-  /** deck id → set of illegal Scryfall card IDs */
-  illegalByDeck: Record<string, Set<string>>;
+  /** deck id → map of illegal card ID → human-readable reason */
+  illegalByDeck: Record<string, Map<string, string>>;
   /** deck id → structural validation issues (size, copies, etc.) */
   issuesByDeck: Record<string, ValidationIssue[]>;
   /** deck id → true while checking */
@@ -50,16 +50,21 @@ export const useLegalityStore = create<LegalityState>(() => ({
 const STORAGE_KEY = "boundless-grimoire:legality";
 
 interface PersistedShape {
-  illegalByDeck: Record<string, string[]>;
+  illegalByDeck: Record<string, Record<string, string>>;
   checkedKeyByDeck: Record<string, string>;
 }
 
 export async function hydrateLegalityStore(): Promise<void> {
   const stored = await storage.get<PersistedShape>(STORAGE_KEY);
-  const illegalByDeck: Record<string, Set<string>> = {};
+  const illegalByDeck: Record<string, Map<string, string>> = {};
   if (stored?.illegalByDeck) {
-    for (const [id, arr] of Object.entries(stored.illegalByDeck)) {
-      illegalByDeck[id] = new Set(arr);
+    for (const [id, obj] of Object.entries(stored.illegalByDeck)) {
+      // Old format stored arrays of card IDs (no reasons). Skip them —
+      // they'll be recomputed on the next legality check.
+      if (Array.isArray(obj)) continue;
+      if (typeof obj === "object" && obj !== null) {
+        illegalByDeck[id] = new Map(Object.entries(obj as Record<string, string>));
+      }
     }
   }
   useLegalityStore.setState({
@@ -75,7 +80,7 @@ let writeChain: Promise<void> = Promise.resolve();
 function persist(state: LegalityState): void {
   const shape: PersistedShape = {
     illegalByDeck: Object.fromEntries(
-      Object.entries(state.illegalByDeck).map(([id, set]) => [id, [...set]]),
+      Object.entries(state.illegalByDeck).map(([id, map]) => [id, Object.fromEntries(map)]),
     ),
     checkedKeyByDeck: state.checkedKeyByDeck,
   };
@@ -138,7 +143,7 @@ export async function checkLegality(
 
   if (oracleToCards.size === 0) {
     useLegalityStore.setState((s) => ({
-      illegalByDeck: { ...s.illegalByDeck, [deckId]: new Set() },
+      illegalByDeck: { ...s.illegalByDeck, [deckId]: new Map() },
       checking: { ...s.checking, [deckId]: false },
       checkedKeyByDeck: { ...s.checkedKeyByDeck, [deckId]: key },
     }));
@@ -146,7 +151,7 @@ export async function checkLegality(
   }
 
   useLegalityStore.setState((s) => ({
-    illegalByDeck: { ...s.illegalByDeck, [deckId]: new Set() },
+    illegalByDeck: { ...s.illegalByDeck, [deckId]: new Map() },
     checking: { ...s.checking, [deckId]: true },
   }));
 
@@ -177,11 +182,15 @@ export async function checkLegality(
     }
   }
 
-  // Any oracle ID not found in legal results → its card IDs are illegal
-  const illegal = new Set<string>();
+  // Any oracle ID not found in legal results → its card IDs are illegal.
+  const allCards = { ...cards, ...sideboard };
+  const illegal = new Map<string, string>();
   for (const [oracleId, cardIds] of oracleToCards) {
     if (!legalOracleIds.has(oracleId)) {
-      for (const id of cardIds) illegal.add(id);
+      for (const id of cardIds) {
+        const name = allCards[id]?.snapshot.name ?? "Unknown";
+        illegal.set(id, `${name}: Not legal in this format`);
+      }
     }
   }
 

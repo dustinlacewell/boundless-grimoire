@@ -95,7 +95,11 @@ async function maybeSeedExampleDecks(): Promise<void> {
 
   for (const seed of SEED_DECKS) {
     try {
-      const deckId = await importDecklist(parseDecklist(seed.decklist), seed.name);
+      const deckId = await importDecklist(
+        parseDecklist(seed.decklist),
+        seed.name,
+        { commander: seed.commander },
+      );
       setDeckFormat(deckId, seed.formatIndex);
     } catch (err) {
       console.error(`[demo] failed to seed "${seed.name}"`, err);
@@ -151,17 +155,19 @@ export function EmbeddedApp() {
     };
   }, [b]);
 
-  // The app starts with the overlay open and, on first visit, the Help
-  // modal's About tab visible so the user sees the hero content with
-  // download/GitHub links. On subsequent visits the overlay opens
-  // directly to the deck-builder.
+  // Ensure the portal target exists before App mounts. HelpModal and
+  // other portals look up this div by id — if it doesn't exist in the
+  // DOM when the first render runs, createPortal returns null and the
+  // modal silently doesn't mount. Splitting into two divs (outer target
+  // always present, inner app rendered after hydrate) fixes the race.
   return (
-    <div id="boundless-grimoire-root" className="ui-scrollbars">
+    <>
       {hydrated && (
         <ServicesProvider services={b.services}>
           <App initialOpen initialHelpOpen={isFirstVisit} />
         </ServicesProvider>
       )}
-    </div>
+      <div id="boundless-grimoire-root" className="ui-scrollbars" />
+    </>
   );
 }

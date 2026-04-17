@@ -136,6 +136,9 @@ export const browserScryfall: ScryfallClient = {
       const chunk = identifiers.slice(i, i + 75);
       const res = await post<ScryfallSearchResponse>("/cards/collection", { identifiers: chunk }, opts);
       results.push(...res.data);
+      if (res.not_found?.length) {
+        console.warn("[scryfall] cards/collection not_found:", res.not_found);
+      }
     }
     return results;
   },

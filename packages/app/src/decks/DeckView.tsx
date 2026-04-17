@@ -62,7 +62,27 @@ export function DeckView({ deck }: Props) {
   const formats = useCustomFormatStore((s) => s.formats);
   const format = deck.formatIndex != null ? formats[deck.formatIndex] : null;
   const formatFragment = format ? compileFragment(format) : null;
-  const illegalSet = useLegalityStore((s) => s.illegalByDeck[deck.id]);
+  const scryfallIllegal = useLegalityStore((s) => s.illegalByDeck[deck.id]);
+  const issues = useLegalityStore((s) => s.issuesByDeck[deck.id]);
+
+  // Combine Scryfall illegality + structural card-level issues into one
+  // map so each card's badge shows all reasons.
+  const illegalSet = useMemo(() => {
+    const combined = new Map<string, string>();
+    if (scryfallIllegal) for (const [id, r] of scryfallIllegal) combined.set(id, r);
+    if (issues) {
+      for (const issue of issues) {
+        if (!issue.cardIds) continue;
+        for (const id of issue.cardIds) {
+          const name = (deck.cards[id] ?? deck.sideboard[id])?.snapshot.name ?? "Unknown";
+          const reason = `${name}: ${issue.message}`;
+          const prev = combined.get(id);
+          combined.set(id, prev ? `${prev}; ${issue.message}` : reason);
+        }
+      }
+    }
+    return combined;
+  }, [scryfallIllegal, issues, deck.cards, deck.sideboard]);
 
   // Run legality + structural validation when format or cards change.
   useEffect(() => {
