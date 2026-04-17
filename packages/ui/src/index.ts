@@ -3,6 +3,7 @@ export { colors } from "./colors";
 export { GrimoireMark } from "./GrimoireMark";
 export { GrimoireLogo } from "./GrimoireLogo";
 
+export { Bar, TwinBar, StackedBar, BAR_WIDTH, BAR_GAP, CHART_HEIGHT } from "./Bar";
 export { Surface } from "./Surface";
 export { Pill } from "./Pill";
 export { Spinner } from "./Spinner";

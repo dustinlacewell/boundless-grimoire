@@ -12,6 +12,8 @@ export interface Settings {
   previewMode: PreviewMode;
   /** Maximum undo entries per deck. `null` means unbounded. */
   undoHistoryLimit: number | null;
+  /** When true, Ctrl+scroll resizes both the search grid and deck view together. */
+  zoomLinked: boolean;
 }
 
 interface SettingsStoreState {
@@ -24,6 +26,7 @@ const DEFAULT_SETTINGS: Settings = {
   analyticsLayout: "scroll",
   previewMode: "both",
   undoHistoryLimit: 100,
+  zoomLinked: true,
 };
 
 export const useSettingsStore = create<SettingsStoreState>(() => ({
@@ -59,6 +62,12 @@ export function setAnalyticsLayout(layout: AnalyticsLayout): void {
 export function setPreviewMode(mode: PreviewMode): void {
   useSettingsStore.setState((s) => ({
     settings: { ...s.settings, previewMode: mode },
+  }));
+}
+
+export function setZoomLinked(linked: boolean): void {
+  useSettingsStore.setState((s) => ({
+    settings: { ...s.settings, zoomLinked: linked },
   }));
 }
 

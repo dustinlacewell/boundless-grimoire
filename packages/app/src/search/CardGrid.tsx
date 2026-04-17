@@ -24,7 +24,7 @@ interface Props {
 export function CardGrid({ cards }: Props) {
   const cardWidth = useGridSizeStore((s) => s.cardWidth);
   const ref = useRef<HTMLDivElement>(null);
-  useCtrlWheelCardResize(ref);
+  useCtrlWheelCardResize(ref, "search");
 
   return (
     <div

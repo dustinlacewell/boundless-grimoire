@@ -20,6 +20,7 @@ import {
   setDevMode,
   setPreviewMode,
   setUndoHistoryLimit,
+  setZoomLinked,
   useSettingsStore,
   type AnalyticsLayout,
   type PreviewMode,
@@ -154,6 +155,7 @@ export function SettingsModal({ onClose }: Props) {
   const analyticsLayout = useSettingsStore((s) => s.settings.analyticsLayout);
   const previewMode = useSettingsStore((s) => s.settings.previewMode);
   const undoHistoryLimit = useSettingsStore((s) => s.settings.undoHistoryLimit);
+  const zoomLinked = useSettingsStore((s) => s.settings.zoomLinked);
   const [filterText, setFilterText] = useState(() => queriesToText(queries));
   const [formatText, setFormatText] = useState(() => formatsToText(formats));
   const [tab, setTab] = useState<Tab>("general");
@@ -325,6 +327,23 @@ export function SettingsModal({ onClose }: Props) {
                   <strong>Image:</strong> just the zoomed card.{" "}
                   <strong>Text:</strong> just the info panel.{" "}
                   <strong>Both:</strong> image + info side-by-side.
+                </div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Card Zoom</span>
+                <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    checked={zoomLinked}
+                    onChange={(e) => setZoomLinked(e.target.checked)}
+                    style={{ accentColor: colors.accent, width: 16, height: 16 }}
+                  />
+                  <span style={{ fontSize: 13 }}>Link search and deck zoom</span>
+                </label>
+                <div style={hintStyle}>
+                  When linked, Ctrl+scroll resizes cards in both views together. When unlinked,
+                  search and deck zoom independently (deck minimum is larger to fit column labels).
                 </div>
               </div>
             </>

@@ -1,6 +1,6 @@
 # Boundless Grimoire — Architecture
 
-Keep this file up to date as the codebase evolves.
+Keep this file up to date as the codebase evolves. Update it as part of every change/commit — not after the fact.
 
 ## What it is
 
@@ -76,7 +76,7 @@ ui/                    tailwind.css, injectKeyrune.ts
 
 ### `packages/ui/src/`
 
-Primitive components: Button, Surface, Pill, Dropdown, HScroll, IconButton, MultiSelect, Popover, SearchInput, Spinner, ToggleButton, ButtonGroup + GrimoireLogo, GrimoireMark, icons, colors, theme.css.
+Primitive components: Button, Surface, Pill, Dropdown, HScroll, IconButton, MultiSelect, Popover, SearchInput, Spinner, ToggleButton, ButtonGroup + GrimoireLogo, GrimoireMark, icons, colors, theme.css. Shared chart bar primitives: `Bar`, `TwinBar`, `StackedBar` (with `BAR_WIDTH`, `BAR_GAP`, `CHART_HEIGHT` constants).
 
 ## Services seam
 
@@ -152,7 +152,8 @@ Storage key: `boundless-grimoire:library`. Schema version tracked in `LIBRARY_VE
 ## State management
 
 - **`deckStore`** (Zustand) — single source of truth for the deck library. Hydrated once via `hydrateDeckStore()`, persisted on every change through the `storage` service. All mutations go through exported action functions.
-- **Filter/sort/format state** — persisted inside `Deck` (not a separate store). `useFilterStore` is a facade that reads/writes the active deck's `FilterState`. `customFormatStore` holds named Scryfall query fragments; `customQueryStore` holds user-defined oracle-tag toggles; `presetStore` holds named filter snapshots. Separate Zustand slices for favorites, pins, card preview, print picker, grid size, print size, legality.
+- **Filter/sort/format state** — persisted inside `Deck` (not a separate store). `useFilterStore` is a facade that reads/writes the active deck's `FilterState`. `customFormatStore` holds named Scryfall query fragments; `customQueryStore` holds user-defined oracle-tag toggles; `presetStore` holds named filter snapshots. Separate Zustand slices for favorites, pins, card preview, print picker, print size, legality.
+- **Card zoom** — two independent stores: `gridSizeStore` (search grid, MIN 100px) and `deckGridSizeStore` (deck columns, MIN 150px — wide enough for category labels). By default they move together (`zoomLinked` setting); unchecking "Link search and deck zoom" in Settings makes them independent. `useCtrlWheelCardResize(ref, context)` routes Ctrl+scroll to the right store(s). When linked, search is the leader: deck is derived as `clamp(newSearchWidth, DECK_MIN, DECK_MAX)`, so deck waits at 150 while search is below that floor and they re-align naturally when zooming back up.
 - **TanStack Query** — Scryfall search results (infinite pagination), via the `scryfall` service.
 
 ## Scryfall API flow
@@ -177,7 +178,7 @@ In the homepage demo: direct `fetch` to `api.scryfall.com` (CORS-permissive endp
 - `computeRarityBreakdown` — common/uncommon/rare/mythic counts
 - `computeCountBy(mode)` — group by type category or subtype
 
-All charts use `ChartCard` as their outer shell (Surface + pinned title + centered body). Distribution-based charts (`ManaCurveChart`, `PowerCurveChart`, `ToughnessCurveChart`) delegate to `DistributionChart` for the bar/label/average body. Custom charts (`RarityChart`, `CurveByTypeChart`, `ColorManaChart`, `CountByChart`) render their own bodies inside `ChartCard`. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip or CSS grid in `Overlay`.
+Each chart returns `null` when it has no meaningful data (e.g. all-land deck hides the mana curve; no subtypes hides the subtype option in CountByChart). All charts use `AnalyticsCard` as their outer shell — it enforces `overflow: hidden` as a design boundary; if content clips, make the card larger rather than removing the clip. Distribution-based charts (`ManaCurveChart`, `PowerCurveChart`, `ToughnessCurveChart`) delegate to `DistributionChart`. Custom charts (`RarityChart`, `CurveByTypeChart`, `ColorManaChart`, `CountByChart`) render their own bodies inside `AnalyticsCard`. Shared bar primitives (`Bar`, `TwinBar`, `StackedBar`) live in `packages/ui`. All wrapped in `DeckAnalytics`, displayed as an `HScroll` strip or CSS grid in `Overlay`.
 
 ## untap.in sync
 

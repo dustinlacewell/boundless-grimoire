@@ -10,5 +10,6 @@ interface Props {
 
 export function ManaCurveChart({ deck, style }: Props) {
   const curve = useMemo(() => computeManaCurve(deck.cards), [deck.cards]);
+  if (curve.total === 0) return null;
   return <DistributionChart title="Mana Curve" distribution={curve} style={style} />;
 }

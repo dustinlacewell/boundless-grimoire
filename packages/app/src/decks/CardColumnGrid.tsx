@@ -1,7 +1,7 @@
 import { useRef, type CSSProperties } from "react";
 import type { DeckCategoryGroup } from "../cards/categorize";
 import { stackReveal } from "../cards/CategoryStack";
-import { useGridSizeStore } from "../search/gridSizeStore";
+import { useDeckGridSizeStore } from "./deckGridSizeStore";
 import type { CardSnapshot } from "../storage/types";
 import { useCtrlWheelCardResize } from "../ui/useCtrlWheelCardResize";
 import { DeckCategoryColumn } from "./DeckCategoryColumn";
@@ -66,9 +66,9 @@ export function CardColumnGrid({
   leadingColumns,
   illegalCards,
 }: Props) {
-  const cardWidth = useGridSizeStore((s) => s.cardWidth);
+  const cardWidth = useDeckGridSizeStore((s) => s.cardWidth);
   const ref = useRef<HTMLDivElement>(null);
-  useCtrlWheelCardResize(ref);
+  useCtrlWheelCardResize(ref, "deck");
 
   const base = layout === "wrap" ? wrapWrapperBase : scrollWrapperBase;
   const wrapperStyle: CSSProperties = {

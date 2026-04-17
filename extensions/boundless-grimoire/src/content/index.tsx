@@ -6,6 +6,7 @@ import { createExtensionServices } from "../services/extension";
 import { hydrateMetaGroupsStore } from "@boundless-grimoire/app";
 import { hydrateFavoritesStore } from "@boundless-grimoire/app";
 import { hydrateGridSizeStore } from "@boundless-grimoire/app";
+import { hydrateDeckGridSizeStore } from "@boundless-grimoire/app";
 import { hydratePinnedCardsStore } from "@boundless-grimoire/app";
 import { hydrateDeckStore } from "@boundless-grimoire/app";
 import { hydrateCustomFormatStore } from "@boundless-grimoire/app";
@@ -36,6 +37,7 @@ const deckHydrated = hydrateDeckStore();
 const allHydrated = Promise.allSettled([
   deckHydrated,
   hydrateGridSizeStore(),
+  hydrateDeckGridSizeStore(),
   hydratePinnedCardsStore(),
   hydrateFavoritesStore(),
   hydratePrintSizeStore(),
