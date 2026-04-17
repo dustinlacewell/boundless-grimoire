@@ -29,9 +29,9 @@ const FEATURES: Feature[] = [
     body: "Filter by colors, rarity, type, set, oracle text, and oracle tags. Combine custom Scryfall queries with OR / AND.",
   },
   {
-    Icon: Layers,
-    title: "Smart deck columns",
-    body: "Cards auto-group by type, CMC, or your own meta categories. Sideboard included.",
+    Icon: RefreshCw,
+    title: "Two-way untap.in sync",
+    body: "Imports your existing untap decks and pushes every change back automatically.",
   },
   {
     Icon: BarChart3,
@@ -39,9 +39,9 @@ const FEATURES: Feature[] = [
     body: "Mana curve, creature/non-creature stack, power & toughness curves, color demand vs. supply, rarity breakdown.",
   },
   {
-    Icon: RefreshCw,
-    title: "Two-way untap.in sync",
-    body: "Imports your existing untap decks and pushes every change back automatically.",
+    Icon: Layers,
+    title: "Smart deck columns",
+    body: "Cards auto-group by type, CMC, or your own meta categories. Sideboard included.",
   },
   {
     Icon: Bookmark,
@@ -82,8 +82,10 @@ export function FeatureGrid() {
             key={title}
             className="rounded-lg border border-border bg-bg-1 p-5 hover:border-border-strong transition"
           >
-            <Icon className="text-accent mb-3" size={22} strokeWidth={2} />
-            <h3 className="font-semibold mb-1.5">{title}</h3>
+            <h3 className="font-semibold mb-1.5 flex items-center gap-2">
+              <Icon className="text-accent shrink-0" size={18} strokeWidth={2} />
+              {title}
+            </h3>
             <p className="text-sm text-text-muted leading-relaxed">{body}</p>
           </div>
         ))}

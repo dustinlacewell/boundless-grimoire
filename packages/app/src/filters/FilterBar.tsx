@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useCustomFormatStore } from "./customFormatStore";
+import { useCustomFormatStore, compileFragment } from "../formats";
 import { useFilterStore } from "./store";
 import { FilterField } from "./FilterField";
 import { buildScryfallQuery } from "./buildQuery";
@@ -95,7 +95,8 @@ function CompiledQueryDisplay() {
   const filterState = useFilterStore((s) => s.state);
   const deck = useDeckStore(selectedDeck);
   const formats = useCustomFormatStore((s) => s.formats);
-  const formatFragment = deck?.formatIndex != null ? formats[deck.formatIndex]?.fragment : null;
+  const fmt = deck?.formatIndex != null ? formats[deck.formatIndex] : null;
+  const formatFragment = fmt ? compileFragment(fmt) : null;
 
   const query = useMemo(() => {
     const base = buildScryfallQuery(filterState);

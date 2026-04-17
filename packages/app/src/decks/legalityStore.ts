@@ -11,12 +11,17 @@
 import { create } from "zustand";
 import { searchCards, ScryfallError } from "../services/scryfall";
 import { storage } from "../services/storage";
-import type { DeckCard } from "../storage/types";
+import type { DeckCard, Deck } from "../storage/types";
+import type { FormatDefinition } from "../formats/types";
+import type { ValidationIssue } from "../formats/validate";
+import { validateDeck } from "../formats/validate";
 
 interface LegalityState {
   hydrated: boolean;
   /** deck id → set of illegal Scryfall card IDs */
   illegalByDeck: Record<string, Set<string>>;
+  /** deck id → structural validation issues (size, copies, etc.) */
+  issuesByDeck: Record<string, ValidationIssue[]>;
   /** deck id → true while checking */
   checking: Record<string, boolean>;
   /**
@@ -30,6 +35,7 @@ interface LegalityState {
 export const useLegalityStore = create<LegalityState>(() => ({
   hydrated: false,
   illegalByDeck: {},
+  issuesByDeck: {},
   checking: {},
   checkedKeyByDeck: {},
 }));
@@ -186,13 +192,26 @@ export async function checkLegality(
   }));
 }
 
+/**
+ * Run structural validation (size, copies, commander, set restriction)
+ * against a format definition. Synchronous — no network calls.
+ * Results are stored in `issuesByDeck` for the UI to read.
+ */
+export function runValidation(deckId: string, deck: Deck, format: FormatDefinition): void {
+  const issues = validateDeck(deck, format);
+  useLegalityStore.setState((s) => ({
+    issuesByDeck: { ...s.issuesByDeck, [deckId]: issues },
+  }));
+}
+
 /** Clear legality data for a deck (e.g. when format is removed). */
 export function clearLegality(deckId: string): void {
   useLegalityStore.setState((s) => {
     const { [deckId]: _, ...rest } = s.illegalByDeck;
     const { [deckId]: __, ...checkRest } = s.checking;
     const { [deckId]: ___, ...keyRest } = s.checkedKeyByDeck;
-    return { illegalByDeck: rest, checking: checkRest, checkedKeyByDeck: keyRest };
+    const { [deckId]: ____, ...issueRest } = s.issuesByDeck;
+    return { illegalByDeck: rest, checking: checkRest, checkedKeyByDeck: keyRest, issuesByDeck: issueRest };
   });
 }
 

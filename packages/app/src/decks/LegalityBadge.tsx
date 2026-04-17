@@ -3,7 +3,6 @@ import { useLegalityStore } from "./legalityStore";
 
 interface Props {
   deckId: string;
-  /** Whether the deck has a format assigned at all. Hides the badge if not. */
   hasFormat: boolean;
 }
 
@@ -22,40 +21,54 @@ const dotStyle = (bg: string): React.CSSProperties => ({
 });
 
 /**
- * Small green ✓ / red ✕ / neutral dot next to the Format label indicating
- * whether the current deck is legal in its assigned format. Reads directly
- * from the legality store; displays nothing when no format is set.
+ * Small dot next to the Format label: green ✓ if all checks pass,
+ * yellow ! for structural issues (size, copies, commander), red ✕ for
+ * illegal cards, neutral while checking. Combines both the Scryfall-based
+ * card legality and the local structural validation.
  */
 export function LegalityBadge({ deckId, hasFormat }: Props) {
   const illegalCount = useLegalityStore((s) => s.illegalByDeck[deckId]?.size ?? 0);
+  const issues = useLegalityStore((s) => s.issuesByDeck[deckId]);
   const checking = useLegalityStore((s) => !!s.checking[deckId]);
   const checked = useLegalityStore((s) => s.checkedKeyByDeck[deckId] !== undefined);
 
   if (!hasFormat) return null;
 
   if (checking) {
-    return (
-      <span title="Checking legality…" style={dotStyle(colors.bg3)} />
-    );
+    return <span title="Checking legality…" style={dotStyle(colors.bg3)} />;
   }
 
-  // Haven't finished a check yet — show nothing rather than a false ✓.
-  if (!checked) return null;
+  const issueCount = issues?.length ?? 0;
 
-  if (illegalCount === 0) {
+  if (!checked && issueCount === 0) return null;
+
+  // Red: illegal cards
+  if (illegalCount > 0) {
+    const lines = [`${illegalCount} card${illegalCount === 1 ? "" : "s"} not legal in this format`];
+    if (issueCount > 0) lines.push(...issues!.map((i) => i.message));
     return (
-      <span title="All cards legal in this format" style={dotStyle(colors.success)}>
-        ✓
+      <span title={lines.join("\n")} style={dotStyle(colors.danger)}>
+        ✕
       </span>
     );
   }
 
+  // Yellow: structural issues but all cards individually legal
+  if (issueCount > 0) {
+    return (
+      <span
+        title={issues!.map((i) => i.message).join("\n")}
+        style={dotStyle(colors.accent)}
+      >
+        !
+      </span>
+    );
+  }
+
+  // Green: everything passes
   return (
-    <span
-      title={`${illegalCount} card${illegalCount === 1 ? "" : "s"} not legal in this format`}
-      style={dotStyle(colors.danger)}
-    >
-      ✕
+    <span title="All checks pass" style={dotStyle(colors.success)}>
+      ✓
     </span>
   );
 }

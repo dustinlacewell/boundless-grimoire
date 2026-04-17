@@ -1,5 +1,5 @@
 import { colors, Button, Dropdown, ToggleButton } from "@boundless-grimoire/ui";
-import { useCustomFormatStore } from "../../filters/customFormatStore";
+import { useCustomFormatStore } from "../../formats";
 import { ColorToggle } from "../../filters/icons/ColorToggle";
 import type { GeneratorInput, CurvePreset, DeckSize, ColorCount } from "../../generator";
 import type { ColorLetter } from "../../filters/types";

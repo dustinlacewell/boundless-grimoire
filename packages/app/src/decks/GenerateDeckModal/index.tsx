@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { colors } from "@boundless-grimoire/ui";
 import { useServices } from "../../services";
-import { useCustomFormatStore } from "../../filters/customFormatStore";
+import { useCustomFormatStore, compileFragment } from "../../formats";
 import { generateDeck } from "../../generator";
 import type { GeneratorInput, GenProgress, GeneratedDeck } from "../../generator";
 import { commitGeneratedDeck } from "../../storage/deckStore";
@@ -97,7 +97,7 @@ export function GenerateDeckModal({ onClose }: Props) {
     setState({ kind: "generating", progress: { phase: { kind: "pool-creatures", fetched: 0 } } });
 
     const fmt = formats[input.formatIndex];
-    const formatFragment = fmt?.fragment ?? "";
+    const formatFragment = fmt ? compileFragment(fmt) : "";
     const formatName = fmt?.name ?? "Unknown";
 
     let result: GeneratedDeck;
