@@ -12,7 +12,6 @@ import { create } from "zustand";
 import { searchCards, ScryfallError } from "../services/scryfall";
 import { storage } from "../services/storage";
 import type { DeckCard } from "../storage/types";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface LegalityState {
   hydrated: boolean;
@@ -197,4 +196,3 @@ export function clearLegality(deckId: string): void {
   });
 }
 
-preserveOnHmr(useLegalityStore, import.meta.hot);

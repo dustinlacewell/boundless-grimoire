@@ -8,6 +8,7 @@ import { Spinner } from "@boundless-grimoire/ui";
 import { Surface } from "@boundless-grimoire/ui";
 import { DeckTileActions } from "./DeckTileActions";
 import { LegalityBadge } from "./LegalityBadge";
+import { SyncBadge } from "./SyncBadge";
 import { checkLegality, clearLegality } from "./legalityStore";
 
 const WUBRG = ["W", "U", "B", "R", "G"] as const;
@@ -177,32 +178,36 @@ export function DeckRibbonItem({
                 {count} {count === 1 ? "card" : "cards"}
               </div>
             </div>
-            {colorIdentity.length > 0 && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  gap: 1,
-                  flexShrink: 0,
-                  alignItems: "center",
-                  marginTop: 2,
-                }}
-              >
-                {colorIdentity.map((c) => (
-                  <img
-                    key={c}
-                    src={symbolUrl(c)}
-                    alt={c}
-                    draggable={false}
-                    style={{
-                      width: 14,
-                      height: 14,
-                      display: "block",
-                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
-                    }}
-                  />
-                ))}
-              </span>
-            )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                gap: 2,
+                flexShrink: 0,
+                marginTop: 2,
+              }}
+            >
+              {colorIdentity.length > 0 && (
+                <span style={{ display: "inline-flex", gap: 1, alignItems: "center" }}>
+                  {colorIdentity.map((c) => (
+                    <img
+                      key={c}
+                      src={symbolUrl(c)}
+                      alt={c}
+                      draggable={false}
+                      style={{
+                        width: 14,
+                        height: 14,
+                        display: "block",
+                        filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
+                      }}
+                    />
+                  ))}
+                </span>
+              )}
+              <SyncBadge deckId={deck.id} />
+            </div>
           </div>
 
           {/* Bottom-right: format name + legality badge. */}

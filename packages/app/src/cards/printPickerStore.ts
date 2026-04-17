@@ -4,7 +4,6 @@
  */
 import { create } from "zustand";
 import type { CardSnapshot } from "../storage/types";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 interface PickerTarget {
   deckId: string;
@@ -28,4 +27,3 @@ export function closePrintPicker(): void {
   usePrintPickerStore.setState({ target: null });
 }
 
-preserveOnHmr(usePrintPickerStore, import.meta.hot);

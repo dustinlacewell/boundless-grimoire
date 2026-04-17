@@ -84,6 +84,13 @@ export { hydrateCustomQueryStore } from "./filters/customQueryStore";
 export { hydratePresetStore } from "./filters/presetStore";
 export { hydrateSettingsStore } from "./settings/settingsStore";
 export { hydrateLegalityStore } from "./decks/legalityStore";
+export {
+  useSyncStatusStore,
+  setSyncStatus,
+  clearSyncStatus,
+} from "./sync/syncStatusStore";
+export type { SyncStatus, SyncStatusInfo } from "./sync/syncStatusStore";
+export { pushToast, dismissToast, dismissByKey, ToastFrame } from "./notifications";
 
 // --- Domain types --------------------------------------------------------
 

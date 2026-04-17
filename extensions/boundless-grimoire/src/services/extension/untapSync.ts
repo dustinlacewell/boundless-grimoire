@@ -1,12 +1,10 @@
 /**
- * UntapSync impl that wraps the existing `sync/*` modules into the
- * service interface. The transport (postMessage to the MAIN-world
- * `untapBridge` script) is unchanged — this file is just an adapter.
+ * UntapSync impl that wraps the `sync/*` modules into the service interface.
  */
 import { bootSync } from "../../sync/bootSync";
 import { pullUntapDecks } from "../../sync/pullDecks";
 import { deleteUntapDeck } from "../../sync/pushDeck";
-import { cancelPendingPush, schedulePush } from "../../sync/pushSchedule";
+import { cancelPendingPush, retryPush, schedulePush } from "../../sync/pushSchedule";
 import { reEnrichThinDecks } from "../../sync/reEnrich";
 import type { Deck, UntapSync } from "@boundless-grimoire/app";
 import { waitForBridge } from "../../sync/untapApi";
@@ -30,6 +28,10 @@ export const extensionUntapSync: UntapSync = {
 
   cancelPush(localDeckId: string): void {
     cancelPendingPush(localDeckId);
+  },
+
+  retryPush(deckId: string): void {
+    retryPush(deckId);
   },
 
   deleteRemote(untapDeckUid: string): Promise<boolean> {

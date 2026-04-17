@@ -14,7 +14,6 @@
  */
 import { create } from "zustand";
 import { storage } from "../services/storage";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 export interface CustomFormat {
   name: string;
@@ -105,4 +104,3 @@ function defaultFormats(): CustomFormat[] {
   ];
 }
 
-preserveOnHmr(useCustomFormatStore, import.meta.hot);

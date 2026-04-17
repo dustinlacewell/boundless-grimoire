@@ -8,10 +8,6 @@
  *   const untap = useUntapSync();
  *   if (!untap) return null;            // demo: render nothing
  *   untap.schedulePush(deck);
- *
- * That conditional render is the entire UX contract — when this service
- * isn't provided, every untap-flavored UI element (linked-deck badges,
- * import-from-untap tile, manual sync controls) just doesn't show up.
  */
 import type { Deck } from "../storage/types";
 
@@ -19,15 +15,15 @@ export interface UntapSync {
   /**
    * Resolves once the underlying transport is reachable. Returns false
    * if it's not coming up (e.g. the page isn't actually untap.in). Used
-   * by the deck-store sync subscriber to defer the very first push until
+   * by the deck-store sync subscriber to defer the first push until
    * the bridge is up.
    */
   whenReady(): Promise<boolean>;
 
   /**
-   * One-time pull-then-push at app boot. Pulls untap decks not yet
-   * mirrored locally, then pushes every local deck back so untap reflects
-   * our state. Idempotent — safe to call once per app start.
+   * One-time push-then-pull at app boot. Pushes every local deck first
+   * (extension is authoritative), then imports any untap decks we've
+   * never seen. Idempotent — safe to call once per app start.
    */
   boot(): Promise<void>;
 
@@ -47,6 +43,9 @@ export interface UntapSync {
    * locally before the debounce timer fires.
    */
   cancelPush(localDeckId: string): void;
+
+  /** Kick an immediate retry for a specific deck's push. */
+  retryPush(deckId: string): void;
 
   /**
    * Delete the corresponding deck on untap. Resolves true on success.

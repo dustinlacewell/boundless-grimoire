@@ -26,7 +26,6 @@ import { useDeckStore } from "../storage/deckStore";
 import type { DeckCard, DeckLibrary } from "../storage/types";
 import { classify, type MetaQuery } from "./meta/classify";
 import { fetchMatches } from "./meta/fetchMatches";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 import {
   createCache,
   pruneToFragments,
@@ -248,4 +247,3 @@ function prune(
   return { changed: sizeBefore !== sizeAfter || countBefore !== countAfter };
 }
 
-preserveOnHmr(useMetaGroupsStore, import.meta.hot);

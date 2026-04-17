@@ -14,7 +14,6 @@
  */
 import { create } from "zustand";
 import { attachPersistence } from "../storage/persistedSlice";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:favorited-cards";
 
@@ -64,4 +63,3 @@ export function toggleFavorite(cardId: string): void {
   });
 }
 
-preserveOnHmr(useFavoritesStore, import.meta.hot);
