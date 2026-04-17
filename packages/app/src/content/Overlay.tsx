@@ -24,7 +24,9 @@ import { GearIcon, HelpIcon } from "@boundless-grimoire/ui";
 import { Section } from "./Section";
 import { TRIGGER_H, TRIGGER_W } from "./TriggerButton";
 
-type Props = Record<string, never>;
+interface Props {
+  initialHelpOpen?: boolean;
+}
 
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
@@ -81,14 +83,14 @@ function isTypingTarget(el: EventTarget | null): boolean {
   return false;
 }
 
-export function Overlay(_props: Props) {
+export function Overlay({ initialHelpOpen = false }: Props) {
   const selected = useDeckStore(selectedDeck);
   const library = useDeckStore((s) => s.library);
   let deckCount = 0;
   let cubeCount = 0;
   for (const d of Object.values(library.decks)) (d.isCube ? cubeCount++ : deckCount++);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [helpOpen, setHelpOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(initialHelpOpen);
   const bodyRef = useRef<HTMLDivElement>(null);
   const deckRef = useRef<HTMLElement>(null);
   const analyticsRef = useRef<HTMLElement>(null);

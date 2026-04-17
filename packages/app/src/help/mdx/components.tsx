@@ -133,6 +133,9 @@ function Row({ keys, children }: { keys: string; children: ReactNode }) {
 
 /** HTML element overrides so prose in MDX inherits the modal's theme. */
 const htmlOverrides: MDXComponents = {
+  h1: ({ style, ...props }) => (
+    <h1 style={{ fontSize: 32, fontWeight: 800, margin: "12px 0 8px", color: colors.text, ...style }} {...props} />
+  ),
   h2: (props) => (
     <h2
       style={{
@@ -147,7 +150,7 @@ const htmlOverrides: MDXComponents = {
     />
   ),
   h3: (props) => <h3 style={{ fontSize: 13, fontWeight: 700, margin: "12px 0 4px", color: colors.text }} {...props} />,
-  p: (props) => <p style={{ fontSize: 13, color: colors.text, lineHeight: 1.5, margin: "6px 0" }} {...props} />,
+  p: ({ style, ...props }) => <p style={{ fontSize: 13, color: colors.text, lineHeight: 1.5, margin: "6px 0", ...style }} {...props} />,
   code: (props) => (
     <code
       style={{
@@ -165,6 +168,14 @@ const htmlOverrides: MDXComponents = {
   ul: (props) => <ul style={{ margin: "6px 0", paddingLeft: 20, fontSize: 13, color: colors.text }} {...props} />,
 };
 
+function HeroTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <span style={{ fontSize: 64, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1, color: "#fff", fontFamily: "system-ui, sans-serif" }}>
+      {children}
+    </span>
+  );
+}
+
 export const mdxComponents: MDXComponents = {
   ...htmlOverrides,
   Card,
@@ -172,4 +183,5 @@ export const mdxComponents: MDXComponents = {
   Row,
   Version,
   GrimoireLogo,
+  HeroTitle,
 };

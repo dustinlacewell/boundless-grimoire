@@ -124,9 +124,22 @@ async function maybeSeedExampleDecks(): Promise<void> {
   await storage.set(SEED_FLAG_KEY, true);
 }
 
+const FIRST_VISIT_KEY = "boundless-grimoire:demo:visited";
+
 export function EmbeddedApp() {
   const [b] = useState(() => bootOnce());
   const [hydrated, setHydrated] = useState(false);
+  const [isFirstVisit] = useState(() => {
+    try {
+      const forced = new URLSearchParams(window.location.search).has("first-time");
+      if (forced) return true;
+      if (localStorage.getItem(FIRST_VISIT_KEY)) return false;
+      localStorage.setItem(FIRST_VISIT_KEY, "1");
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -138,22 +151,15 @@ export function EmbeddedApp() {
     };
   }, [b]);
 
-  // The host id is the portal target the global modals (HelpModal,
-  // PrintPickerModal, etc.) look up when mounting. It must exist before
-  // they render; nothing else about it matters. App's TriggerButton is
-  // fixed-positioned (top-left) and the Overlay is fixed-inset-0 when
-  // toggled open — both float over the marketing content beneath.
-  //
-  // Deliberately NO `isolate`: it would trap the overlay's max-int
-  // z-index inside this container, which from outside has default
-  // stacking. Page-level fixed elements (the Try-It callout) would
-  // then render ON TOP of the overlay. Without isolate, the overlay's
-  // z-index propagates to the document and covers everything.
+  // The app starts with the overlay open and, on first visit, the Help
+  // modal's About tab visible so the user sees the hero content with
+  // download/GitHub links. On subsequent visits the overlay opens
+  // directly to the deck-builder.
   return (
-    <div id="boundless-grimoire-root">
+    <div id="boundless-grimoire-root" className="ui-scrollbars">
       {hydrated && (
         <ServicesProvider services={b.services}>
-          <App />
+          <App initialOpen initialHelpOpen={isFirstVisit} />
         </ServicesProvider>
       )}
     </div>

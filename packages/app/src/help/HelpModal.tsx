@@ -4,7 +4,7 @@ import { MDXProvider } from "@mdx-js/react";
 import { colors } from "@boundless-grimoire/ui";
 import { mdxComponents } from "./mdx/components";
 import Keybinds from "./content/keybinds.mdx";
-import About from "./content/about.mdx";
+import { AboutTab } from "./content/AboutTab";
 
 interface Props {
   onClose: () => void;
@@ -17,7 +17,7 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { id: "about", label: "About", Component: About },
+  { id: "about", label: "About", Component: AboutTab },
   { id: "keybinds", label: "Keybinds", Component: Keybinds },
 ];
 
