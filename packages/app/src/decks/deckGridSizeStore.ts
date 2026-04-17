@@ -8,7 +8,6 @@
  */
 import { create } from "zustand";
 import { attachPersistence } from "../storage/persistedSlice";
-import { preserveOnHmr } from "../storage/preserveOnHmr";
 
 const STORAGE_KEY = "boundless-grimoire:deck-card-width";
 
@@ -54,4 +53,3 @@ export function setDeckCardWidth(width: number): void {
   );
 }
 
-preserveOnHmr(useDeckGridSizeStore, import.meta.hot);
