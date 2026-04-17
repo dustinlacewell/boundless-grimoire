@@ -227,6 +227,28 @@ const STEPS: MigrationStep[] = [
       return { ...lib, version: 10, decks };
     },
   },
+
+  // v10 → v11: CMC range filter.
+  {
+    from: 10,
+    to: 11,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const f = deck.filters ?? DEFAULT_FILTER_STATE;
+        const raw = f as unknown as Record<string, unknown>;
+        decks[id] = {
+          ...deck,
+          filters: {
+            ...f,
+            cmcMin: (raw.cmcMin as number | null) ?? null,
+            cmcMax: (raw.cmcMax as number | null) ?? null,
+          },
+        };
+      }
+      return { ...lib, version: 11, decks };
+    },
+  },
 ];
 
 /** The version a correctly-upgraded library ends on. Derived from STEPS. */

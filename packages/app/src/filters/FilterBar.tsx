@@ -4,6 +4,7 @@ import { useFilterStore } from "./store";
 import { FilterField } from "./FilterField";
 import { buildScryfallQuery } from "./buildQuery";
 import { CardNameFilter } from "./components/CardNameFilter";
+import { CmcRangeFilter } from "./components/CmcRangeFilter";
 import { CardTextFilter } from "./components/CardTextFilter";
 import { ColorFilter } from "./components/ColorFilter";
 import { ColorModeDot } from "./components/ColorModeDot";
@@ -186,6 +187,9 @@ export function FilterBar() {
       <div style={{ display: "flex", flexDirection: "row", gap: 24, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
         <div style={{ flex: "0 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 12 }}>
           <RarityAndColorPanel />
+          <FilterField label="Mana Value" align="center">
+            <CmcRangeFilter />
+          </FilterField>
           <FilterField label="Type" align="center" action={<TypeModeDot />}>
             <TypeFilter />
           </FilterField>

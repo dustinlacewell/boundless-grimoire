@@ -44,6 +44,9 @@ export interface FilterState {
   excludedOracleTags: string[];
   /** How multiple custom query toggles combine: OR (any) or AND (all). */
   customQueryMode: "or" | "and";
+  /** Mana value range filter. null = unbounded on that side. */
+  cmcMin: number | null;
+  cmcMax: number | null;
   /** Which set_type values to show in the set dropdown. All on by default. */
   enabledSetTypes: string[];
 }
@@ -109,5 +112,7 @@ export const INITIAL_FILTER_STATE: FilterState = {
   oracleTags: [],
   excludedOracleTags: [],
   customQueryMode: "or",
+  cmcMin: null,
+  cmcMax: null,
   enabledSetTypes: [...DEFAULT_ENABLED_SET_TYPES],
 };

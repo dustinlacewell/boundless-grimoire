@@ -6,19 +6,29 @@ Keep this file up to date as the codebase evolves. Update it as part of every ch
 
 A full-screen MTG deck-builder built with React 18, Zustand, TanStack Query, Zod, and `scryfall-api`. The core app (`packages/app`) is environment-agnostic — it ships as a Chrome extension (Manifest V3) overlaid on untap.in and as a standalone web demo on the marketing site. Bundled by Vite (no CRX plugin — plain multi-entry build).
 
-**Branches:** `dev` — active development (**commit here by default**).
-`master` — stable releases only; `dev` merges into `master` as part of
-cutting a release. Never commit feature work directly to `master`. The
-standard flow is:
+**Branches — all work lands on `dev` or a feature branch merged into `dev`.**
 
-1. `git checkout dev` before starting any feature work.
-2. Commit on `dev`, push as needed.
-3. When rolling a release: bump `APP_VERSION` + the five package
-   `version` fields + the extension manifest on `dev`, commit as
-   `Release X.Y.Z`, then merge `dev → master`, tag `vX.Y.Z` on
-   `master`, and push both branches + the tag. Tagged pushes on
-   `master` are what trigger the release-side automation (Discord
-   announce, etc.).
+- `dev` — the integration branch. **Default target for all commits.**
+  Verify you are on `dev` (or a feature branch) before starting work.
+  If you find yourself on `master`, switch to `dev` first.
+- `master` — stable releases only. **Never commit directly to master.**
+  The only way code reaches `master` is via `/release` (or the manual
+  equivalent: merge `dev → master`, tag, push).
+- **Feature branches** — optional, for larger or exploratory work.
+  Branch from `dev`, PR or merge back into `dev`. Delete after merge.
+
+Standard workflow:
+
+1. `git checkout dev` (or create a feature branch from dev).
+2. Commit on `dev` (or the feature branch), push as needed.
+3. Before releasing, `git pull --rebase origin dev` to catch any
+   collaborator work that landed while you were working.
+4. Cut a release with `/release minor` (or `major` / `point`). This
+   bumps `APP_VERSION` + the five package `version` fields + the
+   extension manifest on `dev`, commits as `Release X.Y.Z`, merges
+   `dev → master`, tags `vX.Y.Z` on `master`, and pushes both
+   branches + the tag. Tagged pushes on `master` trigger release
+   automation (Discord announce, etc.).
 
 pnpm monorepo. Workspace members:
 
