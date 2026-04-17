@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CardPreview } from "../cards/CardPreview";
 import { PrintPickerModal } from "../cards/PrintPickerModal";
+import { TestDrawModal } from "../decks/TestDrawModal";
 import { Overlay } from "./Overlay";
 import { TriggerButton } from "./TriggerButton";
 
@@ -48,6 +49,7 @@ export function App({ initialOpen = false, initialHelpOpen = false }: AppProps) 
       {open && <Overlay initialHelpOpen={initialHelpOpen} />}
       <TriggerButton open={open} onToggle={() => setOpen((v) => !v)} />
       <PrintPickerModal />
+      <TestDrawModal />
       <CardPreview />
     </>
   );

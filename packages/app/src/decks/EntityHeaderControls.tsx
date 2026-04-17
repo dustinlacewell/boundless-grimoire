@@ -1,11 +1,12 @@
 import type { CSSProperties } from "react";
-import { colors } from "@boundless-grimoire/ui";
+import { colors, IconButton } from "@boundless-grimoire/ui";
 import type { Deck } from "../storage/types";
 import { DeckColumnSortPicker } from "./DeckColumnSortPicker";
 import { DeckFormatPicker } from "./DeckFormatPicker";
 import { DeckGroupByPicker } from "./DeckGroupByPicker";
 import { DeckLayoutToggle } from "./DeckLayoutToggle";
 import { LegalityBadge } from "./LegalityBadge";
+import { openTestDraw } from "./testDrawStore";
 
 interface Props {
   deck: Deck;
@@ -57,6 +58,31 @@ export function EntityHeaderControls({ deck }: Props) {
           <DeckFormatPicker deckId={deck.id} formatIndex={deck.formatIndex} />
         </div>
       )}
+      {!deck.isCube && (
+        <IconButton title="Test Draw" onClick={() => openTestDraw(deck)} size={26}>
+          <HandIcon size={14} />
+        </IconButton>
+      )}
     </>
+  );
+}
+
+/** Simple playing-card hand icon (SVG). */
+function HandIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Two fanned cards */}
+      <rect x="4" y="3" width="10" height="14" rx="1.5" transform="rotate(-8 9 10)" />
+      <rect x="10" y="3" width="10" height="14" rx="1.5" transform="rotate(8 15 10)" />
+    </svg>
   );
 }
