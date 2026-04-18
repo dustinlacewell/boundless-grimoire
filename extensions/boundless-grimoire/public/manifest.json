@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Boundless Grimoire",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Comfy and customizable deck builder for Magic: The Gathering that syncs with Untap.in",
   "permissions": ["storage"],
   "web_accessible_resources": [

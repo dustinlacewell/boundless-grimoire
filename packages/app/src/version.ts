@@ -7,4 +7,4 @@
  * `public/manifest.json`. The Chrome Web Store reads from the manifest;
  * everything else reads from here.
  */
-export const APP_VERSION = "0.7.2";
+export const APP_VERSION = "0.7.3";
