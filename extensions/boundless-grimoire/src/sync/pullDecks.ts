@@ -10,6 +10,7 @@ import {
   DEFAULT_FILTER_STATE,
   DEFAULT_SORT_DIR,
   DEFAULT_SORT_FIELD,
+  setSyncStatus,
   useDeckStore,
   type Deck,
   type DeckCard,
@@ -55,7 +56,10 @@ export async function pullUntapDecks(): Promise<void> {
 
   const newDecks = unlinked.map(buildThinDeck);
   commitImported(newDecks);
-  for (const deck of newDecks) void enrichDeckInPlace(deck.id);
+  for (const deck of newDecks) {
+    setSyncStatus(deck.id, "synced", { lastSuccessAt: Date.now() });
+    void enrichDeckInPlace(deck.id);
+  }
 }
 
 function readUntapDecksFromIDB(): Promise<UntapDeck[]> {

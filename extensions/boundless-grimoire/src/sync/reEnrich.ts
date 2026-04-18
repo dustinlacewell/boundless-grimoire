@@ -110,49 +110,48 @@ function mergeInto(
   return changed ? out : current;
 }
 
+/** Tracks in-flight enrichments to prevent duplicate runs. */
+const enriching = new Set<string>();
+
 /** Re-enrich a single deck's thin cards and commit the result to the store. */
 export async function enrichDeckInPlace(localDeckId: string): Promise<void> {
+  if (enriching.has(localDeckId)) return;
   const deck = useDeckStore.getState().library.decks[localDeckId];
   if (!deck) return;
+  enriching.add(localDeckId);
 
   const [enrichedCards, enrichedSideboard] = await Promise.all([
     enrichDeckCards(deck.cards),
     enrichDeckCards(deck.sideboard),
   ]);
 
-  useDeckStore.setState((s) => {
-    const current = s.library.decks[localDeckId];
-    if (!current) return s;
-    const nextCards = mergeInto(current.cards, enrichedCards);
-    const nextSide = mergeInto(current.sideboard, enrichedSideboard);
-    const contentChanged = nextCards !== current.cards || nextSide !== current.sideboard;
-    // Bail cleanly if nothing at all changed (no thin cards resolved
-    // and we weren't mid-enrichment).
-    if (!contentChanged && !current.enriching) return s;
-    return {
-      library: {
-        ...s.library,
-        decks: {
-          ...s.library.decks,
-          [localDeckId]: {
-            ...current,
-            cards: nextCards,
-            sideboard: nextSide,
-            enriching: false,
-            // Bumping `updatedAt` when card content changed is what lets
-            // the outbox observe "this deck was modified" and schedule
-            // a push — without it, a pulled thin deck would be
-            // permanently stuck in a dirty-but-un-pushed state because
-            // the enrichment commit and the initial pull would share
-            // the same timestamp. Without a content change, leave the
-            // stamp alone so boot-time re-enrich doesn't spuriously
-            // re-push every deck in the library.
-            updatedAt: contentChanged ? Date.now() : current.updatedAt,
+  try {
+    useDeckStore.setState((s) => {
+      const current = s.library.decks[localDeckId];
+      if (!current) return s;
+      const nextCards = mergeInto(current.cards, enrichedCards);
+      const nextSide = mergeInto(current.sideboard, enrichedSideboard);
+      const contentChanged = nextCards !== current.cards || nextSide !== current.sideboard;
+      if (!contentChanged && !current.enriching) return s;
+      return {
+        library: {
+          ...s.library,
+          decks: {
+            ...s.library.decks,
+            [localDeckId]: {
+              ...current,
+              cards: nextCards,
+              sideboard: nextSide,
+              enriching: false,
+              updatedAt: contentChanged ? Date.now() : current.updatedAt,
+            },
           },
         },
-      },
-    };
-  });
+      };
+    });
+  } finally {
+    enriching.delete(localDeckId);
+  }
 }
 
 /** Scan all decks and re-enrich any that contain thin snapshots. */

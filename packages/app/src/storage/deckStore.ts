@@ -102,6 +102,14 @@ function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
     // Pushes for added or modified decks.
     for (const [id, deck] of Object.entries(next.decks)) {
       const prevDeck = prev.decks[id];
+
+      // Skip decks that just arrived from pull (enriching: true) or
+      // just finished enrichment (enriching flipped false). Enrichment
+      // replaces untap card_uids with Scryfall ids in the snapshots —
+      // pushing those back would send ids untap doesn't recognize.
+      if (!prevDeck && deck.enriching) continue;
+      if (prevDeck?.enriching && !deck.enriching) continue;
+
       if (
         !prevDeck ||
         prevDeck.cards !== deck.cards ||
