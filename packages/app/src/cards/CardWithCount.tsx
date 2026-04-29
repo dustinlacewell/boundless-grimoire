@@ -59,6 +59,7 @@ interface TitleOpts {
   canFavorite: boolean;
   canAlt: boolean;
   canSetCover: boolean;
+  canSetCommander: boolean;
   altLabel?: string;
   pinned: boolean;
   favorited: boolean;
@@ -73,6 +74,7 @@ const buildTitle = (name: string, opts: TitleOpts): string => {
     name,
     "left click — +1, right click — -1",
   ];
+  if (opts.canSetCommander) lines.push("shift-alt-click — toggle commander");
   if (opts.canPin || opts.canFavorite) {
     const mods: string[] = [];
     if (opts.canPin) mods.push(`shift-click — ${opts.pinned ? "unpin" : "pin"}`);
@@ -161,6 +163,7 @@ export function CardWithCount({
         canFavorite: !!onShiftContextMenu,
         canAlt: !!onAltClick,
         canSetCover: !!onSetCover,
+        canSetCommander: !!onSetCommander,
         pinned,
         favorited,
       })}
