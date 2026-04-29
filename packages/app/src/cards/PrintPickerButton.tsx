@@ -1,5 +1,4 @@
 import type { MouseEvent } from "react";
-import { colors } from "@boundless-grimoire/ui";
 
 interface Props {
   onClick: (e: MouseEvent) => void;
@@ -30,9 +29,9 @@ export function PrintPickerButton({ onClick }: Props) {
         bottom: 6,
         left: "50%",
         transform: "translateX(-50%)",
-        background: "rgba(15,15,18,0.85)",
-        color: colors.text,
-        border: `1px solid ${colors.borderStrong}`,
+        background: "rgba(21,21,26,0.92)",
+        color: "#ffffff",
+        border: "none",
         borderRadius: 999,
         padding: "2px 10px",
         fontSize: 14,
@@ -40,6 +39,7 @@ export function PrintPickerButton({ onClick }: Props) {
         fontWeight: 800,
         cursor: "pointer",
         letterSpacing: 1,
+        boxShadow: "0 0 0 1.5px white, 0 0 0 3px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.55)",
         zIndex: 3,
       }}
     >

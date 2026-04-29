@@ -7,9 +7,9 @@ import type { ScryfallImageUris } from "../scryfall/types";
 
 type Size = keyof ScryfallImageUris;
 
-export function imageUrl(snapshot: CardSnapshot, size: Size = "normal"): string | null {
+export function imageUrl(snapshot: CardSnapshot, size: Size = "normal", faceIndex: 0 | 1 = 0): string | null {
   const direct = snapshot.image_uris?.[size];
   if (direct) return direct;
-  const face = snapshot.card_faces?.[0]?.image_uris?.[size];
+  const face = snapshot.card_faces?.[faceIndex]?.image_uris?.[size];
   return face ?? null;
 }

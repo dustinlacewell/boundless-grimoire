@@ -248,77 +248,136 @@ export function CardPreview() {
     );
   }
 
-  // Pull oracle text / pt from card_faces if not on top level (DFCs).
-  const face = snapshot.card_faces?.[0];
-  const oracleText = snapshot.oracle_text ?? face?.oracle_text ?? "";
-  const power = snapshot.power ?? face?.power;
-  const toughness = snapshot.toughness ?? face?.toughness;
-  const loyalty = snapshot.loyalty ?? face?.loyalty;
-  const manaCost = snapshot.mana_cost ?? face?.mana_cost ?? "";
+  // DFCs: no root image_uris, each face has its own.
+  const isDfc = !snapshot.image_uris && !!snapshot.card_faces?.[1]?.image_uris;
+  // Any card whose faces carry distinct text (DFC, flip, adventure, split).
+  const isMultiFace = (snapshot.card_faces?.length ?? 0) >= 2;
+  const backUrl = isDfc ? (imageUrl(snapshot, "normal", 1) ?? imageUrl(snapshot, "large", 1)) : null;
+
+  // For single-face cards pull from root, falling back to face[0].
+  const face0 = snapshot.card_faces?.[0];
+  const oracleText = snapshot.oracle_text ?? face0?.oracle_text ?? "";
+  const power = snapshot.power ?? face0?.power;
+  const toughness = snapshot.toughness ?? face0?.toughness;
+  const loyalty = snapshot.loyalty ?? face0?.loyalty;
+  const manaCost = snapshot.mana_cost ?? face0?.mana_cost ?? "";
 
   // Round only the outer corners based on which half is visible.
   const imageRadius = showText ? "10px 0 0 10px" : "10px";
   const textRadius = showImage ? "0 10px 10px 0" : "10px";
 
+  const setLine = (
+    <div style={{ ...rowStyle, borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: "auto" }}>
+      <div style={setLineStyle}>
+        {snapshot.set_name ?? "—"}
+        {snapshot.set ? ` (${snapshot.set.toUpperCase()})` : ""}
+        {snapshot.collector_number ? ` #${snapshot.collector_number}` : ""}
+      </div>
+      {snapshot.rarity && ["common","uncommon","rare","mythic"].includes(snapshot.rarity) && (
+        <RarityIcon rarity={snapshot.rarity as "common"|"uncommon"|"rare"|"mythic"} size={18} />
+      )}
+    </div>
+  );
+
   return createPortal(
     <div ref={ref} style={{ ...wrapStyle, width: fullPanelW }}>
       {showImage && (
-        <div
-          style={{
-            width: IMAGE_W,
-            height: IMAGE_H,
-            flex: "0 0 auto",
-            background: colors.bg0,
-            borderRadius: imageRadius,
-            overflow: "hidden",
-          }}
-        >
-          {url && (
-            <img
-              src={url}
-              alt={snapshot.name}
-              draggable={false}
-              style={{ width: "100%", height: "100%", display: "block", objectFit: "cover", scale: "1.02" }}
-            />
-          )}
-        </div>
+        isDfc ? (
+          // DFC: both face images side by side, each at half width.
+          <div style={{ width: IMAGE_W, height: IMAGE_H, flex: "0 0 auto", display: "flex", borderRadius: imageRadius, overflow: "hidden" }}>
+            {([0, 1] as const).map((i) => {
+              const faceUrl = i === 0 ? url : backUrl;
+              const faceName = snapshot.card_faces![i].name;
+              return (
+                <div key={i} style={{ width: IMAGE_W / 2, height: IMAGE_H, flex: "0 0 auto", background: colors.bg0 }}>
+                  {faceUrl && (
+                    <img
+                      src={faceUrl}
+                      alt={faceName}
+                      draggable={false}
+                      style={{ width: "100%", height: "100%", display: "block", objectFit: "cover", scale: "1.02" }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div style={{ width: IMAGE_W, height: IMAGE_H, flex: "0 0 auto", background: colors.bg0, borderRadius: imageRadius, overflow: "hidden" }}>
+            {url && (
+              <img
+                src={url}
+                alt={snapshot.name}
+                draggable={false}
+                style={{ width: "100%", height: "100%", display: "block", objectFit: "cover", scale: "1.02" }}
+              />
+            )}
+          </div>
+        )
       )}
       {showText && (
         <div style={{ ...sideStyle, borderRadius: textRadius }}>
-          {/* title · cost */}
-          <div style={{ ...rowStyle, ...dividerStyle }}>
-            <div style={nameStyle}>{snapshot.name}</div>
-            {manaCost && <ManaCost cost={manaCost} size={15} />}
-          </div>
-
-          {/* type -- subtype · rarity icon */}
-          <div style={{ ...rowStyle, ...dividerStyle }}>
-            <div style={typeStyle}>{snapshot.type_line ?? ""}</div>
-            {snapshot.rarity && ["common","uncommon","rare","mythic"].includes(snapshot.rarity) && (
-              <RarityIcon rarity={snapshot.rarity as "common"|"uncommon"|"rare"|"mythic"} size={18} />
-            )}
-          </div>
-
-          {/* one block per ability / paragraph */}
-          {oracleText && (
-            <div style={oracleBlockStyle}>
-              <OracleText text={oracleText} />
-            </div>
-          )}
-
-          {/* set info · pow/tou */}
-          <div style={{ ...rowStyle, borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: "auto" }}>
-            <div style={setLineStyle}>
-              {snapshot.set_name ?? "—"}
-              {snapshot.set ? ` (${snapshot.set.toUpperCase()})` : ""}
-              {snapshot.collector_number ? ` #${snapshot.collector_number}` : ""}
-            </div>
-            {(power !== undefined || loyalty !== undefined) && (
-              <div style={ptStyle}>
-                {loyalty !== undefined ? `${loyalty}` : `${power}/${toughness}`}
+          {isMultiFace ? (
+            // Multi-face: render each face as its own block.
+            <>
+              {snapshot.card_faces!.map((face, i) => (
+                <div key={i} style={i > 0 ? { borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: 6 } : undefined}>
+                  <div style={{ ...rowStyle, marginBottom: 4 }}>
+                    <div style={nameStyle}>{face.name}</div>
+                    {face.mana_cost && <ManaCost cost={face.mana_cost} size={15} />}
+                  </div>
+                  {face.type_line && <div style={{ ...typeStyle, marginBottom: 4 }}>{face.type_line}</div>}
+                  {face.oracle_text && (
+                    <div style={{ ...oracleBlockStyle, flex: "none" }}>
+                      <OracleText text={face.oracle_text} />
+                    </div>
+                  )}
+                  {(face.power !== undefined || face.loyalty !== undefined) && (
+                    <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
+                      <div style={ptStyle}>
+                        {face.loyalty !== undefined ? face.loyalty : `${face.power}/${face.toughness}`}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {setLine}
+            </>
+          ) : (
+            <>
+              {/* title · cost */}
+              <div style={{ ...rowStyle, ...dividerStyle }}>
+                <div style={nameStyle}>{snapshot.name}</div>
+                {manaCost && <ManaCost cost={manaCost} size={15} />}
               </div>
-            )}
-          </div>
+
+              {/* type -- subtype */}
+              <div style={{ ...rowStyle, ...dividerStyle }}>
+                <div style={typeStyle}>{snapshot.type_line ?? ""}</div>
+              </div>
+
+              {/* oracle text */}
+              {oracleText && (
+                <div style={oracleBlockStyle}>
+                  <OracleText text={oracleText} />
+                </div>
+              )}
+
+              {/* set info · pow/tou */}
+              <div style={{ ...rowStyle, borderTop: `1px solid ${colors.border}`, paddingTop: 6, marginTop: "auto" }}>
+                <div style={setLineStyle}>
+                  {snapshot.set_name ?? "—"}
+                  {snapshot.set ? ` (${snapshot.set.toUpperCase()})` : ""}
+                  {snapshot.collector_number ? ` #${snapshot.collector_number}` : ""}
+                </div>
+                {(power !== undefined || loyalty !== undefined) && (
+                  <div style={ptStyle}>
+                    {loyalty !== undefined ? `${loyalty}` : `${power}/${toughness}`}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>,

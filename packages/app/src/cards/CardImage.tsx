@@ -9,6 +9,8 @@ interface Props {
   width: number;
   size?: "small" | "normal" | "large";
   style?: CSSProperties;
+  /** Which face to show for double-faced cards. Ignored for single-faced cards. */
+  faceIndex?: 0 | 1;
 }
 
 /** Standard MTG card aspect ratio (width / height). */
@@ -22,8 +24,8 @@ export function cardHeightFor(width: number): number {
  * Pure card image. No interaction, no badges. Composes into CardWithCount
  * for the actual deck-view tile.
  */
-export function CardImage({ snapshot, width, size = "normal", style }: Props) {
-  const url = imageUrl(snapshot, size);
+export function CardImage({ snapshot, width, size = "normal", style, faceIndex = 0 }: Props) {
+  const url = imageUrl(snapshot, size, faceIndex);
   const height = cardHeightFor(width);
 
   return (

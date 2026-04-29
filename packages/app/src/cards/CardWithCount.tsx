@@ -1,4 +1,4 @@
-import { type MouseEvent } from "react";
+import { type MouseEvent, useState } from "react";
 import { useCtrlKey } from "../ui/useCtrlKey";
 import type { CardSnapshot } from "../storage/types";
 import { CardImage } from "./CardImage";
@@ -8,6 +8,7 @@ import { DogEar } from "./DogEar";
 import { FavoriteBadge } from "./FavoriteBadge";
 import { PinBadge } from "./PinBadge";
 import { PrintPickerButton } from "./PrintPickerButton";
+import { FlipButton } from "./FlipButton";
 
 interface Props {
   snapshot: CardSnapshot;
@@ -117,6 +118,12 @@ export function CardWithCount({
 }: Props) {
   const { hovered, handlers: hoverHandlers } = useCardHoverPreview(snapshot);
   const ctrlHeld = useCtrlKey();
+  const [flipped, setFlipped] = useState(false);
+  // DFCs: no root image_uris, each face has its own image.
+  const isDfc = !snapshot.image_uris && !!snapshot.card_faces?.[1]?.image_uris;
+  // Flip cards (Kamigawa): single root image, faces carry only text — show by rotating 180°.
+  const isFlipCard = !!snapshot.image_uris && (snapshot.card_faces?.length ?? 0) >= 2 && !snapshot.card_faces?.[1]?.image_uris;
+  const canFlip = isDfc || isFlipCard;
 
   const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -168,13 +175,21 @@ export function CardWithCount({
         favorited,
       })}
     >
-      <CardImage snapshot={snapshot} width={width} />
+      <CardImage
+        snapshot={snapshot}
+        width={width}
+        faceIndex={flipped && isDfc ? 1 : 0}
+        style={flipped && isFlipCard ? { transform: "rotate(180deg)" } : undefined}
+      />
       {count > 0 && <DogEar count={count} cardWidth={width} />}
       {illegalReason && <IllegalBadge cardWidth={width} reason={illegalReason} />}
       {pinned && <PinBadge cardWidth={width} />}
       {favorited && !pinned && <FavoriteBadge cardWidth={width} />}
       {hovered && onPickPrint && (
         <PrintPickerButton onClick={() => onPickPrint(snapshot)} />
+      )}
+      {hovered && canFlip && (
+        <FlipButton flipped={flipped} onClick={() => setFlipped((f) => !f)} />
       )}
     </div>
   );
