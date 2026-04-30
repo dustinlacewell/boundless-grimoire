@@ -11,6 +11,8 @@ import {
 import { imageUrl } from "./imageUrl";
 import { ManaCost } from "./ManaCost";
 import { OracleText } from "./OracleText";
+import { faceKind, multiFaces } from "./cardFaces";
+import type { PreviewMode } from "../settings/settingsStore";
 import { RarityIcon } from "../filters/icons/RarityIcon";
 import { cardHeightFor, CARD_ASPECT } from "./CardImage";
 import type { ScryfallCardFace } from "../scryfall/types";
@@ -220,15 +222,6 @@ function TextPreview({
 	const toughness = face?.toughness ?? snapshot.toughness;
 	const typeLine = face?.type_line ?? snapshot.type_line;
 
-	console.log(
-		"Rendering TextPreview for",
-		snapshot.name,
-		"with face",
-		face?.name,
-	);
-	console.log(snapshot);
-	console.log(face);
-
 	return (
 		<>
 			{/* title · cost */}
@@ -289,13 +282,18 @@ function PreviewCard({
 	face,
 	faceIndex,
 	previewMode,
-	isMultiface,
+	multiTextFaces,
 }: {
 	snapshot: CardSnapshot;
-	previewMode: string;
+	previewMode: PreviewMode;
 	face?: ScryfallCardFace;
 	faceIndex?: number;
-	isMultiface?: boolean;
+	/**
+	 * When set, the text panel renders one TextPreview per face in this
+	 * list with `<hr>` separators between them. Used for cards that share
+	 * a single image but carry multiple oracle texts (Kamigawa flips).
+	 */
+	multiTextFaces?: readonly ScryfallCardFace[];
 }) {
 	const showImage = previewMode !== "text";
 	const showText = previewMode !== "image";
@@ -307,29 +305,21 @@ function PreviewCard({
 	let text = null;
 
 	if (showText) {
-		if (!face && isMultiface) {
-			const faces = snapshot.card_faces ?? [];
-			const previews = faces.map((face, i) => (
-				// biome-ignore lint/suspicious/noArrayIndexKey: keys are stable here since card_faces order is semantically meaningful and stable
-				<TextPreview key={i} snapshot={snapshot} face={face} />
-			));
-
+		if (!face && multiTextFaces) {
+			const items = multiTextFaces.flatMap((f, i) => {
+				const preview = (
+					// biome-ignore lint/suspicious/noArrayIndexKey: card_faces order is semantically meaningful and stable
+					<TextPreview key={`face-${i}`} snapshot={snapshot} face={f} />
+				);
+				return i === 0
+					? [preview]
+					: [
+							<hr key={`sep-${i}`} style={{ margin: "10px 0" }} />,
+							preview,
+						];
+			});
 			text = (
-				<div
-					style={{
-						...sideStyle,
-						display: "flex",
-						flexDirection: "column",
-					}}
-				>
-					{previews.reduce((acc, face) => (
-						<>
-							{acc}
-							<hr style={{ margin: "10px 0" }} />
-							{face}
-						</>
-					))}
-				</div>
+				<div style={{ ...sideStyle, flexDirection: "column" }}>{items}</div>
 			);
 		} else {
 			text = (
@@ -373,12 +363,19 @@ export function CardPreview() {
 	const showImage = previewMode !== "text";
 	const showText = previewMode !== "image";
 
-	const faceCount = snapshot?.card_faces?.length ?? 1;
+	// DFCs render their faces side-by-side in print mode and stacked
+	// vertically in hover mode; everything else (single, flip) renders
+	// at single-card dimensions. Computed up here so panel placement
+	// math sees the same shape the render path will produce.
+	const dfcCount =
+		snapshot && faceKind(snapshot) === "dfc"
+			? (snapshot.card_faces?.length ?? 1)
+			: 1;
 
 	// Panel width: image-only / text-only shrinks; both is the full width.
 	const fullPanelW = (showImage ? IMAGE_W : 0) + (showText ? SIDE_W : 0);
-	const panelW = printMode ? PRINT_W * faceCount : fullPanelW;
-	const panelH = printMode ? PRINT_H + LABEL_H : PANEL_H * faceCount;
+	const panelW = printMode ? PRINT_W * dfcCount : fullPanelW;
+	const panelH = printMode ? PRINT_H + LABEL_H : PANEL_H * dfcCount;
 
 	// Position the panel imperatively on every mousemove while open. Also
 	// hide the preview if Ctrl is released without a fresh keydown.
@@ -429,12 +426,12 @@ export function CardPreview() {
 
 	if (!snapshot) return null;
 
-	const isMultiface =
-		typeof snapshot.card_faces !== "undefined" &&
-		snapshot.card_faces.length !== 0;
-
-	// MFCs: no root image_uris, each face has its own.
-	const isMultiimage = !snapshot.image_uris && isMultiface;
+	const kind = faceKind(snapshot);
+	// DFCs carry a separate image per face; render them side-by-side.
+	const dfcFaces = kind === "dfc" ? multiFaces(snapshot) : null;
+	// Flip cards share one image but carry multiple oracle texts; render
+	// the single image once and stack the per-face text below.
+	const flipFaces = kind === "flip" ? multiFaces(snapshot) : null;
 
 	if (printMode) {
 		const setLabel = [
@@ -446,7 +443,7 @@ export function CardPreview() {
 
 		return createPortal(
 			<div ref={ref} style={{ ...printWrapStyle }}>
-				{isMultiimage ? (
+				{dfcFaces ? (
 					<div
 						style={{
 							display: "flex",
@@ -456,20 +453,17 @@ export function CardPreview() {
 							gap: 12,
 						}}
 					>
-						{
-							// biome-ignore lint/style/noNonNullAssertion: type guarded by isMfc
-							snapshot.card_faces!.map((face, i) => (
-								<ImagePreview
-									// biome-ignore lint/suspicious/noArrayIndexKey: keys are stable here since card_faces order is semantically meaningful and stable
-									key={i}
-									snapshot={snapshot}
-									face={face}
-									faceIndex={i}
-									imageHeight={PRINT_H}
-									imageWidth={PRINT_W}
-								/>
-							))
-						}
+						{dfcFaces.map((face, i) => (
+							<ImagePreview
+								// biome-ignore lint/suspicious/noArrayIndexKey: card_faces order is semantically meaningful and stable
+								key={i}
+								snapshot={snapshot}
+								face={face}
+								faceIndex={i}
+								imageHeight={PRINT_H}
+								imageWidth={PRINT_W}
+							/>
+						))}
 					</div>
 				) : (
 					<ImagePreview snapshot={snapshot} />
@@ -482,31 +476,26 @@ export function CardPreview() {
 
 	return createPortal(
 		<div ref={ref} style={wrapStyle}>
-			{isMultiimage ? (
+			{dfcFaces ? (
 				<div
 					style={{ display: "flex", flexDirection: "column", height: "100%" }}
 				>
-					{
-						// biome-ignore lint/style/noNonNullAssertion: type guarded by isMfc
-						snapshot.card_faces!.map((face, i) => {
-							return (
-								<PreviewCard
-									// biome-ignore lint/suspicious/noArrayIndexKey: keys are stable here since card_faces order is semantically meaningful and stable
-									key={i}
-									snapshot={snapshot}
-									face={face}
-									faceIndex={i}
-									previewMode={previewMode}
-								/>
-							);
-						})
-					}
+					{dfcFaces.map((face, i) => (
+						<PreviewCard
+							// biome-ignore lint/suspicious/noArrayIndexKey: card_faces order is semantically meaningful and stable
+							key={i}
+							snapshot={snapshot}
+							face={face}
+							faceIndex={i}
+							previewMode={previewMode}
+						/>
+					))}
 				</div>
 			) : (
 				<PreviewCard
 					snapshot={snapshot}
 					previewMode={previewMode}
-					isMultiface={isMultiface}
+					multiTextFaces={flipFaces ?? undefined}
 				/>
 			)}
 		</div>,

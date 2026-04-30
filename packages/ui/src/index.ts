@@ -13,6 +13,7 @@ export { Button } from "./Button";
 export { ButtonGroup, type ButtonGroupOption } from "./ButtonGroup";
 export { IconButton } from "./IconButton";
 export { ToggleButton } from "./ToggleButton";
+export { FloatingCardButton } from "./FloatingCardButton";
 
 export { Dropdown, type DropdownOption } from "./Dropdown";
 export { MultiSelect, type MultiSelectOption } from "./MultiSelect";
