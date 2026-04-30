@@ -69,7 +69,7 @@ function symbolUrl(color: ManaColor): string {
 }
 
 export function ColorManaChart({ deck, style }: Props) {
-  const { demand, supply } = useMemo(() => computeColorDemandSupply(deck.cards), [deck.cards]);
+  const { demand, supply } = useMemo(() => computeColorDemandSupply(deck.zones.mainboard.cards), [deck.zones.mainboard.cards]);
   const activeColors = MANA_COLORS.filter((c) => demand[c] > 0);
   if (activeColors.length === 0) return null;
   const maxValue = Math.max(...activeColors.map((c) => Math.max(demand[c], supply[c])), 1);

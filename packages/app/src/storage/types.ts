@@ -6,8 +6,8 @@
  * subset of fields the UI actually needs.
  */
 import type { DeckGroupBy } from "../cards/categorize";
-import type { ScryfallCard } from "../scryfall/types";
 import { INITIAL_FILTER_STATE, type FilterState, type SortDir, type SortField } from "../filters/types";
+import type { ScryfallCard } from "../scryfall/types";
 
 export const DEFAULT_SORT_FIELD: SortField = "name";
 export const DEFAULT_SORT_DIR: SortDir = "asc";
@@ -54,22 +54,33 @@ export interface DeckCard {
   zone: string;
 }
 
+/**
+ * A named zone within a deck (e.g. mainboard, sideboard, commander).
+ * Each zone owns its card map and its own grouping preference.
+ */
+export type ZoneName = "mainboard" | "sideboard" | "commander" | "startsInPlay";
+
+export interface Zone {
+  cards: Record<string, DeckCard>;
+  groupBy: DeckGroupBy;
+}
+
 export interface Deck {
   id: string;
   name: string;
   createdAt: number;
   updatedAt: number;
-  /** Card map keyed by Scryfall card id. */
-  cards: Record<string, DeckCard>;
-  /** Sideboard card map keyed by Scryfall card id. */
-  sideboard: Record<string, DeckCard>;
   /**
-   * The deck's commander, if any. Stored as a single snapshot (no
-   * count — commanders are singleton by definition). Rendered as the
-   * first column in the deck view when set. Setting a new commander
-   * returns the previous one to the mainboard.
+   * All card collections, keyed by zone name. Every deck always has all
+   * four zones present; unused zones simply have an empty `cards` map.
+   *
+   * Zone → untap.in mapping:
+   *   mainboard    → "deck-1"
+   *   sideboard    → "sideboard-1"
+   *   commander    → "play-1"  (1–2 cards: solo or partner)
+   *   startsInPlay → "play-1"  (other cards that start on the battlefield)
    */
-  commander?: CardSnapshot;
+  zones: Record<ZoneName, Zone>;
   /** Sort field used by the search grid while this deck is active. */
   sortField: SortField;
   /** Sort direction used by the search grid while this deck is active. */
@@ -78,12 +89,6 @@ export interface Deck {
   filters: FilterState;
   /** Index into the custom formats list, or null for no format. */
   formatIndex: number | null;
-  /**
-   * Grouping mode for the card-column grid. Persisted per deck/cube so
-   * each entity remembers its own preferred layout. Decks default to
-   * "category"; cubes default to "zone".
-   */
-  groupBy: DeckGroupBy;
   /**
    * Card-column layout: `"scroll"` keeps columns in a single row that
    * scrolls horizontally, `"wrap"` wraps columns onto multiple rows.
@@ -143,7 +148,7 @@ export interface DeckLibrary {
 }
 
 /** Bump when DeckLibrary's on-disk shape changes. See migrateLibrary. */
-export const LIBRARY_VERSION = 11;
+export const LIBRARY_VERSION = 12;
 
 export const EMPTY_LIBRARY: DeckLibrary = {
   version: LIBRARY_VERSION,

@@ -26,7 +26,7 @@
  *       user-facing state) — except the `enriching` flag flip.
  */
 import { useDeckStore } from "@boundless-grimoire/app";
-import type { CardSnapshot, DeckCard } from "@boundless-grimoire/app";
+import type { CardSnapshot, DeckCard, ZoneName } from "@boundless-grimoire/app";
 import { enrichDeckCards } from "./enrichDeck";
 
 function isLand(snapshot: CardSnapshot): boolean {
@@ -120,18 +120,24 @@ export async function enrichDeckInPlace(localDeckId: string): Promise<void> {
   if (!deck) return;
   enriching.add(localDeckId);
 
-  const [enrichedCards, enrichedSideboard] = await Promise.all([
-    enrichDeckCards(deck.cards),
-    enrichDeckCards(deck.sideboard),
-  ]);
+  const zoneNames = Object.keys(deck.zones) as ZoneName[];
+  const enrichedZones = await Promise.all(
+    zoneNames.map((name) => enrichDeckCards(deck.zones[name].cards)),
+  );
 
   try {
     useDeckStore.setState((s) => {
       const current = s.library.decks[localDeckId];
       if (!current) return s;
-      const nextCards = mergeInto(current.cards, enrichedCards);
-      const nextSide = mergeInto(current.sideboard, enrichedSideboard);
-      const contentChanged = nextCards !== current.cards || nextSide !== current.sideboard;
+      let contentChanged = false;
+      const nextZones = { ...current.zones };
+      for (const [i, name] of zoneNames.entries()) {
+        const merged = mergeInto(current.zones[name].cards, enrichedZones[i]);
+        if (merged !== current.zones[name].cards) {
+          nextZones[name] = { ...current.zones[name], cards: merged };
+          contentChanged = true;
+        }
+      }
       if (!contentChanged && !current.enriching) return s;
       return {
         library: {
@@ -140,8 +146,7 @@ export async function enrichDeckInPlace(localDeckId: string): Promise<void> {
             ...s.library.decks,
             [localDeckId]: {
               ...current,
-              cards: nextCards,
-              sideboard: nextSide,
+              zones: nextZones,
               enriching: false,
               updatedAt: contentChanged ? Date.now() : current.updatedAt,
             },
@@ -158,7 +163,8 @@ export async function enrichDeckInPlace(localDeckId: string): Promise<void> {
 export function reEnrichThinDecks(): void {
   const { decks } = useDeckStore.getState().library;
   for (const deck of Object.values(decks)) {
-    if (hasThinCards(deck.cards) || hasThinCards(deck.sideboard)) {
+    const anyThin = Object.values(deck.zones).some((z) => hasThinCards(z.cards));
+    if (anyThin) {
       console.log(`[re-enrich] deck "${deck.name}" has thin cards, re-enriching`);
       void enrichDeckInPlace(deck.id);
     }

@@ -40,7 +40,7 @@ export function DeckAnalytics({ deck }: Props) {
   const layout = useSettingsStore((s) => s.settings.analyticsLayout);
   const scrollRef = useRef<HTMLDivElement>(null);
   useWheelToHorizontal(scrollRef, layout !== "wrap");
-  const hasCards = Object.keys(deck.cards).length > 0;
+  const hasCards = Object.keys(deck.zones.mainboard.cards).length > 0;
   if (!hasCards) return null;
 
   const s = layout === "wrap" ? WRAP_STYLE : SCROLL_STYLE;

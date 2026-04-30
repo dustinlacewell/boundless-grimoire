@@ -41,7 +41,7 @@ function CardGridItemImpl({ card, width }: Props) {
     if (!id) return 0;
     const deck = s.library.decks[id];
     if (!deck) return 0;
-    return (deck.cards[card.id]?.count ?? 0) + (deck.sideboard[card.id]?.count ?? 0);
+    return (deck.zones.mainboard.cards[card.id]?.count ?? 0) + (deck.zones.sideboard.cards[card.id]?.count ?? 0);
   });
 
   const pinned = usePinnedCardsStore((s) => card.id in s.byId);

@@ -138,8 +138,9 @@ function collectOracleIds(
 function collectLibraryOracleIds(library: DeckLibrary): Set<string> {
   const set = new Set<string>();
   for (const deck of Object.values(library.decks)) {
-    addOracleIds(set, deck.cards);
-    addOracleIds(set, deck.sideboard);
+    for (const zone of Object.values(deck.zones)) {
+      addOracleIds(set, zone.cards);
+    }
   }
   return set;
 }

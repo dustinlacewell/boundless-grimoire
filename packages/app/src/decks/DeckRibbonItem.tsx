@@ -62,14 +62,13 @@ export function DeckRibbonItem({
   // Union of color_identity across all cards, kept in canonical WUBRG order.
   const colorIdentity = useMemo(() => {
     const set = new Set<string>();
-    for (const entry of Object.values(deck.cards)) {
-      for (const c of entry.snapshot.color_identity ?? []) set.add(c);
-    }
-    for (const entry of Object.values(deck.sideboard)) {
-      for (const c of entry.snapshot.color_identity ?? []) set.add(c);
+    for (const zone of Object.values(deck.zones)) {
+      for (const entry of Object.values(zone.cards)) {
+        for (const c of entry.snapshot.color_identity ?? []) set.add(c);
+      }
     }
     return WUBRG.filter((c) => set.has(c));
-  }, [deck.cards, deck.sideboard]);
+  }, [deck.zones]);
 
   const formats = useCustomFormatStore((s) => s.formats);
   const format = deck.formatIndex != null ? formats[deck.formatIndex] : null;
@@ -83,7 +82,7 @@ export function DeckRibbonItem({
       return;
     }
     runValidation(deck.id, deck, format);
-    void checkLegality(deck.id, compileFragment(format), deck.cards, deck.sideboard);
+    void checkLegality(deck.id, compileFragment(format), deck.zones.mainboard.cards, deck.zones.sideboard.cards);
   }, [deck.id, deck, format]);
 
   return (

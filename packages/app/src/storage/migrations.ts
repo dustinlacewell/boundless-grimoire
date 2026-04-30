@@ -24,13 +24,17 @@
  * so the compiler notices gaps — every v → v+1 hop must exist.
  */
 import { ALL_SET_TYPES } from "../filters/types";
+import type { DeckGroupBy } from "../cards/categorize";
 import {
   DEFAULT_FILTER_STATE,
   DEFAULT_SORT_DIR,
   DEFAULT_SORT_FIELD,
   LIBRARY_VERSION,
+  type CardSnapshot,
   type Deck,
+  type DeckCard,
   type DeckLibrary,
+  type Zone,
 } from "./types";
 
 interface MigrationStep {
@@ -91,7 +95,7 @@ const STEPS: MigrationStep[] = [
         const f = deck.filters ?? DEFAULT_FILTER_STATE;
         decks[id] = {
           ...deck,
-          sideboard: (raw.sideboard as Record<string, never>) ?? {},
+          sideboard: (raw.sideboard as Record<string, DeckCard>) ?? {},
           formatIndex: (raw.formatIndex as number) ?? null,
           filters: {
             ...f,
@@ -102,7 +106,7 @@ const STEPS: MigrationStep[] = [
               (f as unknown as Record<string, unknown>).enabledSetTypes as string[] ??
               [...ALL_SET_TYPES],
           },
-        };
+        } as unknown as Deck;
       }
       return { ...lib, version: 3, decks };
     },
@@ -118,9 +122,10 @@ const STEPS: MigrationStep[] = [
     apply: (lib) => {
       const decks: Record<string, Deck> = {};
       for (const [id, deck] of Object.entries(lib.decks)) {
-        const cards = tagZone(deck.cards, "deck-1");
-        const sideboard = tagZone(deck.sideboard, "sideboard-1");
-        decks[id] = { ...deck, cards, sideboard, isCube: false };
+        const raw = deck as unknown as Record<string, unknown>;
+        const cards = tagZone((raw.cards as Record<string, DeckCard>) ?? {}, "deck-1");
+        const sideboard = tagZone((raw.sideboard as Record<string, DeckCard>) ?? {}, "sideboard-1");
+        decks[id] = { ...deck, cards, sideboard, isCube: false } as unknown as Deck;
       }
       const raw = lib as unknown as Record<string, unknown>;
       return {
@@ -144,8 +149,8 @@ const STEPS: MigrationStep[] = [
         decks[id] = {
           ...deck,
           groupBy:
-            (raw.groupBy as Deck["groupBy"] | undefined) ?? (deck.isCube ? "zone" : "category"),
-        };
+            (raw.groupBy as DeckGroupBy | undefined) ?? (deck.isCube ? "zone" : "category"),
+        } as unknown as Deck;
       }
       return { ...lib, version: 6, decks };
     },
@@ -249,6 +254,50 @@ const STEPS: MigrationStep[] = [
       return { ...lib, version: 11, decks };
     },
   },
+
+  // v11 → v12: unified zone map. Replaces top-level `cards`, `sideboard`,
+  // `commander`, and `groupBy` with `zones: Record<ZoneName, Zone>`.
+  {
+    from: 11,
+    to: 12,
+    apply: (lib) => {
+      const decks: Record<string, Deck> = {};
+      for (const [id, deck] of Object.entries(lib.decks)) {
+        const raw = deck as unknown as Record<string, unknown>;
+        const oldCards = (raw.cards as Record<string, DeckCard>) ?? {};
+        const oldSideboard = (raw.sideboard as Record<string, DeckCard>) ?? {};
+        const oldCommander = raw.commander as CardSnapshot | undefined;
+        const oldGroupBy = (raw.groupBy as DeckGroupBy) ?? (deck.isCube ? "zone" : "category");
+
+        const commanderCards: Record<string, DeckCard> = {};
+        if (oldCommander) {
+          commanderCards[oldCommander.id] = {
+            snapshot: oldCommander,
+            count: 1,
+            addedAt: 0,
+            zone: "play-1",
+          };
+        }
+
+        const zones: Deck["zones"] = {
+          mainboard: { cards: oldCards, groupBy: oldGroupBy } satisfies Zone,
+          sideboard: { cards: oldSideboard, groupBy: "category" } satisfies Zone,
+          commander: { cards: commanderCards, groupBy: "category" } satisfies Zone,
+          startsInPlay: { cards: {}, groupBy: "category" } satisfies Zone,
+        };
+
+        // Spread old deck but omit legacy fields by destructuring them away.
+        const { cards: _c, sideboard: _s, commander: _cmd, groupBy: _g, ...rest } =
+          raw as unknown as {
+            cards: unknown; sideboard: unknown; commander: unknown; groupBy: unknown;
+            [k: string]: unknown;
+          };
+        void _c; void _s; void _cmd; void _g;
+        decks[id] = { ...rest, zones } as unknown as Deck;
+      }
+      return { ...lib, version: 12, decks };
+    },
+  },
 ];
 
 /** The version a correctly-upgraded library ends on. Derived from STEPS. */
@@ -265,10 +314,10 @@ if (LIBRARY_VERSION !== LATEST_LIBRARY_VERSION) {
 }
 
 function tagZone(
-  map: Record<string, Deck["cards"][string]>,
+  map: Record<string, DeckCard>,
   zone: string,
-): Record<string, Deck["cards"][string]> {
-  const out: Record<string, Deck["cards"][string]> = {};
+): Record<string, DeckCard> {
+  const out: Record<string, DeckCard> = {};
   for (const [k, c] of Object.entries(map)) {
     out[k] = { ...c, zone: c.zone ?? zone };
   }

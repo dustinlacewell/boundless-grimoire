@@ -35,13 +35,13 @@ function isBasicLand(card: DeckCard): boolean {
 
 function mainboardCount(deck: Deck): number {
   let total = 0;
-  for (const c of Object.values(deck.cards)) total += c.count;
+  for (const c of Object.values(deck.zones.mainboard.cards)) total += c.count;
   return total;
 }
 
 function sideboardCount(deck: Deck): number {
   let total = 0;
-  for (const c of Object.values(deck.sideboard)) total += c.count;
+  for (const c of Object.values(deck.zones.sideboard.cards)) total += c.count;
   return total;
 }
 
@@ -49,7 +49,8 @@ export function validateDeck(deck: Deck, format: FormatDefinition): ValidationIs
   const issues: ValidationIssue[] = [];
 
   // Deck size
-  const mainCount = mainboardCount(deck) + (deck.commander ? 1 : 0);
+  const commanderCount = Object.keys(deck.zones.commander.cards).length;
+  const mainCount = mainboardCount(deck) + commanderCount;
   if (mainCount < format.minDeckSize) {
     issues.push({
       kind: "deck-too-small",
@@ -78,16 +79,18 @@ export function validateDeck(deck: Deck, format: FormatDefinition): ValidationIs
   }
 
   // Copy limits (skip basic lands)
+  const mainboardCards = deck.zones.mainboard.cards;
+  const sideboardCards = deck.zones.sideboard.cards;
   const copyViolations: string[] = [];
-  for (const [id, card] of Object.entries(deck.cards)) {
+  for (const [id, card] of Object.entries(mainboardCards)) {
     if (isBasicLand(card)) continue;
     if (card.count > format.maxCopies) {
       copyViolations.push(id);
     }
   }
-  for (const [id, card] of Object.entries(deck.sideboard)) {
+  for (const [id, card] of Object.entries(sideboardCards)) {
     if (isBasicLand(card)) continue;
-    const mainCopies = deck.cards[id]?.count ?? 0;
+    const mainCopies = mainboardCards[id]?.count ?? 0;
     if (mainCopies + card.count > format.maxCopies) {
       copyViolations.push(id);
     }
@@ -95,7 +98,7 @@ export function validateDeck(deck: Deck, format: FormatDefinition): ValidationIs
   if (copyViolations.length > 0) {
     const names = copyViolations
       .slice(0, 5)
-      .map((id) => (deck.cards[id] ?? deck.sideboard[id])?.snapshot.name ?? id);
+      .map((id) => (mainboardCards[id] ?? sideboardCards[id])?.snapshot.name ?? id);
     const suffix = copyViolations.length > 5 ? ` and ${copyViolations.length - 5} more` : "";
     issues.push({
       kind: "copy-limit",
@@ -105,7 +108,7 @@ export function validateDeck(deck: Deck, format: FormatDefinition): ValidationIs
   }
 
   // Commander
-  if (format.commanderRequired && !deck.commander) {
+  if (format.commanderRequired && Object.keys(deck.zones.commander.cards).length === 0) {
     issues.push({
       kind: "commander-required",
       message: "This format requires a commander",
@@ -116,18 +119,18 @@ export function validateDeck(deck: Deck, format: FormatDefinition): ValidationIs
   if (format.sets.length > 0) {
     const allowed = new Set(format.sets.map((s) => s.toLowerCase()));
     const violations: string[] = [];
-    for (const [id, card] of Object.entries(deck.cards)) {
+    for (const [id, card] of Object.entries(mainboardCards)) {
       if (!card.snapshot.set) continue;
       if (!allowed.has(card.snapshot.set.toLowerCase())) violations.push(id);
     }
-    for (const [id, card] of Object.entries(deck.sideboard)) {
+    for (const [id, card] of Object.entries(sideboardCards)) {
       if (!card.snapshot.set) continue;
       if (!allowed.has(card.snapshot.set.toLowerCase())) violations.push(id);
     }
     if (violations.length > 0) {
       const names = violations
         .slice(0, 5)
-        .map((id) => (deck.cards[id] ?? deck.sideboard[id])?.snapshot.name ?? id);
+        .map((id) => (mainboardCards[id] ?? sideboardCards[id])?.snapshot.name ?? id);
       const suffix = violations.length > 5 ? ` and ${violations.length - 5} more` : "";
       issues.push({
         kind: "set-restriction",

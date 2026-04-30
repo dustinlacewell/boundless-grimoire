@@ -11,19 +11,15 @@
  * `apply` and `invert` just choose which transform to call and with what
  * arguments.
  */
-import type { CardSnapshot, Deck, DeckCard, DeckLibrary } from "../storage/types";
+import type { CardSnapshot, Deck, DeckCard, DeckLibrary, ZoneName } from "../storage/types";
 
-export type DeckZone = "main" | "sideboard";
+export type { ZoneName as DeckZone };
 
 /** One card-level change. `count` is always a positive integer. */
 export interface CardDelta {
   snapshot: CardSnapshot;
   count: number;
-  zone: DeckZone;
-}
-
-function zoneField(zone: DeckZone): "cards" | "sideboard" {
-  return zone === "sideboard" ? "sideboard" : "cards";
+  zone: ZoneName;
 }
 
 function touch(deck: Deck): Deck {
@@ -56,14 +52,18 @@ function addToZone(
 }
 
 /**
- * Resolve the untap zone tag for a newly-added card. Decks use the
- * fixed "deck-1" / "sideboard-1" tags. Cubes have no sideboard and drop
- * new cards into "group-1" — the user can reorganize into other groups
- * later via cube-specific actions.
+ * Resolve the untap zone tag for a card in a given zone.
+ * Cubes place all cards in "group-1"; non-cube zones map to their
+ * canonical untap zone strings.
  */
-function zoneTagFor(deck: Deck, semanticZone: DeckZone): string {
+function zoneTagFor(deck: Deck, zoneName: ZoneName): string {
   if (deck.isCube) return "group-1";
-  return semanticZone === "sideboard" ? "sideboard-1" : "deck-1";
+  switch (zoneName) {
+    case "sideboard": return "sideboard-1";
+    case "commander":
+    case "startsInPlay": return "play-1";
+    default: return "deck-1";
+  }
 }
 
 function removeFromZone(
@@ -88,14 +88,13 @@ export function addCards(
 ): DeckLibrary {
   const deck = lib.decks[deckId];
   if (!deck) return lib;
-  let cards = deck.cards;
-  let sideboard = deck.sideboard;
+  let zones = deck.zones;
   for (const d of deltas) {
     const tag = zoneTagFor(deck, d.zone);
-    if (d.zone === "sideboard") sideboard = addToZone(sideboard, d.snapshot, d.count, tag);
-    else cards = addToZone(cards, d.snapshot, d.count, tag);
+    const zone = zones[d.zone];
+    zones = { ...zones, [d.zone]: { ...zone, cards: addToZone(zone.cards, d.snapshot, d.count, tag) } };
   }
-  return withDeck(lib, deckId, touch({ ...deck, cards, sideboard }));
+  return withDeck(lib, deckId, touch({ ...deck, zones }));
 }
 
 /** Remove each delta from the deck. Counts clamp to zero (entry removed). */
@@ -106,35 +105,33 @@ export function removeCards(
 ): DeckLibrary {
   const deck = lib.decks[deckId];
   if (!deck) return lib;
-  let cards = deck.cards;
-  let sideboard = deck.sideboard;
+  let zones = deck.zones;
   for (const d of deltas) {
-    if (d.zone === "sideboard") sideboard = removeFromZone(sideboard, d.snapshot.id, d.count);
-    else cards = removeFromZone(cards, d.snapshot.id, d.count);
+    const zone = zones[d.zone];
+    zones = { ...zones, [d.zone]: { ...zone, cards: removeFromZone(zone.cards, d.snapshot.id, d.count) } };
   }
-  return withDeck(lib, deckId, touch({ ...deck, cards, sideboard }));
+  return withDeck(lib, deckId, touch({ ...deck, zones }));
 }
 
 /**
- * Move deltas from `from` zone to the opposite zone. The counts shift
- * between zones — total deck size is unchanged.
+ * Move deltas from one zone to another. Total deck size is unchanged.
  */
 export function moveCards(
   lib: DeckLibrary,
   deckId: string,
   deltas: readonly CardDelta[],
-  from: DeckZone,
+  from: ZoneName,
+  to: ZoneName,
 ): DeckLibrary {
   const deck = lib.decks[deckId];
   if (!deck) return lib;
-  const to: DeckZone = from === "main" ? "sideboard" : "main";
-  const srcKey = zoneField(from);
-  const dstKey = zoneField(to);
-  let src = deck[srcKey];
-  let dst = deck[dstKey];
+  let zones = deck.zones;
   for (const d of deltas) {
-    src = removeFromZone(src, d.snapshot.id, d.count);
-    dst = addToZone(dst, d.snapshot, d.count, zoneTagFor(deck, to));
+    const srcZone = zones[from];
+    const dstZone = zones[to];
+    const srcCards = removeFromZone(srcZone.cards, d.snapshot.id, d.count);
+    const dstCards = addToZone(dstZone.cards, d.snapshot, d.count, zoneTagFor(deck, to));
+    zones = { ...zones, [from]: { ...srcZone, cards: srcCards }, [to]: { ...dstZone, cards: dstCards } };
   }
-  return withDeck(lib, deckId, touch({ ...deck, [srcKey]: src, [dstKey]: dst }));
+  return withDeck(lib, deckId, touch({ ...deck, zones }));
 }

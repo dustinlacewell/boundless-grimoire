@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function PowerCurveChart({ deck, style }: Props) {
-  const curve = useMemo(() => computePowerCurve(deck.cards), [deck.cards]);
+  const curve = useMemo(() => computePowerCurve(deck.zones.mainboard.cards), [deck.zones.mainboard.cards]);
   if (curve.total === 0) return null;
   return <DistributionChart title="Power" distribution={curve} style={style} />;
 }

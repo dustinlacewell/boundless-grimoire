@@ -29,7 +29,7 @@ function shuffle<T>(arr: T[]): T[] {
 /** Expand a deck's card map into a flat list respecting counts. */
 function expandDeck(deck: Deck): CardSnapshot[] {
   const pool: CardSnapshot[] = [];
-  for (const entry of Object.values(deck.cards)) {
+  for (const entry of Object.values(deck.zones.mainboard.cards)) {
     for (let i = 0; i < entry.count; i++) pool.push(entry.snapshot);
   }
   return pool;

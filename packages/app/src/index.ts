@@ -65,10 +65,11 @@ export { storage } from "./services/storage";
 // --- Store hydrators (called once at boot) -------------------------------
 
 export {
+  addCommander,
   hydrateDeckStore,
   importDecklist,
+  removeCommander,
   selectDeck,
-  setDeckCommander,
   setDeckFormat,
   setLibraryView,
   useDeckStore,
@@ -102,6 +103,8 @@ export type {
   DeckLibrary,
   DeckCard,
   CardSnapshot,
+  Zone,
+  ZoneName,
 } from "./storage/types";
 export {
   DEFAULT_FILTER_STATE,

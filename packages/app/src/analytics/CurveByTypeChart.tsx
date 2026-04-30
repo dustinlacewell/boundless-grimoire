@@ -48,7 +48,7 @@ const legendDotStyle = (color: string): React.CSSProperties => ({
 });
 
 export function CurveByTypeChart({ deck, style }: Props) {
-  const curve = useMemo(() => computeCurveByType(deck.cards), [deck.cards]);
+  const curve = useMemo(() => computeCurveByType(deck.zones.mainboard.cards), [deck.zones.mainboard.cards]);
   const total = curve.creatures.reduce((a, b) => a + b, 0) + curve.nonCreatures.reduce((a, b) => a + b, 0);
   if (total === 0) return null;
   const maxStack = Math.max(...curve.creatures.map((c, i) => c + curve.nonCreatures[i]), 1);

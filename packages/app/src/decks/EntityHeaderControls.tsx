@@ -43,7 +43,7 @@ export function EntityHeaderControls({ deck }: Props) {
         <span style={labelStyle}>Group</span>
         <DeckGroupByPicker
           deckId={deck.id}
-          groupBy={deck.groupBy}
+          groupBy={deck.zones.mainboard.groupBy}
           hideMeta={deck.isCube}
         />
       </div>
@@ -71,6 +71,7 @@ export function EntityHeaderControls({ deck }: Props) {
 function HandIcon({ size = 16 }: { size?: number }) {
   return (
     <svg
+      aria-hidden
       width={size}
       height={size}
       viewBox="0 0 24 24"

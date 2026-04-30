@@ -91,8 +91,8 @@ function comparatorFor(mode: ColumnSort): (a: DeckCard, b: DeckCard) => number {
 
 
 function cardMapOf(input: Deck | Record<string, DeckCard>): Record<string, DeckCard> {
-  return "cards" in input && "id" in input
-    ? (input as Deck).cards
+  return "zones" in input && "id" in input
+    ? (input as Deck).zones.mainboard.cards
     : (input as Record<string, DeckCard>);
 }
 

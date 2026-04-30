@@ -34,8 +34,9 @@ export function CubeView({ cube }: Props) {
   // Meta grouping isn't meaningful for cubes — the custom-query
   // pipeline is deck-oriented — so if the user picks "meta" for a
   // cube we silently fall back to its zone layout.
-  const mode = cube.groupBy === "meta" ? "zone" : cube.groupBy;
-  const groups = groupDeck(cube.cards, mode, { sort: cube.columnSort });
+  const groupBy = cube.zones.mainboard.groupBy;
+  const mode = groupBy === "meta" ? "zone" : groupBy;
+  const groups = groupDeck(cube.zones.mainboard.cards, mode, { sort: cube.columnSort });
 
   if (groups.length === 0) {
     return <div style={emptyStyle}>This cube is empty. Add a card to get started.</div>;

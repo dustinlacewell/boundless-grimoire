@@ -79,7 +79,7 @@ function allModeEntries(cards: Record<string, DeckCard>) {
 
 export function CountByChart({ deck, style }: Props) {
   const [mode, setMode] = useState<CountByMode>("type");
-  const allEntries = useMemo(() => allModeEntries(deck.cards), [deck.cards]);
+  const allEntries = useMemo(() => allModeEntries(deck.zones.mainboard.cards), [deck.zones.mainboard.cards]);
   const availableModes = MODE_OPTIONS.filter(({ value }) => allEntries[value] !== null);
 
   if (availableModes.length === 0) return null;

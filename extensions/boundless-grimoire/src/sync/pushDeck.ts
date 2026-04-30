@@ -76,9 +76,14 @@ export async function pushDeck(deck: Deck): Promise<string | null> {
   // run through update-deck so a rename or other metadata change reaches
   // untap. The previous shortcut returned the uid early and silently
   // dropped pending renames on empty decks.
-  const commanderName = deck.commander?.name ?? "";
-  const hasCards = cardText.trim() || sideText.trim() || commanderName;
-  const resolvedCards = hasCards ? await pasteDeck(cardText, sideText, commanderName) : [];
+  const play1Text = [
+    ...Object.values(deck.zones.commander.cards),
+    ...Object.values(deck.zones.startsInPlay.cards),
+  ]
+    .map((c) => `1 ${c.snapshot.name}`)
+    .join("\n");
+  const hasCards = cardText.trim() || sideText.trim() || play1Text.trim();
+  const resolvedCards = hasCards ? await pasteDeck(cardText, sideText, play1Text) : [];
   if (resolvedCards === null) return null;
 
   const untapDeck = await getOrCreateUntapDeck(deck);
@@ -132,15 +137,12 @@ export async function verifyDeckSync(
   }
 
   const local = new Map<string, number>();
-  for (const c of Object.values(deck.cards)) {
-    if (!c.snapshot.name) continue;
-    const k = entryKey(c.snapshot.name, c.zone);
-    local.set(k, (local.get(k) ?? 0) + c.count);
-  }
-  for (const c of Object.values(deck.sideboard)) {
-    if (!c.snapshot.name) continue;
-    const k = entryKey(c.snapshot.name, c.zone);
-    local.set(k, (local.get(k) ?? 0) + c.count);
+  for (const zone of Object.values(deck.zones)) {
+    for (const c of Object.values(zone.cards)) {
+      if (!c.snapshot.name) continue;
+      const k = entryKey(c.snapshot.name, c.zone);
+      local.set(k, (local.get(k) ?? 0) + c.count);
+    }
   }
 
   const remoteCounts = new Map<string, number>();
@@ -184,12 +186,12 @@ export async function deleteUntapDeck(untapDeckUid: string): Promise<boolean> {
 async function pasteDeck(
   cardText: string,
   sideText: string,
-  commanderName: string,
+  play1Text: string,
 ): Promise<PasteResult["deck"] | null> {
   const zones: PasteDeckZone[] = [
     { type: "deck-1", title: "Deck", cards: cardText },
     { type: "sideboard-1", title: "Sideboard", cards: sideText },
-    { type: "play-1", title: "Starts in Play", cards: commanderName },
+    { type: "play-1", title: "Starts in Play", cards: play1Text },
     { type: "hand-1", title: "Hand", cards: "" },
     { type: "token-1", title: "Tokens", cards: "" },
     { type: "maybe-1", title: "Maybe Board", cards: "" },
@@ -249,10 +251,9 @@ async function createUntapDeck(name: string, isCube: boolean): Promise<string | 
  * server re-resolves cards by (set, title, zone) if card_uid is missing.
  */
 async function updateUntapDeckDirect(untapDeck: UntapDeck, deck: Deck): Promise<boolean> {
-  // Flatten mainboard + sideboard (cubes won't have sideboard entries
-  // but we include it for safety) into untap's card shape, preserving
-  // each card's original zone.
-  const entries = [...Object.values(deck.cards), ...Object.values(deck.sideboard)];
+  // Flatten all zones into untap's card shape, preserving each card's
+  // original zone tag. Cubes use group-1…group-10 zone tags.
+  const entries = Object.values(deck.zones).flatMap((z) => Object.values(z.cards));
   let i = 0;
   const cards = entries.map((c) => ({
     // Prefer the untap card_uid we may have preserved (pull sets the

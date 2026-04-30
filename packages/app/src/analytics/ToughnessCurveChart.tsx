@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function ToughnessCurveChart({ deck, style }: Props) {
-  const curve = useMemo(() => computeToughnessCurve(deck.cards), [deck.cards]);
+  const curve = useMemo(() => computeToughnessCurve(deck.zones.mainboard.cards), [deck.zones.mainboard.cards]);
   if (curve.total === 0) return null;
   return <DistributionChart title="Toughness" distribution={curve} style={style} />;
 }

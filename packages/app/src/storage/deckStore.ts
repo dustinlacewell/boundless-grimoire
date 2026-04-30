@@ -23,6 +23,8 @@ import {
   type Deck,
   type DeckCard,
   type DeckLibrary,
+  type Zone,
+  type ZoneName,
 } from "./types";
 
 const STORAGE_KEY = "boundless-grimoire:library";
@@ -112,10 +114,8 @@ function scheduleSyncChanged(prev: DeckLibrary, next: DeckLibrary): void {
 
       if (
         !prevDeck ||
-        prevDeck.cards !== deck.cards ||
-        prevDeck.sideboard !== deck.sideboard ||
+        prevDeck.zones !== deck.zones ||
         prevDeck.name !== deck.name ||
-        prevDeck.commander !== deck.commander ||
         prevDeck.isCube !== deck.isCube
       ) {
         untap.schedulePush(deck);
@@ -145,7 +145,18 @@ function touch(deck: Deck): Deck {
 
 // ---------- Actions ----------
 
-export type DeckZone = "main" | "sideboard";
+function emptyZone(groupBy: Zone["groupBy"] = "category"): Zone {
+  return { cards: {}, groupBy };
+}
+
+function emptyZones(isCube: boolean): Deck["zones"] {
+  return {
+    mainboard: emptyZone(isCube ? "zone" : "category"),
+    sideboard: emptyZone(),
+    commander: emptyZone(),
+    startsInPlay: emptyZone(),
+  };
+}
 
 function makeEntity(name: string, isCube: boolean): Deck {
   const id = crypto.randomUUID();
@@ -155,17 +166,12 @@ function makeEntity(name: string, isCube: boolean): Deck {
     name,
     createdAt: now,
     updatedAt: now,
-    cards: {},
-    sideboard: {},
+    zones: emptyZones(isCube),
     formatIndex: null,
     sortField: DEFAULT_SORT_FIELD,
     sortDir: DEFAULT_SORT_DIR,
     filters: DEFAULT_FILTER_STATE,
     isCube,
-    // Cubes sensibly default to zone grouping — their zone tags
-    // (basics, group-1…group-10) are the main axis. Decks default
-    // to type-line category columns.
-    groupBy: isCube ? "zone" : "category",
     layout: "scroll",
     columnSort: "cmc",
   };
@@ -196,19 +202,30 @@ export function commitGeneratedDeck(args: {
 }): string {
   const deck = makeEntity(args.name, false);
   const now = Date.now();
-  const cards: Record<string, DeckCard> = {};
+  const mainCards: Record<string, DeckCard> = {};
   for (const c of args.cards) {
-    const existing = cards[c.snapshot.id];
-    if (existing) cards[c.snapshot.id] = { ...existing, count: existing.count + c.count };
-    else cards[c.snapshot.id] = { snapshot: c.snapshot, count: c.count, addedAt: now, zone: "deck-1" };
+    const existing = mainCards[c.snapshot.id];
+    if (existing) mainCards[c.snapshot.id] = { ...existing, count: existing.count + c.count };
+    else mainCards[c.snapshot.id] = { snapshot: c.snapshot, count: c.count, addedAt: now, zone: "deck-1" };
+  }
+  const commanderCards: Record<string, DeckCard> = {};
+  if (args.commander) {
+    commanderCards[args.commander.id] = {
+      snapshot: args.commander,
+      count: 1,
+      addedAt: now,
+      zone: "play-1",
+    };
   }
   const enriched: Deck = {
     ...deck,
-    cards,
-    commander: args.commander,
+    zones: {
+      ...deck.zones,
+      mainboard: { cards: mainCards, groupBy: "cmc" },
+      commander: { cards: commanderCards, groupBy: "category" },
+    },
     coverCardId: args.commander?.id,
     formatIndex: args.formatIndex ?? null,
-    groupBy: "cmc",
   };
   mutate((lib) => ({
     ...lib,
@@ -247,19 +264,19 @@ export function duplicateDeck(deckId: string): string | null {
   if (!src) return null;
   const newId = crypto.randomUUID();
   const now = Date.now();
+  const clonedZones = Object.fromEntries(
+    (Object.entries(src.zones) as [ZoneName, Zone][]).map(([name, zone]) => [
+      name,
+      { ...zone, cards: Object.fromEntries(Object.entries(zone.cards).map(([id, c]) => [id, { ...c }])) },
+    ]),
+  ) as Deck["zones"];
   const copy: Deck = {
     ...src,
     id: newId,
     name: `${src.name} (Copy)`,
     createdAt: now,
     updatedAt: now,
-    // Deep-clone both card maps so future mutations don't bleed across.
-    cards: Object.fromEntries(
-      Object.entries(src.cards).map(([id, c]) => [id, { ...c }]),
-    ),
-    sideboard: Object.fromEntries(
-      Object.entries(src.sideboard).map(([id, c]) => [id, { ...c }]),
-    ),
+    zones: clonedZones,
   };
   mutate((library) => {
     const idx = library.order.indexOf(deckId);
@@ -358,75 +375,80 @@ export function renameDeck(deckId: string, name: string): void {
 }
 
 /**
- * Set (or clear) a deck's commander.
+ * Add a commander to the deck's commander zone.
  *
- * - Passing a snapshot promotes that card: the snapshot is stored as the
- *   deck's commander and a copy of it is removed from `cards` /
- *   `sideboard` (one count). Any previous commander is returned to the
- *   mainboard at count 1.
- * - Passing `null` clears the commander and returns the previous one
- *   (if any) to the mainboard.
- *
- * The commander is rendered as a fixed first column in the deck view.
- * It's a singleton — count is implicitly 1 — so we don't store a count
- * with it.
+ * - Promotes the card from mainboard or sideboard (removes one copy).
+ * - If the card is already in the commander zone, no-op.
+ * - Sets cover art to the new commander.
  */
-export function setDeckCommander(deckId: string, snapshot: CardSnapshot | null): void {
+export function addCommander(deckId: string, snapshot: CardSnapshot): void {
   mutate((lib) => {
     const deck = lib.decks[deckId];
     if (!deck) return lib;
-    if (snapshot && deck.commander?.id === snapshot.id) return lib;
+    if (deck.zones.commander.cards[snapshot.id]) return lib;
 
-    let cards = deck.cards;
-    let sideboard = deck.sideboard;
+    let mainCards = deck.zones.mainboard.cards;
+    let sideCards = deck.zones.sideboard.cards;
 
-    // Return the previous commander (if any) to the mainboard.
-    if (deck.commander) {
-      const prev = deck.commander;
-      const existing = cards[prev.id];
-      cards = {
-        ...cards,
-        [prev.id]: existing
-          ? { ...existing, count: existing.count + 1 }
-          : { snapshot: prev, count: 1, addedAt: Date.now(), zone: "deck-1" },
-      };
-    }
-
-    // Promote the new commander out of mainboard / sideboard.
-    if (snapshot) {
-      const fromMain = cards[snapshot.id];
-      if (fromMain) {
-        if (fromMain.count <= 1) {
-          const { [snapshot.id]: _gone, ...rest } = cards;
-          cards = rest;
-        } else {
-          cards = { ...cards, [snapshot.id]: { ...fromMain, count: fromMain.count - 1 } };
-        }
+    // Remove from mainboard or sideboard.
+    const fromMain = mainCards[snapshot.id];
+    if (fromMain) {
+      if (fromMain.count <= 1) {
+        const { [snapshot.id]: _gone, ...rest } = mainCards;
+        mainCards = rest;
       } else {
-        const fromSide = sideboard[snapshot.id];
-        if (fromSide) {
-          if (fromSide.count <= 1) {
-            const { [snapshot.id]: _gone, ...rest } = sideboard;
-            sideboard = rest;
-          } else {
-            sideboard = { ...sideboard, [snapshot.id]: { ...fromSide, count: fromSide.count - 1 } };
-          }
+        mainCards = { ...mainCards, [snapshot.id]: { ...fromMain, count: fromMain.count - 1 } };
+      }
+    } else {
+      const fromSide = sideCards[snapshot.id];
+      if (fromSide) {
+        if (fromSide.count <= 1) {
+          const { [snapshot.id]: _gone, ...rest } = sideCards;
+          sideCards = rest;
+        } else {
+          sideCards = { ...sideCards, [snapshot.id]: { ...fromSide, count: fromSide.count - 1 } };
         }
       }
     }
 
-    // Promoting a card to commander also sets it as the deck's hero
-    // (cover art) — the visual identity follows the gameplay role.
-    // Clearing the commander leaves the existing cover alone so the
-    // user doesn't lose their selection if they swap commanders.
-    const coverCardId = snapshot ? snapshot.id : deck.coverCardId;
+    const commanderCard: DeckCard = { snapshot, count: 1, addedAt: Date.now(), zone: "play-1" };
+    const next: Deck = {
+      ...deck,
+      coverCardId: snapshot.id,
+      zones: {
+        ...deck.zones,
+        mainboard: { ...deck.zones.mainboard, cards: mainCards },
+        sideboard: { ...deck.zones.sideboard, cards: sideCards },
+        commander: { ...deck.zones.commander, cards: { ...deck.zones.commander.cards, [snapshot.id]: commanderCard } },
+      },
+    };
+    return { ...lib, decks: { ...lib.decks, [deckId]: touch(next) } };
+  });
+}
+
+/**
+ * Remove a card from the commander zone, returning it to the mainboard.
+ */
+export function removeCommander(deckId: string, cardId: string): void {
+  mutate((lib) => {
+    const deck = lib.decks[deckId];
+    if (!deck) return lib;
+    const commanderCard = deck.zones.commander.cards[cardId];
+    if (!commanderCard) return lib;
+
+    const { [cardId]: _gone, ...restCommander } = deck.zones.commander.cards;
+    const existingMain = deck.zones.mainboard.cards[cardId];
+    const returnedCard: DeckCard = existingMain
+      ? { ...existingMain, count: existingMain.count + 1 }
+      : { ...commanderCard, zone: "deck-1" };
 
     const next: Deck = {
       ...deck,
-      commander: snapshot ?? undefined,
-      coverCardId,
-      cards,
-      sideboard,
+      zones: {
+        ...deck.zones,
+        mainboard: { ...deck.zones.mainboard, cards: { ...deck.zones.mainboard.cards, [cardId]: returnedCard } },
+        commander: { ...deck.zones.commander, cards: restCommander },
+      },
     };
     return { ...lib, decks: { ...lib.decks, [deckId]: touch(next) } };
   });
@@ -447,14 +469,21 @@ export function setDeckFormat(deckId: string, formatIndex: number | null): void 
 export function setDeckGroupBy(
   deckId: string,
   groupBy: import("../cards/categorize").DeckGroupBy,
+  zoneName: ZoneName = "mainboard",
 ): void {
   mutate((lib) => {
     const deck = lib.decks[deckId];
     if (!deck) return lib;
-    if (deck.groupBy === groupBy) return lib;
+    if (deck.zones[zoneName].groupBy === groupBy) return lib;
     return {
       ...lib,
-      decks: { ...lib.decks, [deckId]: touch({ ...deck, groupBy }) },
+      decks: {
+        ...lib.decks,
+        [deckId]: touch({
+          ...deck,
+          zones: { ...deck.zones, [zoneName]: { ...deck.zones[zoneName], groupBy } },
+        }),
+      },
     };
   });
 }
@@ -542,11 +571,6 @@ export function reorderDecks(order: string[]): void {
   mutate((lib) => ({ ...lib, order }));
 }
 
-/** Resolve the card map field name for a zone. */
-function zoneField(zone: DeckZone): "cards" | "sideboard" {
-  return zone === "sideboard" ? "sideboard" : "cards";
-}
-
 function sanitizeCount(n: number | undefined): number {
   if (typeof n !== "number" || !Number.isFinite(n) || n < 0) return 0;
   return Math.floor(n);
@@ -566,22 +590,28 @@ export function swapCardPrint(
   deckId: string,
   oldCardId: string,
   newSnapshot: CardSnapshot,
-  zone: DeckZone = "main",
+  zoneName: ZoneName = "mainboard",
 ): void {
   if (oldCardId === newSnapshot.id) return;
-  const field = zoneField(zone);
   mutate((lib) => {
     const deck = lib.decks[deckId];
     if (!deck) return lib;
-    const old = deck[field][oldCardId];
+    const zone = deck.zones[zoneName];
+    const old = zone.cards[oldCardId];
     if (!old) return lib;
-    const map = { ...deck[field] };
+    const map = { ...zone.cards };
     delete map[oldCardId];
     const existing = map[newSnapshot.id];
     map[newSnapshot.id] = existing
       ? { ...existing, count: existing.count + old.count }
       : { snapshot: newSnapshot, count: old.count, addedAt: old.addedAt, zone: old.zone };
-    return { ...lib, decks: { ...lib.decks, [deckId]: touch({ ...deck, [field]: map }) } };
+    return {
+      ...lib,
+      decks: {
+        ...lib.decks,
+        [deckId]: touch({ ...deck, zones: { ...deck.zones, [zoneName]: { ...zone, cards: map } } }),
+      },
+    };
   });
 }
 
@@ -661,8 +691,9 @@ async function resolveAndPopulate(
   mutate((lib) => {
     const deck = lib.decks[deckId];
     if (!deck) return lib;
-    const cards: Record<string, DeckCard> = {};
-    const sideboard: Record<string, DeckCard> = {};
+    const mainCards: Record<string, DeckCard> = {};
+    const sideCards: Record<string, DeckCard> = {};
+    const commanderCards: Record<string, DeckCard> = {};
     const now = Date.now();
     for (const entry of entries) {
       const snap = byName.get(entry.name.toLowerCase());
@@ -670,10 +701,8 @@ async function resolveAndPopulate(
         console.warn(`[importDecklist] card not found on Scryfall: "${entry.name}"`);
         continue;
       }
-      // Cubes: all cards go in the mainboard under "group-1" (no
-      // sideboard concept). Decks: standard main / sideboard split.
       const isSide = !isCube && entry.zone === "sideboard";
-      const target = isSide ? sideboard : cards;
+      const target = isSide ? sideCards : mainCards;
       const zoneTag = isCube ? "group-1" : isSide ? "sideboard-1" : "deck-1";
       const existing = target[snap.id];
       if (existing) {
@@ -682,25 +711,28 @@ async function resolveAndPopulate(
         target[snap.id] = { snapshot: snap, count: entry.count, addedAt: now, zone: zoneTag };
       }
     }
-    // If a commander was requested, find it by name in the resolved cards
-    // and assign it. The commander is removed from the mainboard (cards map)
-    // since it lives in its own slot.
-    let commander: CardSnapshot | undefined;
     if (commanderName) {
       const cmdSnap = byName.get(commanderName.toLowerCase());
       if (cmdSnap) {
-        commander = cmdSnap;
-        // Remove from mainboard/sideboard if it ended up there
-        // (e.g. commander was also in the decklist entries).
-        delete cards[cmdSnap.id];
-        delete sideboard[cmdSnap.id];
+        delete mainCards[cmdSnap.id];
+        delete sideCards[cmdSnap.id];
+        commanderCards[cmdSnap.id] = { snapshot: cmdSnap, count: 1, addedAt: now, zone: "play-1" };
       }
     }
     return {
       ...lib,
       decks: {
         ...lib.decks,
-        [deckId]: touch({ ...deck, cards, sideboard, commander, enriching: false }),
+        [deckId]: touch({
+          ...deck,
+          zones: {
+            ...deck.zones,
+            mainboard: { ...deck.zones.mainboard, cards: mainCards },
+            sideboard: { ...deck.zones.sideboard, cards: sideCards },
+            commander: { ...deck.zones.commander, cards: commanderCards },
+          },
+          enriching: false,
+        }),
       },
     };
   });
@@ -721,36 +753,28 @@ export function selectedDeck(state: DeckStoreState): Deck | null {
 }
 
 export function deckCardCount(deck: Deck): number {
-  let total = deck.commander ? 1 : 0;
-  for (const c of Object.values(deck.cards)) total += sanitizeCount(c.count);
-  for (const c of Object.values(deck.sideboard)) total += sanitizeCount(c.count);
+  let total = 0;
+  for (const zone of Object.values(deck.zones)) {
+    for (const c of Object.values(zone.cards)) total += sanitizeCount(c.count);
+  }
   return total;
 }
 
 export function firstCardSnapshot(deck: Deck): CardSnapshot | null {
-  let earliest: DeckCardEntry | null = null;
-  for (const c of Object.values(deck.cards)) {
+  let earliest: DeckCard | null = null;
+  for (const c of Object.values(deck.zones.mainboard.cards)) {
     if (!earliest || c.addedAt < earliest.addedAt) earliest = c;
   }
   return earliest?.snapshot ?? null;
 }
 
-/**
- * Resolve the deck's cover-art snapshot. Looks up `coverCardId` across
- * mainboard, sideboard, AND the commander slot — promoting a card to
- * commander moves its snapshot into `deck.commander`, so a cover that
- * points at the commander must check there too. Falls back to the
- * commander itself, then the first card by add time.
- */
+/** Resolve the deck's cover-art snapshot. Searches all zones, falls back to first mainboard card. */
 export function coverSnapshotOf(deck: Deck): CardSnapshot | null {
   if (deck.coverCardId) {
-    const explicit =
-      deck.cards[deck.coverCardId]?.snapshot ??
-      deck.sideboard[deck.coverCardId]?.snapshot ??
-      (deck.commander?.id === deck.coverCardId ? deck.commander : undefined);
-    if (explicit) return explicit;
+    for (const zone of Object.values(deck.zones)) {
+      const found = zone.cards[deck.coverCardId]?.snapshot;
+      if (found) return found;
+    }
   }
-  return deck.commander ?? firstCardSnapshot(deck);
+  return firstCardSnapshot(deck) ?? Object.values(deck.zones.commander.cards)[0]?.snapshot ?? null;
 }
-
-type DeckCardEntry = Deck["cards"][string];

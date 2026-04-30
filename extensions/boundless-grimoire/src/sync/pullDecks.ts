@@ -15,6 +15,7 @@ import {
   type Deck,
   type DeckCard,
   type DeckLibrary,
+  type Zone,
 } from "@boundless-grimoire/app";
 import { enrichDeckInPlace } from "./reEnrich";
 
@@ -123,31 +124,36 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
   const sideCards = isCube
     ? []
     : untapDeck.cards.filter((c) => c.zone === SIDEBOARD_ZONE);
-  const cards: Record<string, DeckCard> = {};
+  const mainboardCards: Record<string, DeckCard> = {};
   for (const [i, c] of deckCards.entries()) {
-    cards[c.card_uid] = {
+    mainboardCards[c.card_uid] = {
       snapshot: { id: c.card_uid, name: c.title, set: c.set },
       count: c.qty,
       addedAt: now - deckCards.length + i,
       zone: c.zone,
     };
   }
-  const sideboard: Record<string, DeckCard> = {};
+  const sideboardCards: Record<string, DeckCard> = {};
   for (const [i, c] of sideCards.entries()) {
-    sideboard[c.card_uid] = {
+    sideboardCards[c.card_uid] = {
       snapshot: { id: c.card_uid, name: c.title, set: c.set },
       count: c.qty,
       addedAt: now - sideCards.length + i,
       zone: c.zone,
     };
   }
+  const emptyZone = (groupBy: Zone["groupBy"]): Zone => ({ cards: {}, groupBy });
   return {
     id: crypto.randomUUID(),
     name: untapDeck.title,
     createdAt: untapDeck.created_date,
     updatedAt: untapDeck.updated_date,
-    cards,
-    sideboard,
+    zones: {
+      mainboard: { cards: mainboardCards, groupBy: isCube ? "zone" : "category" },
+      sideboard: { cards: sideboardCards, groupBy: "category" },
+      commander: emptyZone("category"),
+      startsInPlay: emptyZone("category"),
+    },
     formatIndex: null,
     sortField: DEFAULT_SORT_FIELD,
     sortDir: DEFAULT_SORT_DIR,
@@ -155,7 +161,6 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
     untapDeckUid: untapDeck.deck_uid,
     enriching: true,
     isCube,
-    groupBy: isCube ? "zone" : "category",
     layout: "scroll",
     columnSort: "cmc",
   };

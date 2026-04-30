@@ -42,12 +42,12 @@ function groupsToText(groups: DeckCategoryGroup[], opts: TextOpts): string {
 
 /** Convert only the main-deck cards to text. */
 export function deckToText(deck: Deck, opts: TextOpts = {}): string {
-  return groupsToText(categorizeDeck(deck.cards), opts);
+  return groupsToText(categorizeDeck(deck.zones.mainboard.cards), opts);
 }
 
 /** Convert only the sideboard cards to text. */
 export function sideboardToText(deck: Deck, opts: TextOpts = {}): string {
-  return groupsToText(categorizeDeck(deck.sideboard), opts);
+  return groupsToText(categorizeDeck(deck.zones.sideboard.cards), opts);
 }
 
 /**

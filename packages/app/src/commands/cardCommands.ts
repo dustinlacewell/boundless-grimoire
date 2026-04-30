@@ -50,17 +50,17 @@ export function moveCardsToSideboardCommand(deckId: string, deltas: CardDelta[])
   return {
     deckId,
     label: describe("Move to sideboard", deltas),
-    apply: (lib) => libMoveCards(lib, deckId, deltas, "main"),
+    apply: (lib) => libMoveCards(lib, deckId, deltas, "mainboard", "sideboard"),
     invert: () => moveCardsFromSideboardCommand(deckId, sideboarded),
   };
 }
 
 export function moveCardsFromSideboardCommand(deckId: string, deltas: CardDelta[]): Command {
-  const mained = deltas.map(zoneAs("main"));
+  const mained = deltas.map(zoneAs("mainboard"));
   return {
     deckId,
     label: describe("Move from sideboard", deltas),
-    apply: (lib) => libMoveCards(lib, deckId, deltas, "sideboard"),
+    apply: (lib) => libMoveCards(lib, deckId, deltas, "sideboard", "mainboard"),
     invert: () => moveCardsToSideboardCommand(deckId, mained),
   };
 }
