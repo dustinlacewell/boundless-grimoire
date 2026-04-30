@@ -76,8 +76,9 @@ export async function pushDeck(deck: Deck): Promise<string | null> {
   // run through update-deck so a rename or other metadata change reaches
   // untap. The previous shortcut returned the uid early and silently
   // dropped pending renames on empty decks.
-  const hasCards = cardText.trim() || sideText.trim();
-  const resolvedCards = hasCards ? await pasteDeck(cardText, sideText) : [];
+  const commanderName = deck.commander?.name ?? "";
+  const hasCards = cardText.trim() || sideText.trim() || commanderName;
+  const resolvedCards = hasCards ? await pasteDeck(cardText, sideText, commanderName) : [];
   if (resolvedCards === null) return null;
 
   const untapDeck = await getOrCreateUntapDeck(deck);
@@ -180,10 +181,15 @@ export async function deleteUntapDeck(untapDeckUid: string): Promise<boolean> {
 
 // ── steps ─────────────────────────────────────────────────────────────────────
 
-async function pasteDeck(cardText: string, sideText: string): Promise<PasteResult["deck"] | null> {
+async function pasteDeck(
+  cardText: string,
+  sideText: string,
+  commanderName: string,
+): Promise<PasteResult["deck"] | null> {
   const zones: PasteDeckZone[] = [
     { type: "deck-1", title: "Deck", cards: cardText },
     { type: "sideboard-1", title: "Sideboard", cards: sideText },
+    { type: "play-1", title: "Starts in Play", cards: commanderName },
     { type: "hand-1", title: "Hand", cards: "" },
     { type: "token-1", title: "Tokens", cards: "" },
     { type: "maybe-1", title: "Maybe Board", cards: "" },

@@ -30,16 +30,11 @@
  * action which both hits the API and patches the reactive state, so the
  * sidebar re-renders without a page reload.
  *
- * Bridge readiness = `window.apiStore` exists. We do NOT also wait for the
- * underlying WebSocket to be connected — untap's `apiStore.send()` queues
- * calls internally and rejects with `Timeout` if the WS isn't up within
- * its own ~10s window. We catch that rejection, retry through the same
- * retry path the request handler uses, and the call eventually goes
- * through. Pull (which is what most callers want anyway) doesn't even use
- * this bridge — it reads untap's IndexedDB directly. By the time anything
- * goes through here (e.g. a debounced push triggered by a user edit) the
- * WS is almost always already up, so the retry path is rarely exercised
- * in practice.
+ * Bridge readiness = `window.apiStore` exists AND its WebSocket is connected.
+ * apiStore appears before its WS handshake completes, so waitForWsReady()
+ * probes via sendWithRetry("get-deck-list") which retries on transient
+ * timeouts until the WS is up. Only then does the bridge send PONG and
+ * drain the queue, ensuring boot-sync pushes never race the WS.
  *
  * Any `uh:api:req` that arrives before apiStore exists is queued and
  * drained the moment we see it.
@@ -77,6 +72,10 @@ const TYPE_PONG = "uh:api:pong";
 const TYPE_REQ = "uh:api:req";
 const TYPE_RES = "uh:api:res";
 
+type PongMessage = { type: typeof TYPE_PONG };
+type ResMessage = { type: typeof TYPE_RES; id: string; result?: unknown; error?: string };
+type OutboundMessage = PongMessage | ResMessage;
+
 const APISTORE_POLL_MS = 100;
 const APISTORE_TIMEOUT_MS = 30_000;
 const SEND_RETRY_DELAY_MS = 1_500;
@@ -100,7 +99,7 @@ function safeClone<T>(value: T): T | null {
   }
 }
 
-function post(message: unknown): void {
+function post(message: OutboundMessage): void {
   try {
     window.postMessage(message, "*");
   } catch (err) {
@@ -123,7 +122,6 @@ function sendWithRetry(
   if (!apiStore) return Promise.reject(new Error("apiStore not available"));
   return apiStore.send(cmd, payload).catch((err) => {
     if (attempt < SEND_MAX_ATTEMPTS && isTransientTimeout(err)) {
-      console.warn(`[uh:bridge] ${cmd} attempt ${attempt} timed out — retrying`);
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           sendWithRetry(cmd, payload, attempt + 1).then(resolve, reject);
@@ -210,25 +208,51 @@ window.addEventListener("message", (e: MessageEvent) => {
   dispatch({ id, cmd, payload });
 });
 
-/** Poll until untap's apiStore object exists on window. */
-function waitForApiStore(deadline: number): void {
-  const probe = (window as unknown as { apiStore?: ApiStore }).apiStore;
-  if (probe && typeof probe.send === "function") {
-    apiStore = probe;
-    console.log("[uh:bridge] ready");
-    post({ type: TYPE_PONG });
-    for (const req of queued.splice(0)) dispatch(req);
-    return;
-  }
-  if (performance.now() > deadline) {
-    console.warn("[uh:bridge] apiStore never appeared after 30s — giving up");
-    for (const req of queued.splice(0)) {
-      post({ type: TYPE_RES, id: req.id, error: "apiStore unavailable" });
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+async function waitForApiStore(deadline: number): Promise<ApiStore | null> {
+  while (!apiStore) {
+    if (performance.now() > deadline) {
+      console.warn("[uh:bridge] apiStore never appeared — giving up");
+      for (const req of queued.splice(0))
+        post({ type: TYPE_RES, id: req.id, error: "apiStore unavailable" });
+      return null;
     }
-    return;
+    const probe = (window as unknown as { apiStore?: ApiStore }).apiStore;
+    if (probe && typeof probe.send === "function") apiStore = probe;
+    else await sleep(APISTORE_POLL_MS);
   }
-  setTimeout(() => waitForApiStore(deadline), APISTORE_POLL_MS);
+  return apiStore;
+}
+
+async function waitForWsReady(store: ApiStore, deadline: number): Promise<boolean> {
+  while (performance.now() < deadline) {
+    try {
+      await store.send("get-deck-list");
+      return true;
+    } catch (err) {
+      if (!isTransientTimeout(err)) return true;
+    }
+    await sleep(SEND_RETRY_DELAY_MS);
+  }
+  console.warn("[uh:bridge] WS never connected — giving up");
+  for (const req of queued.splice(0))
+    post({ type: TYPE_RES, id: req.id, error: "WS unavailable" });
+  return false;
+}
+
+async function setup(deadline: number): Promise<void> {
+  const store = await waitForApiStore(deadline);
+  if (!store) return;
+  if (!await waitForWsReady(store, deadline)) return;
+  declareReady();
+}
+
+function declareReady(): void {
+  console.log("[uh:bridge] ready");
+  post({ type: TYPE_PONG });
+  for (const req of queued.splice(0)) dispatch(req);
 }
 
 console.log("[uh:bridge] loaded, polling for apiStore...");
-waitForApiStore(performance.now() + APISTORE_TIMEOUT_MS);
+setup(performance.now() + APISTORE_TIMEOUT_MS);
