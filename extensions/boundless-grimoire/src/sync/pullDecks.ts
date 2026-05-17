@@ -12,6 +12,7 @@ import {
   DEFAULT_SORT_FIELD,
   setSyncStatus,
   useDeckStore,
+  useFormatStore,
   type Deck,
   type DeckCard,
   type DeckLibrary,
@@ -134,6 +135,11 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
   const now = Date.now();
   const isCube = !!untapDeck.is_cube;
 
+  const formats = useFormatStore.getState().formats;
+  const formatIndex = untapDeck.format
+    ? formats.findIndex((f) => f.format === untapDeck.format)
+    : -1;
+
   const deckCards = isCube
     ? untapDeck.cards
     : untapDeck.cards.filter((c) => c.zone === DECK_ZONE);
@@ -163,7 +169,7 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
     commander: commanderCard
       ? { id: commanderCard.card_uid, name: commanderCard.title, set: commanderCard.set }
       : undefined,
-    formatIndex: null,
+    formatIndex: formatIndex >= 0 ? formatIndex : null,
     sortField: DEFAULT_SORT_FIELD,
     sortDir: DEFAULT_SORT_DIR,
     filters: DEFAULT_FILTER_STATE,
