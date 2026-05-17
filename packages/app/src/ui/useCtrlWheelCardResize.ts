@@ -19,9 +19,10 @@ const SCROLL_STEP_PX = 12;
 let activeHandler: ((deltaY: number) => void) | null = null;
 let zoomCaptureCleanup: (() => void) | null = null;
 
-function startZoomCapture(handler: (deltaY: number) => void): void {
+function startZoomCapture(handler: (deltaY: number) => void, initialDelta?: number): void {
   if (zoomCaptureCleanup) return; // already capturing — preserve original context
   activeHandler = handler;
+  if (initialDelta !== undefined) handler(initialDelta);
 
   const onCaptureWheel = (e: WheelEvent) => {
     if (!e.ctrlKey) return;
@@ -89,14 +90,16 @@ export function useCtrlWheelCardResize(
       if (rafId === null) rafId = requestAnimationFrame(flush);
     };
 
-    // The grid listener only initiates capture. Once capture is running, the
-    // document-level listener drives all accumulation (including when the
-    // cursor has drifted off this element), so we don't accumulate here too.
+    // The grid listener starts capture and processes the triggering event.
+    // Once capture is running (subsequent events), startZoomCapture returns
+    // early — the document-level listener drives accumulation so resize
+    // continues even when the cursor drifts off this element.
     const onWheel = (e: WheelEvent) => {
       if (!e.ctrlKey) return;
-      startZoomCapture(accumulate);
+      e.preventDefault();
+      startZoomCapture(accumulate, e.deltaY);
     };
-    node.addEventListener("wheel", onWheel, { passive: true });
+    node.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       node.removeEventListener("wheel", onWheel);
       if (rafId !== null) cancelAnimationFrame(rafId);
