@@ -249,6 +249,9 @@ const STEPS: MigrationStep[] = [
       return { ...lib, version: 11, decks };
     },
   },
+
+  // v11 → v12: startsInPlay zone (play-1 round-trip for commander decks).
+  { from: 11, to: 12, apply: (lib) => ({ ...lib, version: 12 }) },
 ];
 
 /** The version a correctly-upgraded library ends on. Derived from STEPS. */

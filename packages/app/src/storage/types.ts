@@ -64,6 +64,11 @@ export interface Deck {
   /** Sideboard card map keyed by Scryfall card id. */
   sideboard: Record<string, DeckCard>;
   /**
+   * Cards in untap's "Starts in Play" zone (`play-1`). Populated during pull
+   * to preserve zone data verbatim. Stopgap until the zone refactor lands.
+   */
+  startsInPlay?: Record<string, DeckCard>;
+  /**
    * The deck's commander, if any. Stored as a single snapshot (no
    * count — commanders are singleton by definition). Rendered as the
    * first column in the deck view when set. Setting a new commander
@@ -143,7 +148,7 @@ export interface DeckLibrary {
 }
 
 /** Bump when DeckLibrary's on-disk shape changes. See migrateLibrary. */
-export const LIBRARY_VERSION = 11;
+export const LIBRARY_VERSION = 12;
 
 export const EMPTY_LIBRARY: DeckLibrary = {
   version: LIBRARY_VERSION,

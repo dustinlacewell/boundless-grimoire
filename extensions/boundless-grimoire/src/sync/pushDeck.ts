@@ -15,7 +15,7 @@
  * persisting it back into the local record. Returns null on any failure;
  * errors are logged but not thrown so the debounced caller stays simple.
  */
-import { deckToText, sideboardToText } from "@boundless-grimoire/app";
+import { deckToText, sideboardToText, startsInPlayToText, useFormatStore } from "@boundless-grimoire/app";
 import type { Deck } from "@boundless-grimoire/app";
 import { isUntapAvailable, untapSend } from "./untapApi";
 
@@ -62,7 +62,7 @@ export async function pushDeck(deck: Deck): Promise<string | null> {
   // cards+zones directly via update-deck using the stored `zone` tag on
   // each DeckCard.
   if (deck.isCube) {
-    const untapDeck = await getOrCreateUntapDeck(deck);
+    const untapDeck = await getOrCreateUntapDeck(deck, undefined);
     if (!untapDeck) return null;
     const ok = await updateUntapDeckDirect(untapDeck, deck);
     return ok ? untapDeck.deck_uid : null;
@@ -71,20 +71,40 @@ export async function pushDeck(deck: Deck): Promise<string | null> {
   const cardText = deckToText(deck, { includeHeaders: false });
   const sideText = sideboardToText(deck, { includeHeaders: false });
 
+  // Resolve format definition — drives both the untap format tag and
+  // commander detection. Fall back to deck.commander presence when no
+  // format is set (e.g. unformatted decks imported from untap).
+  const formatDef =
+    deck.formatIndex != null
+      ? useFormatStore.getState().formats[deck.formatIndex]
+      : undefined;
+  const untapFormat = formatDef?.format || undefined;
+
+  // Build play-1 text from stored startsInPlay cards, plus the commander if
+  // it isn't already represented there (e.g. user set it manually from search).
+  const startsInPlayText = startsInPlayToText(deck, { includeHeaders: false });
+  const commanderAlreadyInPlay =
+    !!deck.commander &&
+    Object.values(deck.startsInPlay ?? {}).some((c) => c.snapshot.name === deck.commander?.name);
+  const commanderLine =
+    deck.commander?.name && !commanderAlreadyInPlay ? `1 ${deck.commander.name}` : "";
+  const play1Text = [startsInPlayText, commanderLine].filter(Boolean).join("\n");
+
   // Resolve the card list. For an empty deck we skip the paste-deck round
   // trip entirely (Scryfall has nothing to look up) but we still want to
   // run through update-deck so a rename or other metadata change reaches
   // untap. The previous shortcut returned the uid early and silently
   // dropped pending renames on empty decks.
-  const commanderName = deck.commander?.name ?? "";
-  const hasCards = cardText.trim() || sideText.trim() || commanderName;
-  const resolvedCards = hasCards ? await pasteDeck(cardText, sideText, commanderName) : [];
+  const hasCards = cardText.trim() || sideText.trim() || play1Text.trim();
+  const resolvedCards = hasCards
+    ? await pasteDeck(cardText, sideText, play1Text, untapFormat)
+    : [];
   if (resolvedCards === null) return null;
 
-  const untapDeck = await getOrCreateUntapDeck(deck);
+  const untapDeck = await getOrCreateUntapDeck(deck, untapFormat);
   if (!untapDeck) return null;
 
-  const ok = await updateUntapDeck(untapDeck, deck.name, resolvedCards);
+  const ok = await updateUntapDeck(untapDeck, deck.name, resolvedCards, untapFormat);
   return ok ? untapDeck.deck_uid : null;
 }
 
@@ -142,6 +162,15 @@ export async function verifyDeckSync(
     const k = entryKey(c.snapshot.name, c.zone);
     local.set(k, (local.get(k) ?? 0) + c.count);
   }
+  for (const c of Object.values(deck.startsInPlay ?? {})) {
+    if (!c.snapshot.name) continue;
+    const k = entryKey(c.snapshot.name, "play-1");
+    local.set(k, (local.get(k) ?? 0) + c.count);
+  }
+  if (deck.commander?.name) {
+    const k = entryKey(deck.commander.name, "play-1");
+    if (!local.has(k)) local.set(k, 1);
+  }
 
   const remoteCounts = new Map<string, number>();
   for (const c of (remote.cards ?? []) as Array<{ title?: string; zone?: string; qty?: number }>) {
@@ -184,12 +213,13 @@ export async function deleteUntapDeck(untapDeckUid: string): Promise<boolean> {
 async function pasteDeck(
   cardText: string,
   sideText: string,
-  commanderName: string,
+  play1Text: string,
+  untapFormat: string | undefined,
 ): Promise<PasteResult["deck"] | null> {
   const zones: PasteDeckZone[] = [
     { type: "deck-1", title: "Deck", cards: cardText },
     { type: "sideboard-1", title: "Sideboard", cards: sideText },
-    { type: "play-1", title: "Starts in Play", cards: commanderName },
+    { type: "play-1", title: "Starts in Play", cards: play1Text },
     { type: "hand-1", title: "Hand", cards: "" },
     { type: "token-1", title: "Tokens", cards: "" },
     { type: "maybe-1", title: "Maybe Board", cards: "" },
@@ -200,6 +230,7 @@ async function pasteDeck(
   try {
     const result = (await untapSend("paste-deck", {
       type: "mtg",
+      format: untapFormat,
       data: zones,
       ofpOnly: false,
       clear: true,
@@ -211,7 +242,7 @@ async function pasteDeck(
   }
 }
 
-async function getOrCreateUntapDeck(deck: Deck): Promise<UntapDeck | null> {
+async function getOrCreateUntapDeck(deck: Deck, untapFormat: string | undefined): Promise<UntapDeck | null> {
   if (deck.untapDeckUid) {
     try {
       return (await untapSend("get-deck", deck.untapDeckUid)) as UntapDeck;
@@ -219,16 +250,21 @@ async function getOrCreateUntapDeck(deck: Deck): Promise<UntapDeck | null> {
       // Fall through to create — the saved uid is stale.
     }
   }
-  const newUid = await createUntapDeck(deck.name, !!deck.isCube);
+  const newUid = await createUntapDeck(deck.name, !!deck.isCube, untapFormat);
   if (!newUid) return null;
   return (await untapSend("get-deck", newUid)) as UntapDeck;
 }
 
-async function createUntapDeck(name: string, isCube: boolean): Promise<string | null> {
+async function createUntapDeck(
+  name: string,
+  isCube: boolean,
+  untapFormat: string | undefined,
+): Promise<string | null> {
   try {
     const result = (await untapSend("create-deck", {
       title: name,
       type: "mtg",
+      format: untapFormat,
       is_cube: isCube,
     })) as [string | null, string, string | null];
     return result[2] ?? null;
@@ -287,6 +323,7 @@ async function updateUntapDeck(
   untapDeck: UntapDeck,
   title: string,
   resolvedCards: PasteResult["deck"],
+  format: string | undefined,
 ): Promise<boolean> {
   const cards = resolvedCards.map((c, i) => ({
     card_uid: c.card_uid,
@@ -299,6 +336,7 @@ async function updateUntapDeck(
     const result = (await untapSend("update-deck", {
       ...untapDeck,
       title,
+      format: format ?? untapDeck.format,
       cards,
     })) as [string | null, string | null];
     if (result[0]) {

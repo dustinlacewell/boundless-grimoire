@@ -110,7 +110,7 @@ export {
 } from "./storage/types";
 
 // Decklist text serialization (used by the manual export flow + untap push).
-export { deckToText, sideboardToText } from "./decks/deckText";
+export { deckToText, sideboardToText, startsInPlayToText } from "./decks/deckText";
 
 // Decklist parsing — accepts the common "4 Lightning Bolt" / "4x Card Name"
 // formats used by Archidekt, Moxfield, MTGO, etc.

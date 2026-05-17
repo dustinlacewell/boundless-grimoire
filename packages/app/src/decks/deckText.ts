@@ -50,6 +50,11 @@ export function sideboardToText(deck: Deck, opts: TextOpts = {}): string {
   return groupsToText(categorizeDeck(deck.sideboard), opts);
 }
 
+/** Convert only the starts-in-play cards (play-1 zone) to text. */
+export function startsInPlayToText(deck: Deck, opts: TextOpts = {}): string {
+  return groupsToText(categorizeDeck(deck.startsInPlay ?? {}), opts);
+}
+
 /**
  * Full decklist export with sideboard. Uses a blank line as the
  * mainboard/sideboard divider — the standard convention that XMage,

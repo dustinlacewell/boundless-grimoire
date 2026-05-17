@@ -22,6 +22,8 @@ const UNTAP_DB_NAME = "untap";
 const UNTAP_DECKS_STORE = "decks";
 const DECK_ZONE = "deck-1";
 const SIDEBOARD_ZONE = "sideboard-1";
+const PLAY_ZONE = "play-1";
+const COMMANDER_FORMAT = "commander";
 
 interface UntapCard {
   card_uid: string;
@@ -39,6 +41,7 @@ interface UntapDeck {
   created_date: number;
   updated_date: number;
   is_cube: boolean | null;
+  format?: string;
 }
 
 export async function pullUntapDecks(): Promise<void> {
@@ -114,33 +117,41 @@ function selectUnlinked(allDecks: UntapDeck[], lib: DeckLibrary): UntapDeck[] {
   });
 }
 
+function buildThinCards(untapCards: UntapCard[], now: number): Record<string, DeckCard> {
+  const result: Record<string, DeckCard> = {};
+  for (const [i, c] of untapCards.entries()) {
+    result[c.card_uid] = {
+      snapshot: { id: c.card_uid, name: c.title, set: c.set },
+      count: c.qty,
+      addedAt: now - untapCards.length + i,
+      zone: c.zone,
+    };
+  }
+  return result;
+}
+
 function buildThinDeck(untapDeck: UntapDeck): Deck {
   const now = Date.now();
   const isCube = !!untapDeck.is_cube;
+
   const deckCards = isCube
     ? untapDeck.cards
     : untapDeck.cards.filter((c) => c.zone === DECK_ZONE);
-  const sideCards = isCube
-    ? []
-    : untapDeck.cards.filter((c) => c.zone === SIDEBOARD_ZONE);
-  const cards: Record<string, DeckCard> = {};
-  for (const [i, c] of deckCards.entries()) {
-    cards[c.card_uid] = {
-      snapshot: { id: c.card_uid, name: c.title, set: c.set },
-      count: c.qty,
-      addedAt: now - deckCards.length + i,
-      zone: c.zone,
-    };
-  }
-  const sideboard: Record<string, DeckCard> = {};
-  for (const [i, c] of sideCards.entries()) {
-    sideboard[c.card_uid] = {
-      snapshot: { id: c.card_uid, name: c.title, set: c.set },
-      count: c.qty,
-      addedAt: now - sideCards.length + i,
-      zone: c.zone,
-    };
-  }
+  const sideCards = isCube ? [] : untapDeck.cards.filter((c) => c.zone === SIDEBOARD_ZONE);
+  const playCards = isCube ? [] : untapDeck.cards.filter((c) => c.zone === PLAY_ZONE);
+
+  const cards = buildThinCards(deckCards, now);
+  const sideboard = buildThinCards(sideCards, now);
+
+  // For commander-format decks with a single play-1 card, we can identify the
+  // commander unambiguously and store it in deck.commander. Multiple cards
+  // (partner commanders) can't be resolved automatically — they go to
+  // startsInPlay for the user to sort out. The identified commander is NOT
+  // included in startsInPlay; it lives only in deck.commander.
+  const isCommander = untapDeck.format === COMMANDER_FORMAT;
+  const commanderCard = isCommander && playCards.length === 1 ? playCards[0] : undefined;
+  const startsInPlay = buildThinCards(commanderCard ? [] : playCards, now);
+
   return {
     id: crypto.randomUUID(),
     name: untapDeck.title,
@@ -148,6 +159,10 @@ function buildThinDeck(untapDeck: UntapDeck): Deck {
     updatedAt: untapDeck.updated_date,
     cards,
     sideboard,
+    startsInPlay,
+    commander: commanderCard
+      ? { id: commanderCard.card_uid, name: commanderCard.title, set: commanderCard.set }
+      : undefined,
     formatIndex: null,
     sortField: DEFAULT_SORT_FIELD,
     sortDir: DEFAULT_SORT_DIR,
