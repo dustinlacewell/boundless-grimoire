@@ -52,6 +52,15 @@ export async function hydrateDeckStore(): Promise<void> {
     useDeckStore.setState({ hydrated: true, library: stored });
     return;
   }
+  const storedVersion = stored.version ?? 0;
+  if (storedVersion < LATEST_LIBRARY_VERSION) {
+    const backupKey = `${STORAGE_KEY}:backup-v${storedVersion}`;
+    await storage.set(backupKey, stored).catch((e) => {
+      // Non-fatal: losing the backup is better than refusing to start.
+      console.warn("[deckStore] backup before migration failed", e);
+    });
+  }
+
   const result = migrateLibrary(stored);
   useDeckStore.setState({ hydrated: true, library: result.library });
 }
